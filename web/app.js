@@ -9,6 +9,7 @@ const REQUIRED_HEADERS = [
   "Reach",
   "Target",
   "Safety",
+  "Softs",
   "Notes",
   "Anything Else?",
 ];
@@ -21,10 +22,16 @@ const RUBRIC_TO_SCORE = {
   "Strongly Agree": 5,
 };
 
+const BAND_ORDER = ["T3", "T6", "T14", "T20", "T30", "T50", "T75", "T100", "T100+"];
+
 const BAND_LABELS = {
+  T3: "Top 3",
+  T6: "Top 6",
   T14: "Top 14",
-  T25: "Top 25",
+  T20: "Top 20",
+  T30: "Top 30",
   T50: "Top 50",
+  T75: "Top 75",
   T100: "Top 100",
   "T100+": "Top 100+",
 };
@@ -73,6 +80,50 @@ const TAG_DEFINITIONS = [
 ];
 
 const TAG_NAME_SET = new Set(TAG_DEFINITIONS.map((tag) => tag.name));
+const TAG_POLARITY_MAP = new Map(TAG_DEFINITIONS.map((tag) => [tag.name, tag.polarity]));
+const READER_PROFILES = [
+  {
+    fullName: "Brigitte Suhr",
+    firstName: "Brigitte",
+    aliases: ["Brigitte", "Briggite"],
+    headshotUrl:
+      "https://www.gravatar.com/avatar/759b37b8091b593596f86f07072fe396?size=320&default=robohash",
+    bio: "",
+  },
+  {
+    fullName: "Sam Riley",
+    firstName: "Sam",
+    aliases: ["Sam Riley"],
+    headshotUrl: "",
+    bio: "",
+  },
+  {
+    fullName: "Sam Kwak",
+    firstName: "Sam",
+    aliases: ["Sam Kwak"],
+    headshotUrl: "",
+    bio: "",
+  },
+  {
+    fullName: "Reyes Aguilar",
+    firstName: "Reyes",
+    aliases: ["Reyes Aguilar", "Reyes"],
+    headshotUrl:
+      "https://www.gravatar.com/avatar/5df779a3d2aef8fbdd29088b8cc485d2?size=320&default=robohash",
+    bio: "",
+  },
+  {
+    fullName: "Jennifer Kott",
+    firstName: "Jennifer",
+    aliases: ["Jennifer Kott", "Jennifer"],
+    headshotUrl:
+      "https://www.gravatar.com/avatar/29d0502c4ea11721ff29d3d1fa1c3bdd?size=320&default=robohash",
+    bio: "",
+  },
+];
+
+const TAG_FONT_BASE_PX = 9;
+const TAG_FONT_MIN_PX = 7;
 
 const state = {
   fileName: "",
@@ -90,10 +141,11 @@ let fitResizeScheduled = false;
 
 const PRINT_CSS = `
   @import url("https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Lexend:wght@400;500;600;700;800&display=swap");
+  *, *::before, *::after { box-sizing: border-box; }
   @page { size: 8.5in 11in; margin: 0; }
   body { margin: 0; font-family: "Lexend", "Segoe UI", Tahoma, sans-serif; color: #202530; }
   .doc-shell { background: #fff; }
-  .page { width: auto; min-height: 10in; padding: 0.5in; margin: 0; break-after: page; }
+  .page { width: 612px; min-height: 792px; height: 792px; padding: 24px; margin: 0; break-after: page; }
   .page.summary-page { padding: 0; min-height: 792px; height: 792px; width: 612px; transform: scale(1.3333333333); transform-origin: top left; margin-bottom: 264px; }
   .page:last-child { break-after: auto; }
   .page-header { border-bottom: 2px solid #111; padding-bottom: 0.1in; margin-bottom: 0.2in; }
@@ -108,81 +160,184 @@ const PRINT_CSS = `
   .stars { display: inline-flex; gap: 4px; }
   .star { width: 18px; height: 18px; }
   .star.filled polygon { fill: #f4b400; stroke: #b78600; }
-  .star.empty polygon { fill: #eef2f7; stroke: #a6b1c2; }
-  .rating-number { font-weight: 600; font-size: 12px; }
+  .star.half polygon { stroke: #b78600; }
+  .waiting-page { display: flex; align-items: center; justify-content: center; }
+  .waiting-copy { font-family: "Fraunces", "Times New Roman", serif; font-size: 36px; font-weight: 700; color: #98a2b3; text-transform: lowercase; }
   .band-list { margin: 0; padding-left: 18px; }
   .band-list li { margin-bottom: 6px; }
   .tag-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-  .tag-pill { border: 1px solid #c4cddd; border-radius: 999px; padding: 6px 10px; font-size: 10px; line-height: 1.1; text-align: center; display: flex; align-items: center; justify-content: center; position: relative; overflow: visible; }
-  .tag-badges { display: inline-flex; gap: 4px; position: absolute; top: -8px; right: 8px; margin-left: 0; vertical-align: baseline; }
-  .tag-badge { min-width: 16px; height: 16px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; background: #111827; color: #fff; border: 1px solid #fff; }
+  .tag-pill { --tag-font-size: 9px; border: 1px solid #e0e6f2; border-radius: 999px; padding: 2px 6px; font-size: var(--tag-font-size); line-height: 1.1; font-weight: 600; text-align: center; display: flex; align-items: center; justify-content: center; position: relative; overflow: visible; color: #4b5563; }
+  .tag-text { display: -webkit-box; width: 100%; overflow: hidden; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .tag-pill.active-positive { background: #ecfdf3; border-color: #86efac; color: #166534; }
+  .tag-pill.active-negative { background: #fef2f2; border-color: #fecaca; color: #7f1d1d; }
+  .tag-badges { display: inline-flex; gap: 4px; position: absolute; top: -12px; right: 8px; margin-left: 0; vertical-align: baseline; z-index: 2; }
+  .tag-badge { min-width: 14px; height: 14px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; background: #111827; color: #fff; border: 1px solid #fff; }
   .tag-pill.inactive { color: #5e6778; background: #fff; }
-  .tag-pill.active-positive { background: #dcfce7; border-color: #22c55e; color: #14532d; }
-  .tag-pill.active-negative { background: #fee2e2; border-color: #ef4444; color: #7f1d1d; }
   .reader-card { border: 1px solid #d8dee9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
   .reader-title { margin: 0 0 8px; font-size: 14px; }
   .notes-box { border: 1px solid #333; min-height: 1.5in; padding: 10px; white-space: pre-wrap; margin-bottom: 8px; }
-  .hero-head { display: flex; justify-content: space-between; align-items: center; height: 56px; background: #f7f5f3; padding: 0 18px; margin-bottom: 0; border-radius: 6px 6px 0 0; }
-  .brand-left { font-size: 18px; font-weight: 800; color: #0f172a; }
-  .brand-left .badge { background: #f3ce73; border-radius: 6px; padding: 2px 8px; margin-right: 6px; }
-  .brand-right { font-family: "Fraunces", "Times New Roman", serif; color: #14b8a6; font-size: 18px; font-weight: 700; }
-  .summary-banner { height: 50px; background: linear-gradient(-45deg, #15b79e 0%, #227f9c 100%); color: #fcfaf8; text-align: center; font-family: "Fraunces", "Times New Roman", serif; font-size: 28px; font-weight: 700; line-height: 50px; margin-bottom: 0; }
-  .section-block { display: grid; grid-template-columns: 40px 1fr; gap: 0; margin-bottom: 0; width: 100%; background: #fff; border-top: 1px solid #d8dee9; border-bottom: 1px solid #d8dee9; }
-  .section-block.readers-section { height: 185px; }
+  .summary-banner { height: 58px; background: linear-gradient(-45deg, #15b79e 0%, #227f9c 100%); color: #fcfaf8; text-align: center; font-family: "Fraunces", "Times New Roman", serif; font-size: 30px; font-weight: 700; line-height: 58px; margin-bottom: 0; }
+  .section-block { display: grid; grid-template-columns: 1fr; gap: 0; margin-bottom: 0; width: 100%; background: #fff; border-top: 1px solid #d8dee9; border-bottom: 1px solid #d8dee9; }
+  .section-block.readers-section { height: 190px; }
   .section-block.readers-section .section-body { height: 100%; overflow: hidden; }
-  .section-block.readers-section .rail-label { height: calc(100% - 40px); margin: 20px 0; display: flex; align-items: center; justify-content: center; padding: 0; overflow: hidden; font-size: 17px; }
-  .section-block.readers-section .avatar { width: 88px; height: 88px; border-radius: 20px; font-size: 24px; }
-  .section-block.readers-section .reader-name { font-size: 28px; }
-  .section-block.readers-section .reader-bio { font-size: 16px; }
-  .section-block.readers-section .section-body { padding: 12px 16px; }
-  .section-block.key-info-section { height: 212px; }
+  .section-block.readers-section .avatar { width: 40px; height: 40px; border-radius: 10px; font-size: 12px; }
+  .section-block.readers-section .reader-name { font-size: 14px; }
+  .section-block.readers-section .reader-bio { font-size: 10px; line-height: 1.2; -webkit-line-clamp: 1; }
+  .section-block.readers-section .section-body { padding: 10px 12px; }
+  .fit-readers { display: block; }
+  .section-block.key-info-section { height: 238px; }
   .section-block.key-info-section .section-body { height: 100%; }
-  .section-block.key-info-section .rail-label { height: calc(100% - 40px); margin: 20px 0; display: flex; align-items: center; justify-content: center; padding: 0; overflow: hidden; font-size: 17px; }
   .section-block.key-info-section .section-body { padding: 14px 16px; }
-  .section-block.key-info-section .key-top-item { font-size: 14px; padding: 8px 10px; }
-  .section-block.key-info-section .metric-col { padding: 6px 8px; }
-  .section-block.key-info-section .metric-title { font-size: 14px; margin: 0 0 4px; }
-  .section-block.key-info-section .small { font-size: 9px; }
-  .section-block.key-info-section .compact-stars .star { width: 12px; height: 12px; }
-  .section-block.key-info-section .band-row { font-size: 9px; gap: 4px; padding: 3px 6px; grid-template-columns: 56px repeat(5, minmax(0, 1fr)); }
-  .section-block.tags-section { height: 289px; }
-  .section-block.tags-section .section-body { height: 100%; }
-  .section-block.tags-section .rail-label { height: calc(100% - 40px); margin: 20px 0; display: flex; align-items: center; justify-content: center; padding: 0; overflow: hidden; font-size: 17px; }
-  .section-block.tags-section .section-body { padding: 14px 16px; }
+  .section-block.key-info-section .key-top-item { font-size: 15px; padding: 10px 12px; }
+  .section-block.key-info-section .metric-col { padding: 8px 10px; }
+  .section-block.key-info-section .metric-title { font-size: 16px; margin: 0 0 6px; }
+  .section-block.key-info-section .small { font-size: 10px; }
+  .section-block.key-info-section .compact-stars .star { width: 16px; height: 16px; }
+  .section-block.key-info-section .band-row { font-size: 9px; gap: 0; padding: 3px 6px; grid-template-columns: 52px repeat(9, minmax(0, 1fr)); }
+  .section-block.tags-section { height: 300px; border-bottom: 0; }
+  .section-block.tags-section .section-body { height: 100%; overflow: hidden; }
+  .section-block.tags-section .section-body { padding: 8px 10px; }
+  .fit-tags { display: flex; flex-direction: column; height: 100%; }
+  .section-title { font-family: "Lexend", "Segoe UI", Tahoma, sans-serif; text-transform: uppercase; letter-spacing: 0.22em; font-size: 10px; font-weight: 700; color: #94a3b8; text-align: center; margin: 0 0 6px; }
+  .section-block.readers-section .section-title { margin-bottom: 4px; }
   .rail-label { writing-mode: vertical-rl; transform: rotate(180deg); background: #334155; color: #fff; width: 40px; border-radius: 18px 0 0 18px; text-align: center; font-family: "Fraunces", "Times New Roman", serif; font-size: 22px; font-weight: 700; letter-spacing: 0.4px; padding: 16px 8px; }
   .section-body { border: 0; border-radius: 0; padding: 14px 16px; background: #fff; width: 100%; min-width: 0; overflow: hidden; }
   .fit-content { transform-origin: top left; width: 100%; }
-  .reader-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-  .reader-col { padding: 4px 8px; border-right: 1px solid #d8dee9; }
-  .reader-col:last-child { border-right: 0; }
-  .avatar { width: 72px; height: 72px; border-radius: 16px; margin: 0 auto 6px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #2b7abf, #14b8a6); color: #fff; font-weight: 800; font-size: 20px; }
-  .reader-name { text-align: center; margin: 0 0 6px; font-size: 22px; font-family: "Fraunces", "Times New Roman", serif; }
-  .reader-bio { margin: 0; text-align: center; font-size: 11px; line-height: 1.35; }
-  .key-card { border: 1px solid #d8dee9; border-radius: 14px; overflow: hidden; width: 100%; }
-  .key-top { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-bottom: 1px solid #d8dee9; }
-  .key-top-item { padding: 8px 12px; font-size: 19px; font-weight: 700; border-right: 1px solid #d8dee9; }
+  .reader-grid { display: grid; grid-template-columns: 1fr; grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 4px; height: 100%; align-content: stretch; }
+  .reader-col { padding: 2px 6px; position: relative; display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: center; min-height: 0; }
+  .summary-page .reader-col:not(:last-child)::after { content: ""; position: absolute; left: 52px; right: 0; bottom: -4px; height: 1px; background: #e5e7eb; }
+  .avatar { width: 52px; height: 52px; border-radius: 12px; margin: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #2b7abf, #14b8a6); color: #fff; font-weight: 800; font-size: 14px; }
+  .avatar.has-photo { background: transparent; padding: 0; }
+  .avatar img { width: 100%; height: 100%; border-radius: inherit; object-fit: cover; display: block; }
+  .reader-name { text-align: left; margin: 0 0 2px; font-size: 16px; font-family: "Fraunces", "Times New Roman", serif; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+  .reader-bio { margin: 0; text-align: left; font-size: 11px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .key-card { border: 0; border-radius: 0; overflow: hidden; width: 100%; height: 100%; display: flex; flex-direction: column; }
+  .key-top { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 0.8fr) minmax(0, 1.4fr) minmax(0, 0.9fr); border-bottom: 2px solid #d8dee9; }
+  .key-top-item { padding: 8px 12px; font-size: 19px; font-weight: 700; white-space: nowrap; position: relative; }
   .key-top-label { opacity: 0.9; }
   .key-top-value { margin-left: 4px; font-weight: 800; }
-  .key-top-item:last-child { border-right: 0; }
-  .metric-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 1px solid #d8dee9; }
-  .metric-col { padding: 8px 10px; border-right: 1px solid #d8dee9; text-align: center; }
-  .metric-col:last-child { border-right: 0; }
+  .key-top-item.other-item .key-top-value { font-size: 13px; font-weight: 500; letter-spacing: 0.1px; }
+  .key-top-item.softs-item .key-top-value { font-weight: 500; }
+  .key-top-item:not(:last-child)::after { content: ""; position: absolute; top: 50%; right: 0; transform: translateY(-50%); width: 2px; height: 60%; background: #d8dee9; }
+  .metric-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-bottom: 2px solid #d8dee9; }
+  .metric-col { padding: 8px 10px; text-align: center; position: relative; }
+  .metric-col:not(:last-child)::after { content: ""; position: absolute; top: 50%; right: 0; transform: translateY(-50%); width: 2px; height: 60%; background: #d8dee9; }
   .metric-title { margin: 0 0 6px; font-size: 20px; font-weight: 700; }
   .compact-stars { display: inline-flex; gap: 3px; justify-content: center; }
   .compact-stars .star { width: 14px; height: 14px; }
-  .band-row { display: grid; grid-template-columns: 62px repeat(5, minmax(0, 1fr)); align-items: center; gap: 6px; padding: 5px 8px; border-top: 1px solid #e5e7eb; font-size: 11px; }
-  .band-row:first-child { border-top: 0; }
-  .band-name { font-weight: 700; border-radius: 999px; text-align: center; padding: 2px 6px; }
+  .band-row { display: grid; grid-template-columns: 72px repeat(9, minmax(0, 1fr)); align-items: center; gap: 0; padding: 5px 8px; font-size: 11px; position: relative; flex: 1 0 0; }
+  .band-name { font-weight: 700; border-radius: 999px; text-align: center; padding: 2px 6px; margin-right: 6px; position: relative; z-index: 3; }
   .band-name.reach { background: #fff2df; color: #b45309; }
   .band-name.target { background: #e0f2fe; color: #0c4a6e; }
   .band-name.safety { background: #dcfce7; color: #14532d; }
-  .band-chip { border: 1px solid #d1d5db; border-radius: 8px; text-align: center; padding: 2px 0; font-weight: 700; }
-  .band-chip.active { background: #dbeafe; border-color: #60a5fa; }
-  .design-tag-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px 10px; }
+  .band-row.row-reach .band-chip.in-range { color: #b45309; }
+  .band-row.row-target .band-chip.in-range { color: #0c4a6e; }
+  .band-row.row-safety .band-chip.in-range { color: #14532d; }
+  .band-range { grid-row: 1; border-radius: 8px; min-height: 18px; align-self: stretch; z-index: 1; }
+  .band-range.range-reach { background: #fff2df; border: 1px solid #f3ce73; }
+  .band-range.range-target { background: #e0f2fe; border: 1px solid #7dd3fc; }
+  .band-range.range-safety { background: #dcfce7; border: 1px solid #86efac; }
+  .band-chip { display: flex; align-items: center; justify-content: center; text-align: center; padding: 2px 0; min-height: 18px; font-weight: 700; color: #111827; position: relative; z-index: 2; }
+  .design-tag-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); grid-template-rows: repeat(8, minmax(0, 1fr)); gap: 6px 8px; height: 100%; align-content: stretch; flex: 1; min-height: 0; }
+  .page.reader-page { padding: 16px; display: grid; grid-template-rows: 90% 10%; gap: 8px; }
+  .reader-page-main { min-height: 0; }
+  .reader-page-footer { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; min-height: 0; position: relative; }
+  .reader-page-footer::before { content: ""; position: absolute; left: -16px; right: -16px; top: -6px; height: 2px; background: #d8dee9; }
+  .reader-footer-box { border: 1px solid #d8dee9; border-radius: 8px; padding: 6px 8px; display: grid; grid-template-rows: auto 1fr; gap: 4px; overflow: hidden; font-size: 10px; line-height: 1.3; }
+  .reader-footer-title { font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: #475467; }
+  .reader-footer-body { white-space: pre-wrap; }
+  .reader-sections { display: grid; grid-template-rows: repeat(3, 1fr); gap: 12px; height: 100%; }
+  .reader-section { border: 0; border-radius: 0; padding: 8px 0; display: flex; flex-direction: column; min-height: 0; position: relative; }
+  .reader-section:not(:last-child)::after { content: ""; position: absolute; left: -16px; right: -16px; bottom: -6px; height: 2px; background: #d8dee9; }
+  .reader-section-title { font-family: "Lexend", "Segoe UI", Tahoma, sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #94a3b8; margin-bottom: 6px; text-align: center; }
+  .reader-rows { display: grid; grid-template-rows: 50% 50%; height: 100%; gap: 8px; min-height: 0; }
+  .reader-row-top { display: grid; grid-template-columns: 0.9fr 0.8fr 1.3fr; gap: 8px; min-height: 0; padding: 0 8px; }
+  .reader-page .reader-col { padding: 0; position: relative; display: grid; grid-template-columns: 1fr; align-items: start; }
+  .reader-col.ratings, .reader-col.bands { display: grid; grid-template-columns: 1fr; grid-auto-rows: minmax(0, 1fr); gap: 4px; min-height: 0; }
+  .reader-col.tags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; align-content: start; min-height: 0; }
+  .reader-rating-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+  .reader-rating-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #475467; white-space: nowrap; }
+  .reader-rating-empty { font-size: 10px; color: #98a2b3; }
+  .reader-page .compact-stars .star { width: 12px; height: 12px; }
+  .reader-band-row { display: grid; grid-template-columns: auto 1fr; gap: 6px; align-items: center; font-size: 10px; }
+  .reader-band-label { font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; font-size: 9px; color: #475467; }
+  .reader-band-value { font-weight: 600; }
+  .reader-notes { border: 1px solid #d8dee9; border-radius: 8px; padding: 8px; font-size: 10px; line-height: 1.3; height: 100%; overflow: hidden; }
+  .reader-notes .label { font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 2px; color: #475467; }
+  .reader-notes-body { margin-bottom: 6px; white-space: pre-wrap; }
+  .reader-tag-pill { border: 1px solid #e0e6f2; border-radius: 999px; padding: 2px 4px; font-size: 8px; line-height: 1.1; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 18px; }
+  .reader-tag-pill.active-positive { background: #ecfdf3; border-color: #86efac; color: #166534; }
+  .reader-tag-pill.active-negative { background: #fef2f2; border-color: #fecaca; color: #7f1d1d; }
+  .reader-tag-pill.inactive { color: #5e6778; background: #fff; }
+  .reader-tag-empty { font-size: 10px; color: #98a2b3; align-self: center; }
 `;
 
 const PRINT_FIT_SCRIPT = `
   (() => {
+    const TAG_FONT_BASE_PX = 9;
+    const TAG_FONT_MIN_PX = 7;
+
+    function fitTagFonts(root = document) {
+      const pills = root.querySelectorAll(".tag-pill");
+      pills.forEach((pill) => {
+        const textEl = pill.querySelector(".tag-text");
+        if (!textEl) return;
+
+        const prevDisplay = textEl.style.display;
+        const prevClamp = textEl.style.webkitLineClamp;
+        const prevOrient = textEl.style.webkitBoxOrient;
+
+        textEl.style.display = "block";
+        textEl.style.webkitLineClamp = "unset";
+        textEl.style.webkitBoxOrient = "initial";
+
+        const setFont = (sizePx) => {
+          pill.style.setProperty("--tag-font-size", sizePx + "px");
+        };
+
+        const getLineHeight = () => {
+          const computed = window.getComputedStyle(textEl);
+          const fontSize = parseFloat(computed.fontSize) || TAG_FONT_BASE_PX;
+          let lineHeight = parseFloat(computed.lineHeight);
+          if (!lineHeight || Number.isNaN(lineHeight)) {
+            lineHeight = fontSize * 1.1;
+          }
+          return { lineHeight, fontSize };
+        };
+
+        setFont(TAG_FONT_BASE_PX);
+        let { lineHeight } = getLineHeight();
+        let maxHeight = lineHeight * 2 + 0.5;
+        let fullHeight = textEl.scrollHeight;
+
+        if (fullHeight > maxHeight) {
+          let low = TAG_FONT_MIN_PX;
+          let high = TAG_FONT_BASE_PX;
+          let best = TAG_FONT_MIN_PX;
+
+          while (low <= high) {
+            const mid = Math.floor((low + high) / 2);
+            setFont(mid);
+            ({ lineHeight } = getLineHeight());
+            maxHeight = lineHeight * 2 + 0.5;
+            fullHeight = textEl.scrollHeight;
+
+            if (fullHeight <= maxHeight) {
+              best = mid;
+              low = mid + 1;
+            } else {
+              high = mid - 1;
+            }
+          }
+          setFont(best);
+        }
+
+        textEl.style.display = prevDisplay;
+        textEl.style.webkitLineClamp = prevClamp;
+        textEl.style.webkitBoxOrient = prevOrient;
+      });
+    }
+
     function fitSectionContent(section) {
       const container = section.querySelector(".section-body");
       const content = container?.querySelector(".fit-content");
@@ -192,23 +347,33 @@ const PRINT_FIT_SCRIPT = `
       content.style.width = "100%";
 
       const availableHeight = container.clientHeight;
-      const availableWidth = container.clientWidth;
       const neededHeight = content.scrollHeight;
-      const neededWidth = content.scrollWidth;
+      if (!availableHeight || !neededHeight) return;
 
-      if (!availableHeight || !availableWidth || !neededHeight || !neededWidth) return;
-
-      const heightScale = availableHeight / neededHeight;
-      const widthScale = availableWidth / neededWidth;
-      const scale = Math.min(1, heightScale, widthScale);
-
-      if (scale < 1) {
-        content.style.transform = "scale(" + scale + ")";
-        content.style.width = (100 / scale) + "%";
+      function applyScale(scale) {
+        if (scale < 1) {
+          content.style.transform = "scale(" + scale + ")";
+          content.style.width = (100 / scale) + "%";
+        } else {
+          content.style.transform = "scale(1)";
+          content.style.width = "100%";
+        }
       }
+
+      let scale = 1;
+      const heightScale = availableHeight / neededHeight;
+
+      // Fill vertical space first.
+      if (heightScale < 1) {
+        scale = heightScale;
+      }
+
+      applyScale(scale);
+
     }
 
     function fitAllSummarySections() {
+      fitTagFonts(document);
       document.querySelectorAll(".summary-page .section-block").forEach(fitSectionContent);
     }
 
@@ -230,9 +395,10 @@ const lsatInput = document.getElementById("lsatInput");
 const gpaInput = document.getElementById("gpaInput");
 const kjdSelect = document.getElementById("kjdSelect");
 const urmSelect = document.getElementById("urmSelect");
+const summaryInput = document.getElementById("summaryInput");
+const nextStepsInput = document.getElementById("nextStepsInput");
 const inputHintEl = document.getElementById("inputHint");
 const downloadPdfBtn = document.getElementById("downloadPdfBtn");
-const printCurrentBtn = document.getElementById("printCurrentBtn");
 const statusEl = document.getElementById("status");
 const validationEl = document.getElementById("validation");
 const previewRoot = document.getElementById("previewRoot");
@@ -244,8 +410,9 @@ lsatInput.addEventListener("input", onManualInputChange);
 gpaInput.addEventListener("input", onManualInputChange);
 kjdSelect.addEventListener("change", onManualInputChange);
 urmSelect.addEventListener("change", onManualInputChange);
+summaryInput.addEventListener("input", onManualInputChange);
+nextStepsInput.addEventListener("input", onManualInputChange);
 downloadPdfBtn.addEventListener("click", onDownloadCurrentStudentPdf);
-printCurrentBtn.addEventListener("click", onPrintCurrentStudent);
 window.addEventListener("resize", onWindowResize);
 
 function setStatus(message) {
@@ -259,6 +426,57 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
+}
+
+function normalizeProfileKey(value) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+}
+
+const READER_PROFILE_NAME_MAP = new Map(
+  READER_PROFILES.flatMap((profile) => {
+    const keys = [
+      profile.fullName,
+      ...(profile.aliases || []),
+    ]
+      .map(normalizeProfileKey)
+      .filter(Boolean);
+    return keys.map((key) => [key, profile]);
+  })
+);
+
+const READER_PROFILE_FIRSTNAME_MAP = READER_PROFILES.reduce((acc, profile) => {
+  const key = normalizeProfileKey(profile.firstName);
+  if (!key) return acc;
+  if (!acc.has(key)) acc.set(key, []);
+  acc.get(key).push(profile);
+  return acc;
+}, new Map());
+
+function getReaderProfile(name) {
+  const normalized = normalizeProfileKey(name);
+  if (!normalized) return null;
+  const direct = READER_PROFILE_NAME_MAP.get(normalized);
+  if (direct) return direct;
+
+  if (!normalized.includes(" ")) {
+    const candidates = READER_PROFILE_FIRSTNAME_MAP.get(normalized) || [];
+    if (candidates.length === 1) return candidates[0];
+  }
+  return null;
+}
+
+function getReaderInitials(label) {
+  const trimmed = String(label || "").trim();
+  if (!trimmed) return "R";
+  return trimmed
+    .split(/\s+/)
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
 }
 
 function showValidationMessages() {
@@ -292,7 +510,6 @@ function clearGeneratedResults({ resetSelector } = { resetSelector: false }) {
     studentSelect.innerHTML = "<option>Upload CSV first</option>";
   }
   downloadPdfBtn.disabled = true;
-  printCurrentBtn.disabled = true;
 }
 
 function parseCsv(csvText) {
@@ -417,9 +634,69 @@ function parseTags(csvTagString) {
 function mapBandValue(value, fileName, fieldLabel) {
   const trimmed = String(value || "").trim();
   if (!trimmed) return "";
-  if (BAND_LABELS[trimmed]) return trimmed;
+  const normalized = trimmed.toUpperCase().replace(/\s+/g, "");
+  const aliasMap = {
+    "3": "T3",
+    "6": "T6",
+    "14": "T14",
+    "20": "T20",
+    "30": "T30",
+    "50": "T50",
+    "75": "T75",
+    "100": "T100",
+    "100+": "T100+",
+    T3: "T3",
+    T6: "T6",
+    T14: "T14",
+    T20: "T20",
+    T25: "T20",
+    T30: "T30",
+    T50: "T50",
+    T75: "T75",
+    T100: "T100",
+    "T100+": "T100+",
+  };
+  const canonical = aliasMap[normalized];
+  if (canonical && BAND_LABELS[canonical]) return canonical;
   state.warnings.push(`${fileName}: unknown ${fieldLabel} value "${trimmed}"`);
   return `Unknown band: ${trimmed}`;
+}
+
+function mapSoftsValue(value, fileName) {
+  const trimmed = String(value || "").trim().toUpperCase();
+  if (!trimmed) return null;
+  const match = /^T([1-4])$/.exec(trimmed);
+  if (!match) {
+    state.warnings.push(`${fileName}: unknown Softs value "${trimmed}"`);
+    return null;
+  }
+  return Number(match[1]);
+}
+
+function computeSoftsDisplay(rows, fileName) {
+  const values = rows
+    .map((row) => mapSoftsValue(row.Softs, fileName))
+    .filter((value) => value !== null);
+  if (!values.length) return null;
+
+  const counts = values.reduce((acc, value) => {
+    acc.set(value, (acc.get(value) || 0) + 1);
+    return acc;
+  }, new Map());
+
+  if (counts.size === 1) {
+    const [onlyValue] = counts.keys();
+    return `T${onlyValue}`;
+  }
+
+  if (counts.size === 2) {
+    const sortedCounts = [...counts.entries()].sort((a, b) => b[1] - a[1]);
+    return `T${sortedCounts[0][0]}/T${sortedCounts[1][0]}`;
+  }
+
+  const average =
+    values.reduce((sum, value) => sum + value, 0) / values.length;
+  return `T${average.toFixed(1)}`;
 }
 
 function uniqueNonEmpty(values) {
@@ -427,16 +704,50 @@ function uniqueNonEmpty(values) {
 }
 
 function buildStudentReport(fileName, rows, manual) {
+  const unknownTags = new Set();
   const randomizedRows = shuffleReaders(rows);
-  const labeledReaders = randomizedRows.map((row, index) => ({
-    row,
-    label: `Reader ${index + 1}`,
-  }));
-  const readers = labeledReaders.map(({ row, label }) => ({
+  const labeledReaders = randomizedRows.map((row, index) => {
+    const rawTags = parseTags(row.Tags);
+    const tags = rawTags.filter((tag) => TAG_NAME_SET.has(tag));
+    rawTags.forEach((tag) => {
+      if (!TAG_NAME_SET.has(tag)) {
+        unknownTags.add(tag);
+      }
+    });
+    return {
+      row,
+      label: `Reader ${index + 1}`,
+      tags,
+    };
+  });
+
+  const normalizeBandDisplay = (value) => {
+    const trimmed = String(value || "").trim();
+    if (!trimmed || trimmed.startsWith("Unknown band:")) return "—";
+    return trimmed;
+  };
+
+  const readers = labeledReaders.map(({ row, label, tags }) => ({
     label,
     notes: row.Notes || "",
     anythingElse: row["Anything Else?"] || "",
     rawReviewer: row.Reviewer || "",
+    ratings: {
+      whyLaw: mapRubricToScore(row["Why Law?"], fileName, "Why Law?"),
+      thrive: mapRubricToScore(row["Thrive?"], fileName, "Thrive?"),
+      contribute: mapRubricToScore(row["Contribute?"], fileName, "Contribute?"),
+      know: mapRubricToScore(row["Know?"], fileName, "Know?"),
+    },
+    bands: {
+      reach: normalizeBandDisplay(mapBandValue(row.Reach, fileName, "Reach")),
+      target: normalizeBandDisplay(mapBandValue(row.Target, fileName, "Target")),
+      safety: normalizeBandDisplay(mapBandValue(row.Safety, fileName, "Safety")),
+    },
+    softs: (() => {
+      const softValue = mapSoftsValue(row.Softs, fileName);
+      return softValue ? `T${softValue}` : "—";
+    })(),
+    tags,
   }));
 
   const whyLawScores = rows
@@ -452,11 +763,10 @@ function buildStudentReport(fileName, rows, manual) {
     .map((row) => mapRubricToScore(row["Know?"], fileName, "Know?"))
     .filter((score) => score !== null);
 
-  const unknownTags = new Set();
   const activeTags = new Set();
   const tagReaderMap = new Map();
-  labeledReaders.forEach(({ row, label }) => {
-    parseTags(row.Tags).forEach((tag) => {
+  labeledReaders.forEach(({ label, tags }) => {
+    tags.forEach((tag) => {
       if (TAG_NAME_SET.has(tag)) {
         activeTags.add(tag);
         if (!tagReaderMap.has(tag)) tagReaderMap.set(tag, new Set());
@@ -488,13 +798,26 @@ function buildStudentReport(fileName, rows, manual) {
       target: uniqueNonEmpty(rows.map((row) => mapBandValue(row.Target, fileName, "Target"))),
       safety: uniqueNonEmpty(rows.map((row) => mapBandValue(row.Safety, fileName, "Safety"))),
     },
+    softsDisplay: computeSoftsDisplay(rows, fileName),
     activeTags,
     tagReaderMap,
   };
 }
 
-function renderStarSvg(isFilled) {
-  return `<svg class="star ${isFilled ? "filled" : "empty"}" viewBox="0 0 24 24" aria-hidden="true">
+function renderStarSvg(type, idSuffix) {
+  if (type === "half") {
+    return `<svg class="star half" viewBox="0 0 24 24" aria-hidden="true">
+      <defs>
+        <linearGradient id="half-fill-${idSuffix}" x1="0" x2="1" y1="0" y2="0">
+          <stop offset="50%" stop-color="#f4b400"></stop>
+          <stop offset="50%" stop-color="#eef2f7"></stop>
+        </linearGradient>
+      </defs>
+      <polygon fill="url(#half-fill-${idSuffix})" points="12,2 15.3,8.8 22.8,9.8 17.3,15.1 18.7,22.5 12,18.8 5.3,22.5 6.7,15.1 1.2,9.8 8.7,8.8"></polygon>
+    </svg>`;
+  }
+
+  return `<svg class="star ${type}" viewBox="0 0 24 24" aria-hidden="true">
     <polygon points="12,2 15.3,8.8 22.8,9.8 17.3,15.1 18.7,22.5 12,18.8 5.3,22.5 6.7,15.1 1.2,9.8 8.7,8.8"></polygon>
   </svg>`;
 }
@@ -504,13 +827,17 @@ function renderStarRow(label, averageValue) {
     return `<div class="rating-row"><div class="label">${escapeHtml(label)}</div><div class="small">No rating submitted</div></div>`;
   }
 
-  const rounded = Math.max(1, Math.min(5, Math.round(averageValue)));
-  const stars = [1, 2, 3, 4, 5].map((idx) => renderStarSvg(idx <= rounded)).join("");
+  const rounded = Math.max(0.5, Math.min(5, Math.round(averageValue * 2) / 2));
+  const fullStars = Math.floor(rounded);
+  const hasHalf = rounded - fullStars >= 0.5;
+  const stars = [
+    ...Array.from({ length: fullStars }, (_, idx) => renderStarSvg("filled", `${label}-full-${idx}`)),
+    ...(hasHalf ? [renderStarSvg("half", `${label}-half`)] : []),
+  ].join("");
   return `<div class="rating-row">
     <div class="label">${escapeHtml(label)}</div>
     <div class="stars-wrap">
       <div class="stars">${stars}</div>
-      <span class="rating-number">${averageValue.toFixed(1)} / 5</span>
     </div>
   </div>`;
 }
@@ -549,28 +876,48 @@ function renderTagGrid(activeTags, tagReaderMap) {
           ? "tag-pill active-positive"
           : "tag-pill active-negative"
         : "tag-pill inactive";
-      return `<div class="${className}">${escapeHtml(tag.name)}${renderTagBadges(readerLabels)}</div>`;
+      return `<div class="${className}"><span class="tag-text">${escapeHtml(
+        tag.name
+      )}</span>${renderTagBadges(readerLabels)}</div>`;
     }).join("")}
   </div>`;
 }
 
 function renderCompactStars(averageValue) {
-  const rounded =
-    averageValue === null ? 0 : Math.max(1, Math.min(5, Math.round(averageValue)));
-  const stars = [1, 2, 3, 4, 5].map((idx) => renderStarSvg(idx <= rounded)).join("");
+  if (averageValue === null) {
+    return `<span class="compact-stars"></span>`;
+  }
+
+  const rounded = Math.max(0.5, Math.min(5, Math.round(averageValue * 2) / 2));
+  const fullStars = Math.floor(rounded);
+  const hasHalf = rounded - fullStars >= 0.5;
+  const stars = [
+    ...Array.from({ length: fullStars }, (_, idx) => renderStarSvg("filled", `compact-full-${idx}`)),
+    ...(hasHalf ? [renderStarSvg("half", "compact-half")] : []),
+  ].join("");
   return `<span class="compact-stars">${stars}</span>`;
 }
 
 function renderBandRow(label, className, values) {
-  const order = ["T14", "T25", "T50", "T100", "T100+"];
-  return `<div class="band-row">
-    <div class="band-name ${className}">${escapeHtml(label)}</div>
-    ${order
-      .map((value) => {
-        const active = values.includes(value) ? " active" : "";
-        return `<div class="band-chip${active}">${escapeHtml(value)}</div>`;
-      })
-      .join("")}
+  const rankedValues = values
+    .map((value) => BAND_ORDER.indexOf(value))
+    .filter((index) => index >= 0)
+    .sort((a, b) => a - b);
+  const minIndex = rankedValues.length ? rankedValues[0] : null;
+  const maxIndex = rankedValues.length ? rankedValues[rankedValues.length - 1] : null;
+
+  return `<div class="band-row row-${className}">
+    <div class="band-name ${className}" style="grid-column: 1; grid-row: 1;">${escapeHtml(label)}</div>
+    ${
+      minIndex !== null && maxIndex !== null
+        ? `<div class="band-range range-${className}" style="grid-column: ${minIndex + 2} / ${maxIndex + 3}; grid-row: 1;"></div>`
+        : ""
+    }
+    ${BAND_ORDER.map((value, idx) => {
+      const inRange =
+        minIndex !== null && maxIndex !== null && idx >= minIndex && idx <= maxIndex;
+      return `<div class="band-chip${inRange ? " in-range" : ""}" style="grid-column: ${idx + 2}; grid-row: 1;">${escapeHtml(value)}</div>`;
+    }).join("")}
   </div>`;
 }
 
@@ -588,7 +935,9 @@ function renderTagGridFourColumns(activeTags, tagReaderMap) {
           ? "tag-pill active-positive"
           : "tag-pill active-negative"
         : "tag-pill inactive";
-      return `<div class="${className}">${escapeHtml(tag.name)}${renderTagBadges(readerLabels)}</div>`;
+      return `<div class="${className}"><span class="tag-text">${escapeHtml(
+        tag.name
+      )}</span>${renderTagBadges(readerLabels)}</div>`;
     }).join("")}
   </div>`;
 }
@@ -607,41 +956,154 @@ function renderReaders(readers) {
     .join("");
 }
 
-function renderStudentDocument(report) {
+function renderReaderRatingRow(label, score) {
+  const stars =
+    score === null || score === undefined
+      ? `<span class="reader-rating-empty">—</span>`
+      : renderCompactStars(score);
+  return `<div class="reader-rating-row">
+    <div class="reader-rating-label">${escapeHtml(label)}</div>
+    ${stars}
+  </div>`;
+}
+
+function renderReaderBandRow(label, value) {
+  const display = value && value !== "—" ? value : "—";
+  return `<div class="reader-band-row">
+    <span class="reader-band-label">${escapeHtml(label)}</span>
+    <span class="reader-band-value">${escapeHtml(display)}</span>
+  </div>`;
+}
+
+function renderReaderTags(tags) {
+  if (!tags.length) {
+    return `<div class="reader-tag-empty">—</div>`;
+  }
+  return tags
+    .map((tag) => {
+      const polarity = TAG_POLARITY_MAP.get(tag);
+      const className =
+        polarity === "positive"
+          ? "reader-tag-pill active-positive"
+          : polarity === "negative"
+            ? "reader-tag-pill active-negative"
+            : "reader-tag-pill inactive";
+      return `<div class="${className}"><span class="reader-tag-text">${escapeHtml(
+        tag
+      )}</span></div>`;
+    })
+    .join("");
+}
+
+function renderReaderNotes(reader) {
+  const notes = String(reader.notes || "").trim();
+  const anythingElse = String(reader.anythingElse || "").trim();
+  const combined =
+    notes && anythingElse
+      ? `${notes}\n\n${anythingElse}`
+      : notes || anythingElse || "—";
+  return `<div class="reader-notes">
+    <div class="label">Notes</div>
+    <div class="reader-notes-body">${escapeHtml(combined)}</div>
+  </div>`;
+}
+
+function renderReaderDetailPage(report) {
+  const summaryText = String(report.manual.summary || "").trim() || "—";
+  const nextStepsText = String(report.manual.nextSteps || "").trim() || "—";
   return `
-    <section class="page summary-page">
-      <div class="hero-head">
-        <div class="brand-left"><span class="badge">7Sage</span>Admissions</div>
-        <div class="brand-right">Committee Review</div>
-      </div>
-      <div class="summary-banner">Summary</div>
-      <div class="section-block readers-section">
-        <div class="rail-label">Readers</div>
-        <div class="section-body">
-          <div class="fit-content fit-readers">
-          <div class="reader-grid">
-            ${report.readers
-              .map(
-                (reader) => `<div class="reader-col">
-                  <div class="avatar">${escapeHtml(reader.label.replace("Reader ", "R"))}</div>
-                  <h3 class="reader-name">${escapeHtml(reader.rawReviewer || reader.label)}</h3>
-                  <p class="reader-bio">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt.</p>
-                </div>`
-              )
-              .join("")}
-          </div>
-          </div>
+    <section class="page reader-page">
+      <div class="reader-page-main">
+        <div class="reader-sections">
+          ${report.readers
+            .map(
+              (reader) => `
+            <article class="reader-section">
+              <div class="reader-section-title">${escapeHtml(reader.label)}</div>
+              <div class="reader-rows">
+                <div class="reader-row reader-row-top">
+                  <div class="reader-col ratings">
+                    ${renderReaderRatingRow("Why Law", reader.ratings.whyLaw)}
+                    ${renderReaderRatingRow("Potential", reader.ratings.thrive)}
+                    ${renderReaderRatingRow("Contribution", reader.ratings.contribute)}
+                    ${renderReaderRatingRow("Personality", reader.ratings.know)}
+                  </div>
+                  <div class="reader-col bands">
+                    ${renderReaderBandRow("Reach", reader.bands.reach)}
+                    ${renderReaderBandRow("Target", reader.bands.target)}
+                    ${renderReaderBandRow("Safety", reader.bands.safety)}
+                    ${renderReaderBandRow("Softs", reader.softs)}
+                  </div>
+                  <div class="reader-col tags">
+                    ${renderReaderTags(reader.tags)}
+                  </div>
+                </div>
+                <div class="reader-row reader-row-notes">
+                  ${renderReaderNotes(reader)}
+                </div>
+              </div>
+            </article>`
+            )
+            .join("")}
         </div>
       </div>
+      <div class="reader-page-footer">
+        <div class="reader-footer-box">
+          <div class="reader-footer-title">Summary</div>
+          <div class="reader-footer-body">${escapeHtml(summaryText)}</div>
+        </div>
+        <div class="reader-footer-box">
+          <div class="reader-footer-title">Recommended Next Steps</div>
+          <div class="reader-footer-body">${escapeHtml(nextStepsText)}</div>
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function renderWaitingPage() {
+  return `
+    <section class="page waiting-page">
+      <p class="waiting-copy">waiting on design</p>
+    </section>
+  `;
+}
+
+function getReaderSortKey(reader) {
+  const profile = getReaderProfile(reader.rawReviewer);
+  const name = String(profile?.fullName || reader.rawReviewer || "").trim();
+  if (!name) {
+    return String(reader.label || "").toLowerCase();
+  }
+  const parts = name.split(/\s+/);
+  const key = parts.length > 1 ? parts[parts.length - 1] : parts[0];
+  return key.toLowerCase();
+}
+
+function renderStudentDocument(report) {
+  const summaryReaders = report.readers
+    .map((reader, index) => ({ reader, index }))
+    .sort((a, b) => {
+      const aKey = getReaderSortKey(a.reader);
+      const bKey = getReaderSortKey(b.reader);
+      const byName = aKey.localeCompare(bKey);
+      return byName !== 0 ? byName : a.index - b.index;
+    })
+    .map(({ reader }) => reader);
+
+  return `
+    <section class="page summary-page">
+      <div class="summary-banner">Summary</div>
       <div class="section-block key-info-section">
-        <div class="rail-label">Key Info</div>
         <div class="section-body">
           <div class="fit-content fit-key-info">
+          <div class="section-title">Key Info</div>
           <div class="key-card">
             <div class="key-top">
               <div class="key-top-item"><span class="key-top-label">LSAT:</span> <span class="key-top-value">${escapeHtml(report.manual.lsat || "—")}</span></div>
               <div class="key-top-item"><span class="key-top-label">GPA:</span> <span class="key-top-value">${escapeHtml(report.manual.gpa || "—")}</span></div>
-              <div class="key-top-item"><span class="key-top-label">Other:</span> <span class="key-top-value">${escapeHtml(report.manual.otherText || "—")}</span></div>
+              <div class="key-top-item other-item"><span class="key-top-label">Other:</span> <span class="key-top-value">${escapeHtml(report.manual.otherText || "—")}</span></div>
+              <div class="key-top-item softs-item"><span class="key-top-label">Softs:</span> <span class="key-top-value">${escapeHtml(report.softsDisplay || "—")}</span></div>
             </div>
             <div class="metric-grid">
               <div class="metric-col">
@@ -668,43 +1130,47 @@ function renderStudentDocument(report) {
           </div>
         </div>
       </div>
+      <div class="section-block readers-section">
+        <div class="section-body">
+          <div class="fit-content fit-readers">
+          <div class="section-title">Readers</div>
+          <div class="reader-grid">
+            ${summaryReaders
+              .map((reader) => {
+                const profile = getReaderProfile(reader.rawReviewer);
+                const name = profile?.fullName || reader.rawReviewer || reader.label;
+                const avatarContent = profile?.headshotUrl
+                  ? `<img src="${escapeHtml(profile.headshotUrl)}" alt="${escapeHtml(name)}" />`
+                  : escapeHtml(getReaderInitials(reader.label.replace("Reader ", "R")));
+                const bio =
+                  profile?.bio ||
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt.";
+                return `<div class="reader-col">
+                  <div class="avatar${profile?.headshotUrl ? " has-photo" : ""}">${avatarContent}</div>
+                  <div>
+                    <h3 class="reader-name">${escapeHtml(name)}</h3>
+                    <p class="reader-bio">${escapeHtml(bio)}</p>
+                  </div>
+                </div>`;
+              })
+              .join("")}
+          </div>
+          </div>
+        </div>
+      </div>
       <div class="section-block tags-section">
-        <div class="rail-label">Tags</div>
         <div class="section-body">
           <div class="fit-content fit-tags">
+          <div class="section-title">Tags</div>
           ${renderTagGridFourColumns(report.activeTags, report.tagReaderMap)}
           </div>
         </div>
       </div>
     </section>
 
-    <section class="page">
-      <header class="page-header">
-        <h1 class="doc-title">Committee Review Summary</h1>
-        <p class="subtitle">Page 2 of 4 - School Band Summary</p>
-      </header>
-      ${renderBandList("Reach", report.bands.reach)}
-      ${renderBandList("Target", report.bands.target)}
-      ${renderBandList("Safety", report.bands.safety)}
-      <p class="small">Band values shown are the distinct entries across all three readers.</p>
-    </section>
-
-    <section class="page">
-      <header class="page-header">
-        <h1 class="doc-title">Committee Review Summary</h1>
-        <p class="subtitle">Page 3 of 4 - Tag Activation (40 Tags)</p>
-      </header>
-      ${renderTagGrid(report.activeTags, report.tagReaderMap)}
-      <p class="small">Active if selected by at least one reader. Green = positive, red = negative.</p>
-    </section>
-
-    <section class="page">
-      <header class="page-header">
-        <h1 class="doc-title">Committee Review Summary</h1>
-        <p class="subtitle">Page 4 of 4 - Reader Comments</p>
-      </header>
-      ${renderReaders(report.readers)}
-    </section>
+    ${renderReaderDetailPage(report)}
+    ${renderWaitingPage()}
+    ${renderWaitingPage()}
   `;
 }
 
@@ -714,6 +1180,8 @@ function getDefaultStudentInput() {
     gpa: "",
     kjd: "Not KJD",
     urm: "Non-URM",
+    summary: "",
+    nextSteps: "",
   };
 }
 
@@ -722,6 +1190,8 @@ function setManualControlsEnabled(enabled) {
   gpaInput.disabled = !enabled;
   kjdSelect.disabled = !enabled;
   urmSelect.disabled = !enabled;
+  summaryInput.disabled = !enabled;
+  nextStepsInput.disabled = !enabled;
 }
 
 function getSelectedFile() {
@@ -744,6 +1214,8 @@ function syncManualFormFromSelection() {
     gpaInput.value = "";
     kjdSelect.value = "Not KJD";
     urmSelect.value = "Non-URM";
+    summaryInput.value = "";
+    nextStepsInput.value = "";
     inputHintEl.textContent = "";
     return;
   }
@@ -753,6 +1225,8 @@ function syncManualFormFromSelection() {
   gpaInput.value = manual.gpa;
   kjdSelect.value = manual.kjd;
   urmSelect.value = manual.urm;
+  summaryInput.value = manual.summary || "";
+  nextStepsInput.value = manual.nextSteps || "";
   validateManualInputs();
 }
 
@@ -810,7 +1284,70 @@ function onManualInputChange() {
   manual.gpa = gpaInput.value.trim();
   manual.kjd = kjdSelect.value;
   manual.urm = urmSelect.value;
+  manual.summary = summaryInput.value.trim();
+  manual.nextSteps = nextStepsInput.value.trim();
   validateManualInputs();
+}
+
+function fitTagFonts(root = document) {
+  const pills = root.querySelectorAll(".tag-pill");
+  pills.forEach((pill) => {
+    const textEl = pill.querySelector(".tag-text");
+    if (!textEl) return;
+
+    const prevDisplay = textEl.style.display;
+    const prevClamp = textEl.style.webkitLineClamp;
+    const prevOrient = textEl.style.webkitBoxOrient;
+
+    textEl.style.display = "block";
+    textEl.style.webkitLineClamp = "unset";
+    textEl.style.webkitBoxOrient = "initial";
+
+    const setFont = (sizePx) => {
+      pill.style.setProperty("--tag-font-size", `${sizePx}px`);
+    };
+
+    const getLineHeight = () => {
+      const computed = window.getComputedStyle(textEl);
+      const fontSize = parseFloat(computed.fontSize) || TAG_FONT_BASE_PX;
+      let lineHeight = parseFloat(computed.lineHeight);
+      if (!lineHeight || Number.isNaN(lineHeight)) {
+        lineHeight = fontSize * 1.1;
+      }
+      return { lineHeight, fontSize };
+    };
+
+    setFont(TAG_FONT_BASE_PX);
+    let { lineHeight } = getLineHeight();
+    let maxHeight = lineHeight * 2 + 0.5;
+    let fullHeight = textEl.scrollHeight;
+
+    if (fullHeight > maxHeight) {
+      let low = TAG_FONT_MIN_PX;
+      let high = TAG_FONT_BASE_PX;
+      let best = TAG_FONT_MIN_PX;
+
+      while (low <= high) {
+        const mid = Math.floor((low + high) / 2);
+        setFont(mid);
+        ({ lineHeight } = getLineHeight());
+        maxHeight = lineHeight * 2 + 0.5;
+        fullHeight = textEl.scrollHeight;
+
+        if (fullHeight <= maxHeight) {
+          best = mid;
+          low = mid + 1;
+        } else {
+          high = mid - 1;
+        }
+      }
+      setFont(best);
+    }
+
+    textEl.style.display = prevDisplay;
+    textEl.style.webkitLineClamp = prevClamp;
+    textEl.style.webkitBoxOrient = prevOrient;
+  });
 }
 
 function fitSectionContent(section) {
@@ -822,23 +1359,33 @@ function fitSectionContent(section) {
   content.style.width = "100%";
 
   const availableHeight = container.clientHeight;
-  const availableWidth = container.clientWidth;
   const neededHeight = content.scrollHeight;
-  const neededWidth = content.scrollWidth;
+  if (!availableHeight || !neededHeight) return;
 
-  if (!availableHeight || !availableWidth || !neededHeight || !neededWidth) return;
-
-  const heightScale = availableHeight / neededHeight;
-  const widthScale = availableWidth / neededWidth;
-  const scale = Math.min(1, heightScale, widthScale);
-
-  if (scale < 1) {
-    content.style.transform = `scale(${scale})`;
-    content.style.width = `${100 / scale}%`;
+  function applyScale(scale) {
+    if (scale < 1) {
+      content.style.transform = `scale(${scale})`;
+      content.style.width = `${100 / scale}%`;
+    } else {
+      content.style.transform = "scale(1)";
+      content.style.width = "100%";
+    }
   }
+
+  let scale = 1;
+  const heightScale = availableHeight / neededHeight;
+
+  // Fill vertical space first.
+  if (heightScale < 1) {
+    scale = heightScale;
+  }
+
+  applyScale(scale);
+
 }
 
 function fitAllSummarySections(root = document) {
+  fitTagFonts(root);
   root.querySelectorAll(".summary-page .section-block").forEach((section) => {
     fitSectionContent(section);
   });
@@ -944,6 +1491,8 @@ function onGenerateDocuments() {
     gpa: manual.gpa,
     kjd: manual.kjd,
     urm: manual.urm,
+    summary: manual.summary,
+    nextSteps: manual.nextSteps,
     otherText: `${manual.kjd} • ${manual.urm}`,
   };
 
@@ -952,7 +1501,6 @@ function onGenerateDocuments() {
   state.reports = [report];
   renderPreviewFromCurrent();
   downloadPdfBtn.disabled = false;
-  printCurrentBtn.disabled = false;
   setStatus(`Generated report for ${selectedFile}.`);
   showValidationMessages();
 }
@@ -962,7 +1510,6 @@ function onStudentSelectionChange() {
   state.currentReport = null;
   state.reports = [];
   downloadPdfBtn.disabled = true;
-  printCurrentBtn.disabled = true;
   previewRoot.innerHTML =
     '<p class="placeholder">Update metadata as needed, then click Generate Report.</p>';
 }
@@ -1035,10 +1582,14 @@ async function onDownloadCurrentStudentPdf() {
   const report = state.currentReport;
   if (!report) return;
 
-  if (typeof window.html2pdf !== "function") {
+  const hasPdfLib = Boolean(window.jspdf?.jsPDF);
+  const hasHtmlToImage = Boolean(window.htmlToImage?.toPng);
+  const hasHtml2Canvas = typeof window.html2canvas === "function";
+
+  if (!hasPdfLib || (!hasHtmlToImage && !hasHtml2Canvas)) {
     state.warnings = [
       ...state.warnings,
-      "PDF library is unavailable. Use Print Current Student as fallback.",
+      "PDF library is unavailable. Use your browser Print dialog as fallback.",
     ];
     showValidationMessages();
     return;
@@ -1059,10 +1610,10 @@ async function onDownloadCurrentStudentPdf() {
 
   const staging = document.createElement("div");
   staging.style.position = "fixed";
-  staging.style.left = "0";
+  staging.style.left = "-10000px";
   staging.style.top = "0";
   staging.style.width = "612px";
-  staging.style.opacity = "0";
+  staging.style.opacity = "1";
   staging.style.pointerEvents = "none";
   staging.style.zIndex = "-1";
   staging.style.overflow = "hidden";
@@ -1085,29 +1636,56 @@ async function onDownloadCurrentStudentPdf() {
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
     const filename = `${sanitizeFileName(report.fileName) || "student-report"}.pdf`;
-    const options = {
-      margin: 0,
-      filename,
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: "#ffffff",
-        width: 612,
-        windowWidth: 612,
-        x: 0,
-        y: 0,
-        scrollX: 0,
-        scrollY: 0,
-      },
-      jsPDF: { unit: "px", format: [612, 792], orientation: "portrait" },
-      pagebreak: { mode: ["css"] },
-    };
-    await window.html2pdf().set(options).from(clone).save();
+    const pageNodes = [...clone.querySelectorAll(".page")];
+    if (!pageNodes.length) {
+      throw new Error("No pages found to export.");
+    }
+    const pdf = new window.jspdf.jsPDF({
+      unit: "pt",
+      format: [612, 792],
+      orientation: "portrait",
+    });
+
+    for (let i = 0; i < pageNodes.length; i += 1) {
+      let imageData = "";
+      if (hasHtmlToImage) {
+        imageData = await window.htmlToImage.toPng(pageNodes[i], {
+          pixelRatio: 2,
+          cacheBust: true,
+          backgroundColor: "#ffffff",
+          canvasWidth: 612,
+          canvasHeight: 792,
+          width: 612,
+          height: 792,
+        });
+      } else {
+        const canvas = await window.html2canvas(pageNodes[i], {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: "#ffffff",
+          width: 612,
+          height: 792,
+          windowWidth: 612,
+          windowHeight: 792,
+          x: 0,
+          y: 0,
+          scrollX: 0,
+          scrollY: 0,
+        });
+        imageData = canvas.toDataURL("image/jpeg", 0.98);
+      }
+
+      if (i > 0) {
+        pdf.addPage([612, 792], "portrait");
+      }
+      pdf.addImage(imageData, "PNG", 0, 0, 612, 792, undefined, "FAST");
+    }
+
+    pdf.save(filename);
   } catch (_error) {
     state.warnings = [
       ...state.warnings,
-      "PDF export failed. Use Print Current Student as fallback.",
+      "PDF export failed. Use your browser Print dialog as fallback.",
     ];
     showValidationMessages();
   } finally {
