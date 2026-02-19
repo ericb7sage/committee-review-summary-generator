@@ -14,12 +14,12 @@ const REQUIRED_HEADERS = [
   "Anything Else?",
 ];
 
-const RUBRIC_TO_SCORE = {
-  "Strongly Disagree": 1,
-  Disagree: 2,
-  Neutral: 3,
-  Agree: 4,
-  "Strongly Agree": 5,
+const RUBRIC_DELTA = {
+  "Strongly Agree": 1,
+  Agree: 0,
+  Neutral: -1,
+  Disagree: -2,
+  "Strongly Disagree": -2,
 };
 
 const BAND_ORDER = ["T3", "T6", "T14", "T20", "T30", "T50", "T75", "T100", "T100+"];
@@ -118,7 +118,8 @@ const READER_PROFILES = [
     aliases: ["Jennifer Kott", "Jennifer"],
     headshotUrl:
       "https://www.gravatar.com/avatar/29d0502c4ea11721ff29d3d1fa1c3bdd?size=320&default=robohash",
-    bio: "",
+    bio:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tincidunt erat et quam lobortis porttitor. Proin eleifend nisi in neque commodo efficitur. Quisque fermentum mi.",
   },
 ];
 
@@ -143,10 +144,10 @@ const PRINT_CSS = `
   @import url("https://fonts.googleapis.com/css2?family=Fraunces:wght@600;700&family=Lexend:wght@400;500;600;700;800&display=swap");
   *, *::before, *::after { box-sizing: border-box; }
   @page { size: 8.5in 11in; margin: 0; }
-  body { margin: 0; font-family: "Lexend", "Segoe UI", Tahoma, sans-serif; color: #202530; }
+  body { margin: 0; font-family: "Lexend", "Segoe UI", Tahoma, sans-serif; color: #202530; background: #fffffe; }
   .doc-shell { background: #fff; }
-  .page { width: 612px; min-height: 792px; height: 792px; padding: 24px; margin: 0; break-after: page; }
-  .page.summary-page { padding: 0; min-height: 792px; height: 792px; width: 612px; transform: scale(1.3333333333); transform-origin: top left; margin-bottom: 264px; }
+  .page { width: 612px; min-height: 792px; height: 792px; padding: 24px; margin: 0; break-after: page; background: #fffffe; }
+  .page.summary-page { padding: 0; min-height: 792px; height: 792px; width: 612px; transform: scale(1.3333333333); transform-origin: top left; margin-bottom: 264px; background: #fffffe; }
   .page:last-child { break-after: auto; }
   .page-header { border-bottom: 2px solid #111; padding-bottom: 0.1in; margin-bottom: 0.2in; }
   .doc-title { margin: 0; font-size: 20pt; }
@@ -177,40 +178,52 @@ const PRINT_CSS = `
   .reader-title { margin: 0 0 8px; font-size: 14px; }
   .notes-box { border: 1px solid #333; min-height: 1.5in; padding: 10px; white-space: pre-wrap; margin-bottom: 8px; }
   .summary-banner { height: 58px; background: linear-gradient(-45deg, #15b79e 0%, #227f9c 100%); color: #fcfaf8; text-align: center; font-family: "Fraunces", "Times New Roman", serif; font-size: 30px; font-weight: 700; line-height: 58px; margin-bottom: 0; }
-  .section-block { display: grid; grid-template-columns: 1fr; gap: 0; margin-bottom: 0; width: 100%; background: #fff; border-top: 1px solid #d8dee9; border-bottom: 1px solid #d8dee9; }
-  .section-block.readers-section { height: 190px; }
-  .section-block.readers-section .section-body { height: 100%; overflow: hidden; }
-  .section-block.readers-section .avatar { width: 40px; height: 40px; border-radius: 10px; font-size: 12px; }
-  .section-block.readers-section .reader-name { font-size: 14px; }
-  .section-block.readers-section .reader-bio { font-size: 10px; line-height: 1.2; -webkit-line-clamp: 1; }
-  .section-block.readers-section .section-body { padding: 10px 12px; }
+  .section-block { display: grid; grid-template-columns: 1fr; gap: 0; margin-bottom: 0; width: 100%; background: #fff; border-top: 0; border-bottom: 0; }
+  .summary-page .section-block { background: #fffffe; }
+  .section-block.basics-section { height: 52px; }
+  .section-block.readers-section { height: 150px; margin-top: -8px; }
+  .section-block.readers-section .section-body { height: 100%; overflow: hidden; padding: 4px 8px; }
+  .section-block.readers-section .avatar { width: 36px; height: 36px; border-radius: 9px; font-size: 11px; }
+  .section-block.readers-section .reader-name { font-size: 13px; }
+  .section-block.readers-section .reader-bio { font-size: 10px; line-height: 1.2; -webkit-line-clamp: 4; }
   .fit-readers { display: block; }
-  .section-block.key-info-section { height: 238px; }
-  .section-block.key-info-section .section-body { height: 100%; }
-  .section-block.key-info-section .section-body { padding: 14px 16px; }
-  .section-block.key-info-section .key-top-item { font-size: 15px; padding: 10px 12px; }
-  .section-block.key-info-section .metric-col { padding: 8px 10px; }
-  .section-block.key-info-section .metric-title { font-size: 16px; margin: 0 0 6px; }
-  .section-block.key-info-section .small { font-size: 10px; }
-  .section-block.key-info-section .compact-stars .star { width: 16px; height: 16px; }
-  .section-block.key-info-section .band-row { font-size: 9px; gap: 0; padding: 3px 6px; grid-template-columns: 52px repeat(9, minmax(0, 1fr)); }
+  .readers-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 4px 6px; height: calc(100% - 14px); }
+  .section-block.basics-section .section-body { height: 100%; padding: 4px 10px; }
+  .section-block.key-takeaways-section { height: 232px; margin-top: 16px; }
+  .section-block.key-takeaways-section .section-body { height: 100%; padding: 6px 12px; }
   .section-block.tags-section { height: 300px; border-bottom: 0; }
   .section-block.tags-section .section-body { height: 100%; overflow: hidden; }
-  .section-block.tags-section .section-body { padding: 8px 10px; }
+  .section-block.tags-section .section-body { padding: 6px 8px; }
   .fit-tags { display: flex; flex-direction: column; height: 100%; }
-  .section-title { font-family: "Lexend", "Segoe UI", Tahoma, sans-serif; text-transform: uppercase; letter-spacing: 0.22em; font-size: 10px; font-weight: 700; color: #94a3b8; text-align: center; margin: 0 0 6px; }
-  .section-block.readers-section .section-title { margin-bottom: 4px; }
+  .tags-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 6px 8px; flex: 1; display: flex; flex-direction: column; }
+  .tags-grid-wrap { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 0; width: 100%; }
+  .fit-tags .design-tag-grid { transform: scale(0.93); transform-origin: center; width: 100%; height: 100%; }
+  .basics-grid { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: nowrap; }
+  .basics-item { display: inline-flex; gap: 4px; align-items: baseline; text-align: left; }
+  .basics-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #475467; }
+  .basics-value { font-size: 12px; font-weight: 700; }
+  .basics-divider { font-size: 12px; color: #98a2b3; padding: 0 4px; }
+  .takeaways-row { display: grid; gap: 8px; margin-bottom: 8px; }
+  .takeaways-row-top { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .takeaways-row-bottom { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .takeaway-item { text-align: center; display: grid; gap: 4px; }
+  .takeaway-title { font-family: "Fraunces", "Times New Roman", serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #475467; }
+  .takeaway-softs-value { font-size: 14px; font-weight: 700; }
+  .takeaways-bands .band-row { font-size: 9px; gap: 0; padding: 3px 6px; grid-template-columns: 52px repeat(9, minmax(0, 1fr)); }
+  .takeaways-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 8px 10px; display: grid; gap: 8px; }
+  .section-title { font-family: "Fraunces", "Times New Roman", serif; text-transform: uppercase; letter-spacing: 0.22em; font-size: 10px; font-weight: 700; color: #94a3b8; text-align: center; margin: 0 0 4px; }
+  .section-block.readers-section .section-title { margin-bottom: 2px; }
   .rail-label { writing-mode: vertical-rl; transform: rotate(180deg); background: #334155; color: #fff; width: 40px; border-radius: 18px 0 0 18px; text-align: center; font-family: "Fraunces", "Times New Roman", serif; font-size: 22px; font-weight: 700; letter-spacing: 0.4px; padding: 16px 8px; }
-  .section-body { border: 0; border-radius: 0; padding: 14px 16px; background: #fff; width: 100%; min-width: 0; overflow: hidden; }
+  .section-body { border: 0; border-radius: 0; padding: 14px 16px; background: transparent; width: 100%; min-width: 0; overflow: hidden; }
   .fit-content { transform-origin: top left; width: 100%; }
-  .reader-grid { display: grid; grid-template-columns: 1fr; grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 4px; height: 100%; align-content: stretch; }
-  .reader-col { padding: 2px 6px; position: relative; display: grid; grid-template-columns: auto 1fr; gap: 8px; align-items: center; min-height: 0; }
-  .summary-page .reader-col:not(:last-child)::after { content: ""; position: absolute; left: 52px; right: 0; bottom: -4px; height: 1px; background: #e5e7eb; }
+  .reader-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: 1fr; gap: 10px; height: 100%; align-content: stretch; }
+  .reader-col { padding: 2px 0; position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 0; }
+  .summary-page .reader-col:not(:last-child)::after { content: ""; position: absolute; top: 10%; bottom: 10%; right: -6px; width: 2px; background: #d8dee9; }
   .avatar { width: 52px; height: 52px; border-radius: 12px; margin: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #2b7abf, #14b8a6); color: #fff; font-weight: 800; font-size: 14px; }
   .avatar.has-photo { background: transparent; padding: 0; }
   .avatar img { width: 100%; height: 100%; border-radius: inherit; object-fit: cover; display: block; }
-  .reader-name { text-align: left; margin: 0 0 2px; font-size: 16px; font-family: "Fraunces", "Times New Roman", serif; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
-  .reader-bio { margin: 0; text-align: left; font-size: 11px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .reader-name { text-align: center; margin: 0 0 1px; font-size: 16px; font-family: "Fraunces", "Times New Roman", serif; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+  .reader-bio { margin: 0; text-align: center; font-size: 11px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
   .key-card { border: 0; border-radius: 0; overflow: hidden; width: 100%; height: 100%; display: flex; flex-direction: column; }
   .key-top { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 0.8fr) minmax(0, 1.4fr) minmax(0, 0.9fr); border-bottom: 2px solid #d8dee9; }
   .key-top-item { padding: 8px 12px; font-size: 19px; font-weight: 700; white-space: nowrap; position: relative; }
@@ -239,30 +252,30 @@ const PRINT_CSS = `
   .band-range.range-safety { background: #dcfce7; border: 1px solid #86efac; }
   .band-chip { display: flex; align-items: center; justify-content: center; text-align: center; padding: 2px 0; min-height: 18px; font-weight: 700; color: #111827; position: relative; z-index: 2; }
   .design-tag-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); grid-template-rows: repeat(8, minmax(0, 1fr)); gap: 6px 8px; height: 100%; align-content: stretch; flex: 1; min-height: 0; }
-  .page.reader-page { padding: 16px; display: grid; grid-template-rows: 90% 10%; gap: 8px; }
-  .reader-page-main { min-height: 0; }
-  .reader-page-footer { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; min-height: 0; position: relative; }
-  .reader-page-footer::before { content: ""; position: absolute; left: -16px; right: -16px; top: -6px; height: 2px; background: #d8dee9; }
+  .page.reader-page { padding: 16px; display: grid; grid-template-rows: 81% 19%; gap: 8px; background: #fffffe; }
+  .reader-page-main { min-height: 0; display: grid; grid-template-rows: repeat(3, 1fr); gap: 0; }
+  .reader-page-main .reader-section { background: #fffffe; }
+  .reader-page-footer { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; min-height: 0; position: relative; background: #fffffe; margin: 0 -16px; padding: 0 16px; }
+  .reader-page-footer::before { content: ""; position: absolute; left: 0; right: 0; top: -6px; height: 2px; background: #d8dee9; }
   .reader-footer-box { border: 1px solid #d8dee9; border-radius: 8px; padding: 6px 8px; display: grid; grid-template-rows: auto 1fr; gap: 4px; overflow: hidden; font-size: 10px; line-height: 1.3; }
-  .reader-footer-title { font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: #475467; }
+  .reader-footer-title { font-family: "Fraunces", "Times New Roman", serif; font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: #475467; }
   .reader-footer-body { white-space: pre-wrap; }
   .reader-sections { display: grid; grid-template-rows: repeat(3, 1fr); gap: 12px; height: 100%; }
-  .reader-section { border: 0; border-radius: 0; padding: 8px 0; display: flex; flex-direction: column; min-height: 0; position: relative; }
-  .reader-section:not(:last-child)::after { content: ""; position: absolute; left: -16px; right: -16px; bottom: -6px; height: 2px; background: #d8dee9; }
-  .reader-section-title { font-family: "Lexend", "Segoe UI", Tahoma, sans-serif; font-weight: 700; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #94a3b8; margin-bottom: 6px; text-align: center; }
+  .reader-section { border: 2px solid #d8dee9; border-radius: 12px; padding: 10px 12px; margin: 0; display: flex; flex-direction: column; min-height: 0; position: relative; }
+  .reader-section-title { font-family: "Fraunces", "Times New Roman", serif; font-weight: 700; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #94a3b8; margin-bottom: 6px; text-align: center; }
   .reader-rows { display: grid; grid-template-rows: 50% 50%; height: 100%; gap: 8px; min-height: 0; }
-  .reader-row-top { display: grid; grid-template-columns: 0.9fr 0.8fr 1.3fr; gap: 8px; min-height: 0; padding: 0 8px; }
+  .reader-row-top { display: grid; grid-template-columns: 0.9fr 0.8fr 1.3fr; gap: 12px; min-height: 0; padding: 0 8px; }
   .reader-page .reader-col { padding: 0; position: relative; display: grid; grid-template-columns: 1fr; align-items: start; }
   .reader-col.ratings, .reader-col.bands { display: grid; grid-template-columns: 1fr; grid-auto-rows: minmax(0, 1fr); gap: 4px; min-height: 0; }
   .reader-col.tags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; align-content: start; min-height: 0; }
-  .reader-rating-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+  .reader-rating-row { display: flex; align-items: center; justify-content: flex-start; gap: 8px; }
   .reader-rating-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #475467; white-space: nowrap; }
   .reader-rating-empty { font-size: 10px; color: #98a2b3; }
   .reader-page .compact-stars .star { width: 12px; height: 12px; }
   .reader-band-row { display: grid; grid-template-columns: auto 1fr; gap: 6px; align-items: center; font-size: 10px; }
   .reader-band-label { font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; font-size: 9px; color: #475467; }
   .reader-band-value { font-weight: 600; }
-  .reader-notes { border: 1px solid #d8dee9; border-radius: 8px; padding: 8px; font-size: 10px; line-height: 1.3; height: 100%; overflow: hidden; }
+  .reader-notes { border: 0; border-radius: 0; padding: 0 4px; font-size: 10px; line-height: 1.3; height: 100%; overflow: hidden; }
   .reader-notes .label { font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 2px; color: #475467; }
   .reader-notes-body { margin-bottom: 6px; white-space: pre-wrap; }
   .reader-tag-pill { border: 1px solid #e0e6f2; border-radius: 999px; padding: 2px 4px; font-size: 8px; line-height: 1.1; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 18px; }
@@ -270,6 +283,13 @@ const PRINT_CSS = `
   .reader-tag-pill.active-negative { background: #fef2f2; border-color: #fecaca; color: #7f1d1d; }
   .reader-tag-pill.inactive { color: #5e6778; background: #fff; }
   .reader-tag-empty { font-size: 10px; color: #98a2b3; align-self: center; }
+  .tag-explanation-page { padding: 24px; background: #fffffe; display: flex; flex-direction: column; height: 792px; }
+  .tag-explanation-grid { display: grid; grid-template-columns: 1fr; grid-template-rows: repeat(6, minmax(0, 1fr)); gap: 12px; height: 100%; align-content: stretch; flex: 1; }
+  .tag-explanation-item { border: 1px solid #d8dee9; border-radius: 8px; padding: 10px 12px; background: transparent; display: grid; gap: 6px; min-height: 0; }
+  .tag-explanation-title { display: flex; align-items: center; gap: 8px; }
+  .tag-explanation-pill { padding: 4px 10px; font-size: 10px; line-height: 1.1; }
+  .tag-explanation-body { font-size: 11px; line-height: 1.4; color: #1f2937; }
+  .tag-explanation-empty { display: flex; align-items: center; justify-content: center; height: 100%; font-size: 14px; color: #98a2b3; }
 `;
 
 const PRINT_FIT_SCRIPT = `
@@ -608,20 +628,26 @@ function shuffleReaders(rows) {
   return shuffled;
 }
 
-function mapRubricToScore(value, fileName, fieldLabel) {
+function normalizeRubricValue(value, fileName, fieldLabel) {
   const trimmed = String(value || "").trim();
   if (!trimmed) return null;
-  const score = RUBRIC_TO_SCORE[trimmed];
-  if (!score) {
+  if (!(trimmed in RUBRIC_DELTA)) {
     state.warnings.push(`${fileName}: unknown ${fieldLabel} value "${trimmed}"`);
     return null;
   }
-  return score;
+  return trimmed;
 }
 
-function averageScores(scores) {
-  if (!scores.length) return null;
-  return scores.reduce((sum, value) => sum + value, 0) / scores.length;
+function computeStarsFromRatings(ratings) {
+  const filtered = ratings.filter(Boolean);
+  if (!filtered.length) return null;
+  let stars = 4;
+  filtered.forEach((rating) => {
+    stars += RUBRIC_DELTA[rating] ?? 0;
+  });
+  if (stars > 5) stars = 5;
+  if (stars < 1) stars = 1;
+  return stars;
 }
 
 function parseTags(csvTagString) {
@@ -705,6 +731,12 @@ function uniqueNonEmpty(values) {
 
 function buildStudentReport(fileName, rows, manual) {
   const unknownTags = new Set();
+  const summaryRatings = {
+    whyLaw: [],
+    thrive: [],
+    contribute: [],
+    know: [],
+  };
   const randomizedRows = shuffleReaders(rows);
   const labeledReaders = randomizedRows.map((row, index) => {
     const rawTags = parseTags(row.Tags);
@@ -727,41 +759,42 @@ function buildStudentReport(fileName, rows, manual) {
     return trimmed;
   };
 
-  const readers = labeledReaders.map(({ row, label, tags }) => ({
-    label,
-    notes: row.Notes || "",
-    anythingElse: row["Anything Else?"] || "",
-    rawReviewer: row.Reviewer || "",
-    ratings: {
-      whyLaw: mapRubricToScore(row["Why Law?"], fileName, "Why Law?"),
-      thrive: mapRubricToScore(row["Thrive?"], fileName, "Thrive?"),
-      contribute: mapRubricToScore(row["Contribute?"], fileName, "Contribute?"),
-      know: mapRubricToScore(row["Know?"], fileName, "Know?"),
-    },
-    bands: {
-      reach: normalizeBandDisplay(mapBandValue(row.Reach, fileName, "Reach")),
-      target: normalizeBandDisplay(mapBandValue(row.Target, fileName, "Target")),
-      safety: normalizeBandDisplay(mapBandValue(row.Safety, fileName, "Safety")),
-    },
-    softs: (() => {
-      const softValue = mapSoftsValue(row.Softs, fileName);
-      return softValue ? `T${softValue}` : "—";
-    })(),
-    tags,
-  }));
+  const readers = labeledReaders.map(({ row, label, tags }) => {
+    const ratingLabels = {
+      whyLaw: normalizeRubricValue(row["Why Law?"], fileName, "Why Law?"),
+      thrive: normalizeRubricValue(row["Thrive?"], fileName, "Thrive?"),
+      contribute: normalizeRubricValue(row["Contribute?"], fileName, "Contribute?"),
+      know: normalizeRubricValue(row["Know?"], fileName, "Know?"),
+    };
+    if (ratingLabels.whyLaw) summaryRatings.whyLaw.push(ratingLabels.whyLaw);
+    if (ratingLabels.thrive) summaryRatings.thrive.push(ratingLabels.thrive);
+    if (ratingLabels.contribute) summaryRatings.contribute.push(ratingLabels.contribute);
+    if (ratingLabels.know) summaryRatings.know.push(ratingLabels.know);
 
-  const whyLawScores = rows
-    .map((row) => mapRubricToScore(row["Why Law?"], fileName, "Why Law?"))
-    .filter((score) => score !== null);
-  const thriveScores = rows
-    .map((row) => mapRubricToScore(row["Thrive?"], fileName, "Thrive?"))
-    .filter((score) => score !== null);
-  const contributeScores = rows
-    .map((row) => mapRubricToScore(row["Contribute?"], fileName, "Contribute?"))
-    .filter((score) => score !== null);
-  const knowScores = rows
-    .map((row) => mapRubricToScore(row["Know?"], fileName, "Know?"))
-    .filter((score) => score !== null);
+    return {
+      label,
+      notes: row.Notes || "",
+      anythingElse: row["Anything Else?"] || "",
+      rawReviewer: row.Reviewer || "",
+      ratingLabels,
+      ratingStars: {
+        whyLaw: computeStarsFromRatings([ratingLabels.whyLaw]),
+        thrive: computeStarsFromRatings([ratingLabels.thrive]),
+        contribute: computeStarsFromRatings([ratingLabels.contribute]),
+        know: computeStarsFromRatings([ratingLabels.know]),
+      },
+      bands: {
+        reach: normalizeBandDisplay(mapBandValue(row.Reach, fileName, "Reach")),
+        target: normalizeBandDisplay(mapBandValue(row.Target, fileName, "Target")),
+        safety: normalizeBandDisplay(mapBandValue(row.Safety, fileName, "Safety")),
+      },
+      softs: (() => {
+        const softValue = mapSoftsValue(row.Softs, fileName);
+        return softValue ? `T${softValue}` : "—";
+      })(),
+      tags,
+    };
+  });
 
   const activeTags = new Set();
   const tagReaderMap = new Map();
@@ -787,11 +820,11 @@ function buildStudentReport(fileName, rows, manual) {
     fileName,
     manual,
     readers,
-    averages: {
-      whyLaw: averageScores(whyLawScores),
-      thrive: averageScores(thriveScores),
-      contribute: averageScores(contributeScores),
-      know: averageScores(knowScores),
+    summaryStars: {
+      whyLaw: computeStarsFromRatings(summaryRatings.whyLaw),
+      thrive: computeStarsFromRatings(summaryRatings.thrive),
+      contribute: computeStarsFromRatings(summaryRatings.contribute),
+      know: computeStarsFromRatings(summaryRatings.know),
     },
     bands: {
       reach: uniqueNonEmpty(rows.map((row) => mapBandValue(row.Reach, fileName, "Reach"))),
@@ -822,18 +855,15 @@ function renderStarSvg(type, idSuffix) {
   </svg>`;
 }
 
-function renderStarRow(label, averageValue) {
-  if (averageValue === null) {
+function renderStarRow(label, starCount) {
+  if (starCount === null) {
     return `<div class="rating-row"><div class="label">${escapeHtml(label)}</div><div class="small">No rating submitted</div></div>`;
   }
 
-  const rounded = Math.max(0.5, Math.min(5, Math.round(averageValue * 2) / 2));
-  const fullStars = Math.floor(rounded);
-  const hasHalf = rounded - fullStars >= 0.5;
-  const stars = [
-    ...Array.from({ length: fullStars }, (_, idx) => renderStarSvg("filled", `${label}-full-${idx}`)),
-    ...(hasHalf ? [renderStarSvg("half", `${label}-half`)] : []),
-  ].join("");
+  const count = Math.max(1, Math.min(5, Math.round(starCount)));
+  const stars = Array.from({ length: count }, (_, idx) =>
+    renderStarSvg("filled", `${label}-full-${idx}`)
+  ).join("");
   return `<div class="rating-row">
     <div class="label">${escapeHtml(label)}</div>
     <div class="stars-wrap">
@@ -883,18 +913,15 @@ function renderTagGrid(activeTags, tagReaderMap) {
   </div>`;
 }
 
-function renderCompactStars(averageValue) {
-  if (averageValue === null) {
+function renderCompactStars(starCount) {
+  if (starCount === null) {
     return `<span class="compact-stars"></span>`;
   }
 
-  const rounded = Math.max(0.5, Math.min(5, Math.round(averageValue * 2) / 2));
-  const fullStars = Math.floor(rounded);
-  const hasHalf = rounded - fullStars >= 0.5;
-  const stars = [
-    ...Array.from({ length: fullStars }, (_, idx) => renderStarSvg("filled", `compact-full-${idx}`)),
-    ...(hasHalf ? [renderStarSvg("half", "compact-half")] : []),
-  ].join("");
+  const count = Math.max(1, Math.min(5, Math.round(starCount)));
+  const stars = Array.from({ length: count }, (_, idx) =>
+    renderStarSvg("filled", `compact-full-${idx}`)
+  ).join("");
   return `<span class="compact-stars">${stars}</span>`;
 }
 
@@ -956,11 +983,11 @@ function renderReaders(readers) {
     .join("");
 }
 
-function renderReaderRatingRow(label, score) {
+function renderReaderRatingRow(label, starCount) {
   const stars =
-    score === null || score === undefined
+    starCount === null || starCount === undefined
       ? `<span class="reader-rating-empty">—</span>`
-      : renderCompactStars(score);
+      : renderCompactStars(starCount);
   return `<div class="reader-rating-row">
     <div class="reader-rating-label">${escapeHtml(label)}</div>
     ${stars}
@@ -1023,10 +1050,10 @@ function renderReaderDetailPage(report) {
               <div class="reader-rows">
                 <div class="reader-row reader-row-top">
                   <div class="reader-col ratings">
-                    ${renderReaderRatingRow("Why Law", reader.ratings.whyLaw)}
-                    ${renderReaderRatingRow("Potential", reader.ratings.thrive)}
-                    ${renderReaderRatingRow("Contribution", reader.ratings.contribute)}
-                    ${renderReaderRatingRow("Personality", reader.ratings.know)}
+                    ${renderReaderRatingRow("Why Law", reader.ratingStars.whyLaw)}
+                    ${renderReaderRatingRow("Potential", reader.ratingStars.thrive)}
+                    ${renderReaderRatingRow("Contribution", reader.ratingStars.contribute)}
+                    ${renderReaderRatingRow("Personality", reader.ratingStars.know)}
                   </div>
                   <div class="reader-col bands">
                     ${renderReaderBandRow("Reach", reader.bands.reach)}
@@ -1069,6 +1096,58 @@ function renderWaitingPage() {
   `;
 }
 
+function renderTagExplanationPage(tags) {
+  return `
+    <section class="page tag-explanation-page">
+      <div class="tag-explanation-grid">
+        ${tags
+          .map(
+            (tag) => {
+              const polarity = TAG_POLARITY_MAP.get(tag);
+              const className =
+                polarity === "positive"
+                  ? "tag-pill active-positive"
+                  : polarity === "negative"
+                    ? "tag-pill active-negative"
+                    : "tag-pill inactive";
+              return `<article class="tag-explanation-item">
+              <div class="tag-explanation-title">
+                <span class="${className} tag-explanation-pill">
+                  <span class="tag-text">${escapeHtml(tag)}</span>
+                </span>
+              </div>
+              <div class="tag-explanation-body">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              </div>
+            </article>`;
+            }
+          )
+          .join("")}
+      </div>
+    </section>
+  `;
+}
+
+function renderTagExplanationPages(report) {
+  const tags = [...(report.activeTags || new Set())].sort((a, b) =>
+    a.localeCompare(b)
+  );
+  if (!tags.length) {
+    return `
+      <section class="page tag-explanation-page">
+        <div class="tag-explanation-empty">No tags selected.</div>
+      </section>
+    `;
+  }
+
+  const pages = [];
+  const perPage = 6;
+  for (let i = 0; i < tags.length; i += perPage) {
+    pages.push(renderTagExplanationPage(tags.slice(i, i + perPage)));
+  }
+  return pages.join("");
+}
+
 function getReaderSortKey(reader) {
   const profile = getReaderProfile(reader.rawReviewer);
   const name = String(profile?.fullName || reader.rawReviewer || "").trim();
@@ -1094,39 +1173,26 @@ function renderStudentDocument(report) {
   return `
     <section class="page summary-page">
       <div class="summary-banner">Summary</div>
-      <div class="section-block key-info-section">
+      <div class="section-block basics-section">
         <div class="section-body">
-          <div class="fit-content fit-key-info">
-          <div class="section-title">Key Info</div>
-          <div class="key-card">
-            <div class="key-top">
-              <div class="key-top-item"><span class="key-top-label">LSAT:</span> <span class="key-top-value">${escapeHtml(report.manual.lsat || "—")}</span></div>
-              <div class="key-top-item"><span class="key-top-label">GPA:</span> <span class="key-top-value">${escapeHtml(report.manual.gpa || "—")}</span></div>
-              <div class="key-top-item other-item"><span class="key-top-label">Other:</span> <span class="key-top-value">${escapeHtml(report.manual.otherText || "—")}</span></div>
-              <div class="key-top-item softs-item"><span class="key-top-label">Softs:</span> <span class="key-top-value">${escapeHtml(report.softsDisplay || "—")}</span></div>
-            </div>
-            <div class="metric-grid">
-              <div class="metric-col">
-                <h4 class="metric-title">Why Law</h4>
-                ${renderCompactStars(report.averages.whyLaw)}
+          <div class="fit-content fit-basics">
+            <div class="section-title">Basics</div>
+            <div class="basics-grid">
+              <div class="basics-item">
+                <span class="basics-label">LSAT:</span>
+                <span class="basics-value">${escapeHtml(report.manual.lsat || "—")}</span>
               </div>
-              <div class="metric-col">
-                <h4 class="metric-title">Potential</h4>
-                ${renderCompactStars(report.averages.thrive)}
+              <span class="basics-divider">|</span>
+              <div class="basics-item">
+                <span class="basics-label">GPA:</span>
+                <span class="basics-value">${escapeHtml(report.manual.gpa || "—")}</span>
               </div>
-              <div class="metric-col">
-                <h4 class="metric-title">Contribution</h4>
-                ${renderCompactStars(report.averages.contribute)}
-              </div>
-              <div class="metric-col">
-                <h4 class="metric-title">Personality</h4>
-                ${renderCompactStars(report.averages.know)}
+              <span class="basics-divider">|</span>
+              <div class="basics-item">
+                <span class="basics-label">Other:</span>
+                <span class="basics-value">${escapeHtml(report.manual.otherText || "—")}</span>
               </div>
             </div>
-            ${renderBandRow("Reach", "reach", report.bands.reach)}
-            ${renderBandRow("Target", "target", report.bands.target)}
-            ${renderBandRow("Safety", "safety", report.bands.safety)}
-          </div>
           </div>
         </div>
       </div>
@@ -1134,27 +1200,67 @@ function renderStudentDocument(report) {
         <div class="section-body">
           <div class="fit-content fit-readers">
           <div class="section-title">Readers</div>
-          <div class="reader-grid">
-            ${summaryReaders
-              .map((reader) => {
-                const profile = getReaderProfile(reader.rawReviewer);
-                const name = profile?.fullName || reader.rawReviewer || reader.label;
-                const avatarContent = profile?.headshotUrl
-                  ? `<img src="${escapeHtml(profile.headshotUrl)}" alt="${escapeHtml(name)}" />`
-                  : escapeHtml(getReaderInitials(reader.label.replace("Reader ", "R")));
-                const bio =
-                  profile?.bio ||
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt.";
-                return `<div class="reader-col">
-                  <div class="avatar${profile?.headshotUrl ? " has-photo" : ""}">${avatarContent}</div>
-                  <div>
-                    <h3 class="reader-name">${escapeHtml(name)}</h3>
-                    <p class="reader-bio">${escapeHtml(bio)}</p>
-                  </div>
-                </div>`;
-              })
-              .join("")}
+          <div class="readers-card">
+            <div class="reader-grid">
+              ${summaryReaders
+                .map((reader) => {
+                  const profile = getReaderProfile(reader.rawReviewer);
+                  const name = profile?.fullName || reader.rawReviewer || reader.label;
+                  const avatarContent = profile?.headshotUrl
+                    ? `<img src="${escapeHtml(profile.headshotUrl)}" alt="${escapeHtml(name)}" />`
+                    : escapeHtml(getReaderInitials(reader.label.replace("Reader ", "R")));
+                  const bio =
+                    profile?.bio ||
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
+                  return `<div class="reader-col">
+                    <div class="avatar${profile?.headshotUrl ? " has-photo" : ""}">${avatarContent}</div>
+                    <div>
+                      <h3 class="reader-name">${escapeHtml(name)}</h3>
+                      <p class="reader-bio">${escapeHtml(bio)}</p>
+                    </div>
+                  </div>`;
+                })
+                .join("")}
+            </div>
           </div>
+          </div>
+        </div>
+      </div>
+      <div class="section-block key-takeaways-section">
+        <div class="section-body">
+          <div class="fit-content fit-takeaways">
+            <div class="section-title">Key Takeaways</div>
+            <div class="takeaways-card">
+              <div class="takeaways-row takeaways-row-top">
+                <div class="takeaway-item">
+                  <div class="takeaway-title">Why Law</div>
+                  ${renderCompactStars(report.summaryStars.whyLaw)}
+                </div>
+                <div class="takeaway-item">
+                  <div class="takeaway-title">Potential</div>
+                  ${renderCompactStars(report.summaryStars.thrive)}
+                </div>
+                <div class="takeaway-item takeaway-softs">
+                  <div class="takeaway-title">Softs</div>
+                  <div class="takeaway-softs-value">${escapeHtml(report.softsDisplay || "—")}</div>
+                </div>
+              </div>
+              <div class="takeaways-row takeaways-row-bottom">
+                <div class="takeaway-item">
+                  <div class="takeaway-title">Contribution</div>
+                  ${renderCompactStars(report.summaryStars.contribute)}
+                </div>
+                <div class="takeaway-item">
+                  <div class="takeaway-title">Personality</div>
+                  ${renderCompactStars(report.summaryStars.know)}
+                </div>
+              </div>
+              <div class="takeaways-bands">
+                ${renderBandRow("Reach", "reach", report.bands.reach)}
+                ${renderBandRow("Target", "target", report.bands.target)}
+                ${renderBandRow("Safety", "safety", report.bands.safety)}
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1162,15 +1268,18 @@ function renderStudentDocument(report) {
         <div class="section-body">
           <div class="fit-content fit-tags">
           <div class="section-title">Tags</div>
-          ${renderTagGridFourColumns(report.activeTags, report.tagReaderMap)}
+          <div class="tags-card">
+            <div class="tags-grid-wrap">
+              ${renderTagGridFourColumns(report.activeTags, report.tagReaderMap)}
+            </div>
+          </div>
           </div>
         </div>
       </div>
     </section>
 
     ${renderReaderDetailPage(report)}
-    ${renderWaitingPage()}
-    ${renderWaitingPage()}
+    ${renderTagExplanationPages(report)}
   `;
 }
 
