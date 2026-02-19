@@ -19,6 +19,10 @@ This is a browser-only JavaScript app for your Coda CSV to printable PDF workflo
 
 Open `web/index.html` in a browser.
 
+## GitHub Pages
+
+Set Pages source to `main` + `/docs`. `/docs` is a published copy of `/web`.
+
 ## Current flow
 
 1. Upload CSV

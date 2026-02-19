@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Coda CSV PDF Generator</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="container">
+      <div class="app-shell">
+        <section class="panel control-panel">
+          <h2>Control Center</h2>
+          <label class="field">
+            <span>CSV file</span>
+            <input id="csvFile" type="file" accept=".csv,text/csv" />
+          </label>
+
+          <label class="field">
+            <span>Select student</span>
+            <select id="studentSelect" disabled>
+              <option>Upload CSV first</option>
+            </select>
+          </label>
+
+          <div class="meta-grid">
+            <label class="field">
+              <span>LSAT</span>
+              <input id="lsatInput" type="text" inputmode="numeric" placeholder="e.g. 171" disabled />
+            </label>
+            <label class="field">
+              <span>GPA</span>
+              <input id="gpaInput" type="text" inputmode="decimal" placeholder="e.g. 3.74" disabled />
+            </label>
+            <label class="field">
+              <span>KJD Status</span>
+              <select id="kjdSelect" disabled>
+                <option value="Not KJD">Not KJD</option>
+                <option value="KJD">KJD</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>URM Status</span>
+              <select id="urmSelect" disabled>
+                <option value="Non-URM">Non-URM</option>
+                <option value="URM">URM</option>
+              </select>
+            </label>
+          </div>
+          <label class="field">
+            <span>Summary</span>
+            <textarea id="summaryInput" rows="3" placeholder="Add a brief summary" disabled></textarea>
+          </label>
+          <label class="field">
+            <span>Recommended Next Steps</span>
+            <textarea
+              id="nextStepsInput"
+              rows="3"
+              placeholder="Add next steps"
+              disabled
+            ></textarea>
+          </label>
+          <p id="inputHint" class="input-hint"></p>
+
+        <div class="actions">
+          <button id="generateBtn" disabled>Generate Report</button>
+          <button id="downloadPdfBtn" disabled>Download PDF</button>
+        </div>
+
+          <p id="status" class="status">Waiting for CSV upload.</p>
+          <div id="validation" class="validation"></div>
+        </section>
+
+        <section class="panel preview-panel">
+          <h2>Document Preview</h2>
+          <div id="previewRoot" class="preview-root">
+            <p class="placeholder">Upload a CSV and generate documents to preview output.</p>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
