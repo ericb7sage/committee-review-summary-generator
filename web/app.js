@@ -267,24 +267,26 @@ const PRINT_CSS = `
   .reader-footer-title { font-family: "Fraunces", "Times New Roman", serif; font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: #475467; }
   .reader-footer-body { white-space: pre-wrap; }
   .reader-sections { display: grid; grid-template-rows: repeat(3, 1fr); gap: 12px; height: 100%; }
-  .reader-section { border: 2px solid #d8dee9; border-radius: 12px; padding: 10px 12px; margin: 0; display: flex; flex-direction: column; min-height: 0; position: relative; }
-  .reader-section-title { font-family: "Fraunces", "Times New Roman", serif; font-weight: 700; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #94a3b8; margin-bottom: 6px; text-align: center; }
-  .reader-rows { display: grid; grid-template-rows: 50% 50%; height: 100%; gap: 8px; min-height: 0; }
-  .reader-row-top { display: grid; grid-template-columns: 0.9fr 0.8fr 1.3fr; gap: 12px; min-height: 0; padding: 0 8px; }
+  .reader-section { border: 2px solid #d8dee9; border-radius: 12px; padding: 8px 10px; margin: 0; display: flex; flex-direction: column; min-height: 0; position: relative; }
+  .reader-section-title { font-family: "Fraunces", "Times New Roman", serif; font-weight: 700; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: #94a3b8; margin-bottom: 4px; text-align: center; }
+  .reader-rows { display: grid; grid-template-rows: 40% 60%; height: 100%; gap: 6px; min-height: 0; }
+  .reader-row-top { display: grid; grid-template-columns: 0.95fr 0.75fr 1.3fr; gap: 8px; min-height: 0; padding: 0 4px; }
   .reader-page .reader-col { padding: 0; position: relative; display: grid; grid-template-columns: 1fr; align-items: start; }
-  .reader-col.ratings, .reader-col.bands { display: grid; grid-template-columns: 1fr; grid-auto-rows: minmax(0, 1fr); gap: 4px; min-height: 0; }
-  .reader-col.tags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; align-content: start; min-height: 0; }
-  .reader-rating-row { display: flex; align-items: center; justify-content: flex-start; gap: 8px; }
-  .reader-rating-label { font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #475467; white-space: nowrap; }
-  .reader-rating-empty { font-size: 10px; color: #98a2b3; }
+  .reader-col.ratings, .reader-col.bands { display: grid; grid-template-columns: 1fr; grid-auto-rows: minmax(0, 1fr); gap: 3px; min-height: 0; }
+  .reader-col.tags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3px; align-content: start; min-height: 0; }
+  .reader-rating-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+  .reader-rating-label { font-size: 8px; font-weight: 600; text-transform: none; letter-spacing: 0; color: #475467; min-width: 0; flex: 1; }
+  .reader-rating-pill { border: 1px solid #e2e8f0; border-radius: 999px; padding: 2px 6px; font-size: 7px; font-weight: 600; line-height: 1.1; background: #f8fafc; color: #334155; white-space: nowrap; }
+  .reader-rating-pill.empty { color: #94a3b8; background: #fff; }
+  .reader-rating-empty { font-size: 8px; color: #98a2b3; }
   .reader-page .compact-stars .star { width: 12px; height: 12px; }
-  .reader-band-row { display: grid; grid-template-columns: auto 1fr; gap: 6px; align-items: center; font-size: 10px; }
-  .reader-band-label { font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; font-size: 9px; color: #475467; }
+  .reader-band-row { display: grid; grid-template-columns: auto 1fr; gap: 4px; align-items: center; font-size: 9px; }
+  .reader-band-label { font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; font-size: 8px; color: #475467; }
   .reader-band-value { font-weight: 600; }
   .reader-notes { border: 0; border-radius: 0; padding: 0 4px; --notes-font-size: 10px; --notes-line-height: 1.3; font-size: var(--notes-font-size); line-height: var(--notes-line-height); height: 100%; overflow: hidden; }
   .reader-notes .label { font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 2px; color: #475467; }
   .reader-notes-body { margin: 0; white-space: pre-wrap; }
-  .reader-tag-pill { border: 1px solid #e0e6f2; border-radius: 999px; padding: 2px 4px; font-size: 8px; line-height: 1.1; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 18px; }
+  .reader-tag-pill { border: 1px solid #e0e6f2; border-radius: 999px; padding: 1px 3px; font-size: 7px; line-height: 1.1; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 16px; }
   .reader-tag-pill.active-positive { background: #ecfdf3; border-color: #86efac; color: #166534; }
   .reader-tag-pill.active-negative { background: #fef2f2; border-color: #fecaca; color: #7f1d1d; }
   .reader-tag-pill.inactive { color: #5e6778; background: #fff; }
@@ -1056,14 +1058,12 @@ function renderReaders(readers) {
     .join("");
 }
 
-function renderReaderRatingRow(label, starCount) {
-  const stars =
-    starCount === null || starCount === undefined
-      ? `<span class="reader-rating-empty">—</span>`
-      : renderCompactStars(starCount);
+function renderReaderRatingRow(label, ratingValue) {
+  const display = ratingValue ? String(ratingValue) : "—";
+  const pillClass = ratingValue ? "reader-rating-pill" : "reader-rating-pill empty";
   return `<div class="reader-rating-row">
     <div class="reader-rating-label">${escapeHtml(label)}</div>
-    ${stars}
+    <span class="${pillClass}">${escapeHtml(display)}</span>
   </div>`;
 }
 
@@ -1123,10 +1123,22 @@ function renderReaderDetailPage(report) {
               <div class="reader-rows">
                 <div class="reader-row reader-row-top">
                   <div class="reader-col ratings">
-                    ${renderReaderRatingRow("Why Law", reader.ratingStars.whyLaw)}
-                    ${renderReaderRatingRow("Potential", reader.ratingStars.thrive)}
-                    ${renderReaderRatingRow("Contribution", reader.ratingStars.contribute)}
-                    ${renderReaderRatingRow("Personality", reader.ratingStars.know)}
+                    ${renderReaderRatingRow(
+                      "I understand the candidate's reason for seeking a law degree.",
+                      reader.ratingLabels.whyLaw
+                    )}
+                    ${renderReaderRatingRow(
+                      "This candidate will thrive in law school.",
+                      reader.ratingLabels.thrive
+                    )}
+                    ${renderReaderRatingRow(
+                      "This candidate would positively contribute to a law school community.",
+                      reader.ratingLabels.contribute
+                    )}
+                    ${renderReaderRatingRow(
+                      "i feel like I know this candidate.",
+                      reader.ratingLabels.know
+                    )}
                   </div>
                   <div class="reader-col bands">
                     ${renderReaderBandRow("Reach", reader.bands.reach)}
@@ -1310,7 +1322,7 @@ function renderStudentDocument(report) {
                   ${renderCompactStars(report.summaryStars.whyLaw)}
                 </div>
                 <div class="takeaway-item">
-                  <div class="takeaway-title">Potential</div>
+                  <div class="takeaway-title">Readiness</div>
                   ${renderCompactStars(report.summaryStars.thrive)}
                 </div>
                 <div class="takeaway-item takeaway-softs">
@@ -1320,7 +1332,7 @@ function renderStudentDocument(report) {
               </div>
               <div class="takeaways-row takeaways-row-bottom">
                 <div class="takeaway-item">
-                  <div class="takeaway-title">Contribution</div>
+                  <div class="takeaway-title">Perspective</div>
                   ${renderCompactStars(report.summaryStars.contribute)}
                 </div>
                 <div class="takeaway-item">
