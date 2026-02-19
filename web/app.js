@@ -126,7 +126,10 @@ const READER_PROFILES = [
 const TAG_FONT_BASE_PX = 9;
 const TAG_FONT_MIN_PX = 7;
 const NOTES_FONT_BASE_PX = 10;
-const NOTES_FONT_MIN_PX = 7;
+const NOTES_FONT_MIN_PX = 6;
+const NOTES_LINE_BASE = 1.3;
+const NOTES_LINE_TIGHT = 1.15;
+const NOTES_LINE_TIGHTER = 1.05;
 
 const state = {
   fileName: "",
@@ -277,7 +280,7 @@ const PRINT_CSS = `
   .reader-band-row { display: grid; grid-template-columns: auto 1fr; gap: 6px; align-items: center; font-size: 10px; }
   .reader-band-label { font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; font-size: 9px; color: #475467; }
   .reader-band-value { font-weight: 600; }
-  .reader-notes { border: 0; border-radius: 0; padding: 0 4px; --notes-font-size: 10px; font-size: var(--notes-font-size); line-height: 1.3; height: 100%; overflow: hidden; }
+  .reader-notes { border: 0; border-radius: 0; padding: 0 4px; --notes-font-size: 10px; --notes-line-height: 1.3; font-size: var(--notes-font-size); line-height: var(--notes-line-height); height: 100%; overflow: hidden; }
   .reader-notes .label { font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 2px; color: #475467; }
   .reader-notes-body { margin-bottom: 6px; white-space: pre-wrap; }
   .reader-tag-pill { border: 1px solid #e0e6f2; border-radius: 999px; padding: 2px 4px; font-size: 8px; line-height: 1.1; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 18px; }
@@ -299,7 +302,10 @@ const PRINT_FIT_SCRIPT = `
     const TAG_FONT_BASE_PX = 9;
     const TAG_FONT_MIN_PX = 7;
     const NOTES_FONT_BASE_PX = 10;
-    const NOTES_FONT_MIN_PX = 7;
+    const NOTES_FONT_MIN_PX = 6;
+    const NOTES_LINE_BASE = 1.3;
+    const NOTES_LINE_TIGHT = 1.15;
+    const NOTES_LINE_TIGHTER = 1.05;
 
     function fitTagFonts(root = document) {
       const pills = root.querySelectorAll(".tag-pill");
@@ -382,7 +388,11 @@ const PRINT_FIT_SCRIPT = `
         const setFont = (sizePx) => {
           notes.style.setProperty("--notes-font-size", sizePx + "px");
         };
+        const setLineHeight = (value) => {
+          notes.style.setProperty("--notes-line-height", value);
+        };
 
+        setLineHeight(NOTES_LINE_BASE);
         setFont(NOTES_FONT_BASE_PX);
         if (body.scrollHeight <= availableHeight) return;
 
@@ -401,6 +411,12 @@ const PRINT_FIT_SCRIPT = `
           }
         }
         setFont(best);
+        setLineHeight(NOTES_LINE_BASE);
+
+        if (body.scrollHeight <= availableHeight) return;
+        setLineHeight(NOTES_LINE_TIGHT);
+        if (body.scrollHeight <= availableHeight) return;
+        setLineHeight(NOTES_LINE_TIGHTER);
       });
     }
 
@@ -446,12 +462,17 @@ const PRINT_FIT_SCRIPT = `
     window.addEventListener("load", () => {
       fitAllSummarySections();
       fitReaderNotes();
-      setTimeout(() => {
+      const finish = () => {
         fitAllSummarySections();
         fitReaderNotes();
         window.focus();
         window.print();
-      }, 80);
+      };
+      if (document.fonts?.ready) {
+        document.fonts.ready.then(() => setTimeout(finish, 80));
+      } else {
+        setTimeout(finish, 80);
+      }
     });
   })();
 `;
@@ -1420,6 +1441,12 @@ function renderPreviewFromCurrent() {
     fitAllSummarySections(previewRoot);
     fitReaderNotes(previewRoot);
   });
+  if (document.fonts?.ready) {
+    document.fonts.ready.then(() => {
+      fitAllSummarySections(previewRoot);
+      fitReaderNotes(previewRoot);
+    });
+  }
 }
 
 function validateManualInputs() {
@@ -1531,7 +1558,11 @@ function fitReaderNotes(root = document) {
     const setFont = (sizePx) => {
       notes.style.setProperty("--notes-font-size", `${sizePx}px`);
     };
+    const setLineHeight = (value) => {
+      notes.style.setProperty("--notes-line-height", `${value}`);
+    };
 
+    setLineHeight(NOTES_LINE_BASE);
     setFont(NOTES_FONT_BASE_PX);
     if (body.scrollHeight <= availableHeight) return;
 
@@ -1550,6 +1581,12 @@ function fitReaderNotes(root = document) {
       }
     }
     setFont(best);
+    setLineHeight(NOTES_LINE_BASE);
+
+    if (body.scrollHeight <= availableHeight) return;
+    setLineHeight(NOTES_LINE_TIGHT);
+    if (body.scrollHeight <= availableHeight) return;
+    setLineHeight(NOTES_LINE_TIGHTER);
   });
 }
 

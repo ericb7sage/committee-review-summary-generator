@@ -1247,8 +1247,9 @@ button:disabled {
   border-radius: 0;
   padding: 0 4px;
   --notes-font-size: 10px;
+  --notes-line-height: 1.3;
   font-size: var(--notes-font-size);
-  line-height: 1.3;
+  line-height: var(--notes-line-height);
   height: 100%;
   overflow: hidden;
 }
