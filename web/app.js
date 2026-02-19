@@ -125,6 +125,8 @@ const READER_PROFILES = [
 
 const TAG_FONT_BASE_PX = 9;
 const TAG_FONT_MIN_PX = 7;
+const NOTES_FONT_BASE_PX = 10;
+const NOTES_FONT_MIN_PX = 7;
 
 const state = {
   fileName: "",
@@ -275,7 +277,7 @@ const PRINT_CSS = `
   .reader-band-row { display: grid; grid-template-columns: auto 1fr; gap: 6px; align-items: center; font-size: 10px; }
   .reader-band-label { font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; font-size: 9px; color: #475467; }
   .reader-band-value { font-weight: 600; }
-  .reader-notes { border: 0; border-radius: 0; padding: 0 4px; font-size: 10px; line-height: 1.3; height: 100%; overflow: hidden; }
+  .reader-notes { border: 0; border-radius: 0; padding: 0 4px; --notes-font-size: 10px; font-size: var(--notes-font-size); line-height: 1.3; height: 100%; overflow: hidden; }
   .reader-notes .label { font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 2px; color: #475467; }
   .reader-notes-body { margin-bottom: 6px; white-space: pre-wrap; }
   .reader-tag-pill { border: 1px solid #e0e6f2; border-radius: 999px; padding: 2px 4px; font-size: 8px; line-height: 1.1; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 18px; }
@@ -296,6 +298,8 @@ const PRINT_FIT_SCRIPT = `
   (() => {
     const TAG_FONT_BASE_PX = 9;
     const TAG_FONT_MIN_PX = 7;
+    const NOTES_FONT_BASE_PX = 10;
+    const NOTES_FONT_MIN_PX = 7;
 
     function fitTagFonts(root = document) {
       const pills = root.querySelectorAll(".tag-pill");
@@ -358,6 +362,48 @@ const PRINT_FIT_SCRIPT = `
       });
     }
 
+    function fitReaderNotes(root = document) {
+      const notesBlocks = root.querySelectorAll(".reader-notes");
+      notesBlocks.forEach((notes) => {
+        const body = notes.querySelector(".reader-notes-body");
+        if (!body) return;
+
+        const label = notes.querySelector(".label");
+        const computed = window.getComputedStyle(notes);
+        const paddingTop = parseFloat(computed.paddingTop) || 0;
+        const paddingBottom = parseFloat(computed.paddingBottom) || 0;
+        const labelHeight = label ? label.offsetHeight : 0;
+        const labelMarginBottom = label ? parseFloat(window.getComputedStyle(label).marginBottom) || 0 : 0;
+
+        const availableHeight =
+          notes.clientHeight - paddingTop - paddingBottom - labelHeight - labelMarginBottom;
+        if (!availableHeight) return;
+
+        const setFont = (sizePx) => {
+          notes.style.setProperty("--notes-font-size", sizePx + "px");
+        };
+
+        setFont(NOTES_FONT_BASE_PX);
+        if (body.scrollHeight <= availableHeight) return;
+
+        let low = NOTES_FONT_MIN_PX;
+        let high = NOTES_FONT_BASE_PX;
+        let best = NOTES_FONT_MIN_PX;
+
+        while (low <= high) {
+          const mid = Math.floor((low + high) / 2);
+          setFont(mid);
+          if (body.scrollHeight <= availableHeight) {
+            best = mid;
+            low = mid + 1;
+          } else {
+            high = mid - 1;
+          }
+        }
+        setFont(best);
+      });
+    }
+
     function fitSectionContent(section) {
       const container = section.querySelector(".section-body");
       const content = container?.querySelector(".fit-content");
@@ -399,8 +445,10 @@ const PRINT_FIT_SCRIPT = `
 
     window.addEventListener("load", () => {
       fitAllSummarySections();
+      fitReaderNotes();
       setTimeout(() => {
         fitAllSummarySections();
+        fitReaderNotes();
         window.focus();
         window.print();
       }, 80);
@@ -1367,7 +1415,11 @@ function renderPreviewFromCurrent() {
   }
   previewRoot.innerHTML = `<div class="doc-shell">${renderStudentDocument(report)}</div>`;
   fitAllSummarySections(previewRoot);
-  requestAnimationFrame(() => fitAllSummarySections(previewRoot));
+  fitReaderNotes(previewRoot);
+  requestAnimationFrame(() => {
+    fitAllSummarySections(previewRoot);
+    fitReaderNotes(previewRoot);
+  });
 }
 
 function validateManualInputs() {
@@ -1459,6 +1511,48 @@ function fitTagFonts(root = document) {
   });
 }
 
+function fitReaderNotes(root = document) {
+  const notesBlocks = root.querySelectorAll(".reader-notes");
+  notesBlocks.forEach((notes) => {
+    const body = notes.querySelector(".reader-notes-body");
+    if (!body) return;
+
+    const label = notes.querySelector(".label");
+    const computed = window.getComputedStyle(notes);
+    const paddingTop = parseFloat(computed.paddingTop) || 0;
+    const paddingBottom = parseFloat(computed.paddingBottom) || 0;
+    const labelHeight = label ? label.offsetHeight : 0;
+    const labelMarginBottom = label ? parseFloat(window.getComputedStyle(label).marginBottom) || 0 : 0;
+
+    const availableHeight =
+      notes.clientHeight - paddingTop - paddingBottom - labelHeight - labelMarginBottom;
+    if (!availableHeight) return;
+
+    const setFont = (sizePx) => {
+      notes.style.setProperty("--notes-font-size", `${sizePx}px`);
+    };
+
+    setFont(NOTES_FONT_BASE_PX);
+    if (body.scrollHeight <= availableHeight) return;
+
+    let low = NOTES_FONT_MIN_PX;
+    let high = NOTES_FONT_BASE_PX;
+    let best = NOTES_FONT_MIN_PX;
+
+    while (low <= high) {
+      const mid = Math.floor((low + high) / 2);
+      setFont(mid);
+      if (body.scrollHeight <= availableHeight) {
+        best = mid;
+        low = mid + 1;
+      } else {
+        high = mid - 1;
+      }
+    }
+    setFont(best);
+  });
+}
+
 function fitSectionContent(section) {
   const container = section.querySelector(".section-body");
   const content = container?.querySelector(".fit-content");
@@ -1506,6 +1600,7 @@ function onWindowResize() {
   requestAnimationFrame(() => {
     fitResizeScheduled = false;
     fitAllSummarySections(previewRoot);
+    fitReaderNotes(previewRoot);
   });
 }
 
@@ -1740,8 +1835,10 @@ async function onDownloadCurrentStudentPdf() {
       await document.fonts.ready;
     }
     fitAllSummarySections(staging);
+    fitReaderNotes(staging);
     await new Promise((resolve) => requestAnimationFrame(resolve));
     fitAllSummarySections(staging);
+    fitReaderNotes(staging);
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
     const filename = `${sanitizeFileName(report.fileName) || "student-report"}.pdf`;
