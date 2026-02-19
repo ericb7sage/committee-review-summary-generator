@@ -126,10 +126,11 @@ const READER_PROFILES = [
 const TAG_FONT_BASE_PX = 9;
 const TAG_FONT_MIN_PX = 7;
 const NOTES_FONT_BASE_PX = 10;
-const NOTES_FONT_MIN_PX = 6;
+const NOTES_FONT_MIN_PX = 5;
 const NOTES_LINE_BASE = 1.3;
 const NOTES_LINE_TIGHT = 1.15;
 const NOTES_LINE_TIGHTER = 1.05;
+const NOTES_LINE_MIN = 1.0;
 
 const state = {
   fileName: "",
@@ -282,7 +283,7 @@ const PRINT_CSS = `
   .reader-band-value { font-weight: 600; }
   .reader-notes { border: 0; border-radius: 0; padding: 0 4px; --notes-font-size: 10px; --notes-line-height: 1.3; font-size: var(--notes-font-size); line-height: var(--notes-line-height); height: 100%; overflow: hidden; }
   .reader-notes .label { font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 2px; color: #475467; }
-  .reader-notes-body { margin-bottom: 6px; white-space: pre-wrap; }
+  .reader-notes-body { margin: 0; white-space: pre-wrap; }
   .reader-tag-pill { border: 1px solid #e0e6f2; border-radius: 999px; padding: 2px 4px; font-size: 8px; line-height: 1.1; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 18px; }
   .reader-tag-pill.active-positive { background: #ecfdf3; border-color: #86efac; color: #166534; }
   .reader-tag-pill.active-negative { background: #fef2f2; border-color: #fecaca; color: #7f1d1d; }
@@ -302,10 +303,11 @@ const PRINT_FIT_SCRIPT = `
     const TAG_FONT_BASE_PX = 9;
     const TAG_FONT_MIN_PX = 7;
     const NOTES_FONT_BASE_PX = 10;
-    const NOTES_FONT_MIN_PX = 6;
+    const NOTES_FONT_MIN_PX = 5;
     const NOTES_LINE_BASE = 1.3;
     const NOTES_LINE_TIGHT = 1.15;
     const NOTES_LINE_TIGHTER = 1.05;
+    const NOTES_LINE_MIN = 1.0;
 
     function fitTagFonts(root = document) {
       const pills = root.querySelectorAll(".tag-pill");
@@ -417,6 +419,8 @@ const PRINT_FIT_SCRIPT = `
         setLineHeight(NOTES_LINE_TIGHT);
         if (body.scrollHeight <= availableHeight) return;
         setLineHeight(NOTES_LINE_TIGHTER);
+        if (body.scrollHeight <= availableHeight) return;
+        setLineHeight(NOTES_LINE_MIN);
       });
     }
 
@@ -1587,6 +1591,8 @@ function fitReaderNotes(root = document) {
     setLineHeight(NOTES_LINE_TIGHT);
     if (body.scrollHeight <= availableHeight) return;
     setLineHeight(NOTES_LINE_TIGHTER);
+    if (body.scrollHeight <= availableHeight) return;
+    setLineHeight(NOTES_LINE_MIN);
   });
 }
 
