@@ -125,12 +125,6 @@ const READER_PROFILES = [
 
 const TAG_FONT_BASE_PX = 9;
 const TAG_FONT_MIN_PX = 7;
-const NOTES_FONT_BASE_PX = 10;
-const NOTES_FONT_MIN_PX = 5;
-const NOTES_LINE_BASE = 1.3;
-const NOTES_LINE_TIGHT = 1.15;
-const NOTES_LINE_TIGHTER = 1.05;
-const NOTES_LINE_MIN = 1.0;
 
 const state = {
   fileName: "",
@@ -258,33 +252,28 @@ const PRINT_CSS = `
   .band-range.range-safety { background: #dcfce7; border: 1px solid #86efac; }
   .band-chip { display: flex; align-items: center; justify-content: center; text-align: center; padding: 2px 0; min-height: 18px; font-weight: 700; color: #111827; position: relative; z-index: 2; }
   .design-tag-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); grid-template-rows: repeat(8, minmax(0, 1fr)); gap: 6px 8px; height: 100%; align-content: stretch; flex: 1; min-height: 0; }
-  .page.reader-page { padding: 16px; display: grid; grid-template-rows: 81% 19%; gap: 8px; background: #fffffe; }
-  .reader-page-main { min-height: 0; display: grid; grid-template-rows: repeat(3, 1fr); gap: 0; }
-  .reader-page-main .reader-section { background: #fffffe; }
-  .reader-page-footer { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; min-height: 0; position: relative; background: #fffffe; margin: 0 -16px; padding: 0 16px; }
-  .reader-page-footer::before { content: ""; position: absolute; left: 0; right: 0; top: -6px; height: 2px; background: #d8dee9; }
+  .page.reader-detail-page { padding: 18px; display: grid; grid-template-rows: auto auto 1fr; gap: 10px; background: #fffffe; }
+  .page.reader-detail-page.continued { grid-template-rows: auto 1fr; }
+  .reader-top-grid { display: grid; grid-template-columns: 1.35fr 0.6fr 1.05fr; gap: 10px; min-height: 0; }
+  .page.reader-summary-page { padding: 24px; background: #fffffe; }
+  .reader-summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; height: 100%; }
   .reader-footer-box { border: 1px solid #d8dee9; border-radius: 8px; padding: 6px 8px; display: grid; grid-template-rows: auto 1fr; gap: 4px; overflow: hidden; font-size: 10px; line-height: 1.3; }
   .reader-footer-title { font-family: "Fraunces", "Times New Roman", serif; font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: #475467; }
   .reader-footer-body { white-space: pre-wrap; }
-  .reader-sections { display: grid; grid-template-rows: repeat(3, 1fr); gap: 12px; height: 100%; }
-  .reader-section { border: 2px solid #d8dee9; border-radius: 12px; padding: 8px 10px; margin: 0; display: flex; flex-direction: column; min-height: 0; position: relative; }
-  .reader-section-title { font-family: "Fraunces", "Times New Roman", serif; font-weight: 700; font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase; color: #94a3b8; margin-bottom: 4px; text-align: center; }
-  .reader-rows { display: grid; grid-template-rows: 40% 60%; height: 100%; gap: 6px; min-height: 0; }
-  .reader-row-top { display: grid; grid-template-columns: 0.95fr 0.75fr 1.3fr; gap: 8px; min-height: 0; padding: 0 4px; }
-  .reader-page .reader-col { padding: 0; position: relative; display: grid; grid-template-columns: 1fr; align-items: start; }
-  .reader-col.ratings, .reader-col.bands { display: grid; grid-template-columns: 1fr; grid-auto-rows: minmax(0, 1fr); gap: 3px; min-height: 0; }
-  .reader-col.tags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3px; align-content: start; min-height: 0; }
-  .reader-rating-row { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
-  .reader-rating-label { font-size: 5px; font-weight: 600; text-transform: none; letter-spacing: 0; color: #475467; min-width: 0; flex: 1; }
-  .reader-rating-pill { border: 1px solid #e2e8f0; border-radius: 999px; padding: 2px 6px; font-size: 7px; font-weight: 600; line-height: 1.1; background: #f8fafc; color: #334155; white-space: nowrap; }
+  .reader-section-title { font-family: "Fraunces", "Times New Roman", serif; font-weight: 700; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #94a3b8; margin-bottom: 0; text-align: center; }
+  .reader-detail-page .reader-col { padding: 0; position: relative; display: grid; grid-template-columns: 1fr; align-items: start; }
+  .reader-col.ratings, .reader-col.bands { display: grid; grid-template-columns: 1fr; grid-auto-rows: minmax(0, 1fr); gap: 6px; min-height: 0; }
+  .reader-col.tags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; align-content: start; min-height: 0; }
+  .reader-rating-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .reader-rating-label { font-size: 8px; font-weight: 600; text-transform: none; letter-spacing: 0; color: #475467; min-width: 0; flex: 1; line-height: 1.2; }
+  .reader-rating-pill { border: 1px solid #e2e8f0; border-radius: 999px; padding: 2px 6px; font-size: 8px; font-weight: 600; line-height: 1.1; background: #f8fafc; color: #334155; white-space: nowrap; }
   .reader-rating-pill.empty { color: #94a3b8; background: #fff; }
   .reader-rating-empty { font-size: 8px; color: #98a2b3; }
-  .reader-page .compact-stars .star { width: 12px; height: 12px; }
   .reader-band-row { display: grid; grid-template-columns: auto 1fr; gap: 4px; align-items: center; font-size: 9px; }
   .reader-band-label { font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; font-size: 8px; color: #475467; }
   .reader-band-value { font-weight: 600; }
-  .reader-notes { border: 0; border-radius: 0; padding: 0 4px; --notes-font-size: 10px; --notes-line-height: 1.3; font-size: var(--notes-font-size); line-height: var(--notes-line-height); height: 100%; overflow: hidden; }
-  .reader-notes .label { font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 2px; color: #475467; }
+  .reader-notes { border: 0; border-radius: 0; padding: 0; font-size: 11px; line-height: 1.35; height: 100%; overflow: hidden; }
+  .reader-notes .label { font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 2px; color: #475467; }
   .reader-notes-body { margin: 0; white-space: pre-wrap; }
   .reader-tag-pill { border: 1px solid #e0e6f2; border-radius: 999px; padding: 1px 3px; font-size: 7px; line-height: 1.1; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 16px; }
   .reader-tag-pill.active-positive { background: #ecfdf3; border-color: #86efac; color: #166534; }
@@ -304,12 +293,6 @@ const PRINT_FIT_SCRIPT = `
   (() => {
     const TAG_FONT_BASE_PX = 9;
     const TAG_FONT_MIN_PX = 7;
-    const NOTES_FONT_BASE_PX = 10;
-    const NOTES_FONT_MIN_PX = 5;
-    const NOTES_LINE_BASE = 1.3;
-    const NOTES_LINE_TIGHT = 1.15;
-    const NOTES_LINE_TIGHTER = 1.05;
-    const NOTES_LINE_MIN = 1.0;
 
     function fitTagFonts(root = document) {
       const pills = root.querySelectorAll(".tag-pill");
@@ -372,57 +355,87 @@ const PRINT_FIT_SCRIPT = `
       });
     }
 
-    function fitReaderNotes(root = document) {
-      const notesBlocks = root.querySelectorAll(".reader-notes");
-      notesBlocks.forEach((notes) => {
-        const body = notes.querySelector(".reader-notes-body");
-        if (!body) return;
+    function paginateReaderNotes(root = document) {
+      const scope = root.querySelector(".doc-shell") || root;
+      scope.querySelectorAll(".reader-detail-page.continued").forEach((page) => page.remove());
 
-        const label = notes.querySelector(".label");
-        const computed = window.getComputedStyle(notes);
-        const paddingTop = parseFloat(computed.paddingTop) || 0;
-        const paddingBottom = parseFloat(computed.paddingBottom) || 0;
-        const labelHeight = label ? label.offsetHeight : 0;
-        const labelMarginBottom = label ? parseFloat(window.getComputedStyle(label).marginBottom) || 0 : 0;
+      const basePages = [...scope.querySelectorAll(".reader-detail-page")].filter(
+        (page) => !page.classList.contains("continued")
+      );
 
-        const availableHeight =
-          notes.clientHeight - paddingTop - paddingBottom - labelHeight - labelMarginBottom;
-        if (!availableHeight) return;
+      basePages.forEach((page) => {
+        const notes = page.querySelector(".reader-notes");
+        const body = notes?.querySelector(".reader-notes-body");
+        if (!notes || !body) return;
 
-        const setFont = (sizePx) => {
-          notes.style.setProperty("--notes-font-size", sizePx + "px");
-        };
-        const setLineHeight = (value) => {
-          notes.style.setProperty("--notes-line-height", value);
-        };
-
-        setLineHeight(NOTES_LINE_BASE);
-        setFont(NOTES_FONT_BASE_PX);
-        if (body.scrollHeight <= availableHeight) return;
-
-        let low = NOTES_FONT_MIN_PX;
-        let high = NOTES_FONT_BASE_PX;
-        let best = NOTES_FONT_MIN_PX;
-
-        while (low <= high) {
-          const mid = Math.floor((low + high) / 2);
-          setFont(mid);
-          if (body.scrollHeight <= availableHeight) {
-            best = mid;
-            low = mid + 1;
-          } else {
-            high = mid - 1;
-          }
+        if (!body.dataset.fullText) {
+          body.dataset.fullText = body.textContent || "";
         }
-        setFont(best);
-        setLineHeight(NOTES_LINE_BASE);
 
-        if (body.scrollHeight <= availableHeight) return;
-        setLineHeight(NOTES_LINE_TIGHT);
-        if (body.scrollHeight <= availableHeight) return;
-        setLineHeight(NOTES_LINE_TIGHTER);
-        if (body.scrollHeight <= availableHeight) return;
-        setLineHeight(NOTES_LINE_MIN);
+        let remaining = String(body.dataset.fullText || "").trim();
+        if (!remaining) {
+          body.textContent = "—";
+          return;
+        }
+
+        let currentPage = page;
+        while (true) {
+          const currentNotes = currentPage.querySelector(".reader-notes");
+          const currentBody = currentNotes?.querySelector(".reader-notes-body");
+          if (!currentNotes || !currentBody) break;
+
+          currentBody.textContent = remaining;
+          if (currentNotes.scrollHeight <= currentNotes.clientHeight + 0.5) {
+            break;
+          }
+
+          const tokens = remaining.match(/\\S+|\\s+/g) || [];
+          let low = 1;
+          let high = tokens.length;
+          let best = 0;
+
+          while (low <= high) {
+            const mid = Math.floor((low + high) / 2);
+            currentBody.textContent = tokens.slice(0, mid).join("");
+            if (currentNotes.scrollHeight <= currentNotes.clientHeight + 0.5) {
+              best = mid;
+              low = mid + 1;
+            } else {
+              high = mid - 1;
+            }
+          }
+
+          if (best <= 0 || best >= tokens.length) {
+            currentBody.textContent = remaining;
+            break;
+          }
+
+          const fitText = tokens.slice(0, best).join("");
+          const restText = tokens.slice(best).join("").trimStart();
+          currentBody.textContent = fitText;
+
+          if (!restText) break;
+
+          const continuation = currentPage.cloneNode(true);
+          continuation.classList.add("continued");
+          const header = continuation.querySelector(".reader-section-title");
+          if (header && !header.textContent.includes("(cont.)")) {
+            header.textContent = header.textContent + " (cont.)";
+          }
+          const topGrid = continuation.querySelector(".reader-top-grid");
+          if (topGrid) topGrid.remove();
+
+          const contNotes = continuation.querySelector(".reader-notes");
+          const contBody = contNotes?.querySelector(".reader-notes-body");
+          if (contBody) {
+            contBody.textContent = restText;
+            contBody.dataset.fullText = restText;
+          }
+
+          currentPage.parentNode.insertBefore(continuation, currentPage.nextSibling);
+          currentPage = continuation;
+          remaining = restText;
+        }
       });
     }
 
@@ -467,10 +480,10 @@ const PRINT_FIT_SCRIPT = `
 
     window.addEventListener("load", () => {
       fitAllSummarySections();
-      fitReaderNotes();
+      paginateReaderNotes();
       const finish = () => {
         fitAllSummarySections();
-        fitReaderNotes();
+        paginateReaderNotes();
         window.focus();
         window.print();
       };
@@ -1095,71 +1108,70 @@ function renderReaderTags(tags) {
     .join("");
 }
 
-function renderReaderNotes(reader) {
+function getReaderNotesText(reader) {
   const notes = String(reader.notes || "").trim();
   const anythingElse = String(reader.anythingElse || "").trim();
-  const combined =
-    notes && anythingElse
-      ? `${notes}\n\n${anythingElse}`
-      : notes || anythingElse || "—";
+  return notes && anythingElse
+    ? `${notes}\n\n${anythingElse}`
+    : notes || anythingElse || "—";
+}
+
+function renderReaderNotesBlock(text) {
   return `<div class="reader-notes">
     <div class="label">Notes</div>
-    <div class="reader-notes-body">${escapeHtml(combined)}</div>
+    <div class="reader-notes-body">${escapeHtml(text)}</div>
   </div>`;
 }
 
-function renderReaderDetailPage(report) {
+function renderReaderPages(report) {
+  return report.readers
+    .map((reader) => {
+      const notesText = getReaderNotesText(reader);
+      return `
+        <section class="page reader-detail-page">
+          <div class="reader-section-title">${escapeHtml(reader.label)}</div>
+          <div class="reader-top-grid">
+            <div class="reader-col ratings">
+              ${renderReaderRatingRow(
+                "I understand the candidate's reason for seeking a law degree.",
+                reader.ratingLabels.whyLaw
+              )}
+              ${renderReaderRatingRow(
+                "This candidate will thrive in law school.",
+                reader.ratingLabels.thrive
+              )}
+              ${renderReaderRatingRow(
+                "This candidate would positively contribute to a law school community.",
+                reader.ratingLabels.contribute
+              )}
+              ${renderReaderRatingRow(
+                "i feel like I know this candidate.",
+                reader.ratingLabels.know
+              )}
+            </div>
+            <div class="reader-col bands">
+              ${renderReaderBandRow("Reach", reader.bands.reach)}
+              ${renderReaderBandRow("Target", reader.bands.target)}
+              ${renderReaderBandRow("Safety", reader.bands.safety)}
+              ${renderReaderBandRow("Softs", reader.softs)}
+            </div>
+            <div class="reader-col tags">
+              ${renderReaderTags(reader.tags)}
+            </div>
+          </div>
+          ${renderReaderNotesBlock(notesText)}
+        </section>
+      `;
+    })
+    .join("");
+}
+
+function renderSummaryNextStepsPage(report) {
   const summaryText = String(report.manual.summary || "").trim() || "—";
   const nextStepsText = String(report.manual.nextSteps || "").trim() || "—";
   return `
-    <section class="page reader-page">
-      <div class="reader-page-main">
-        <div class="reader-sections">
-          ${report.readers
-            .map(
-              (reader) => `
-            <article class="reader-section">
-              <div class="reader-section-title">${escapeHtml(reader.label)}</div>
-              <div class="reader-rows">
-                <div class="reader-row reader-row-top">
-                  <div class="reader-col ratings">
-                    ${renderReaderRatingRow(
-                      "I understand the candidate's reason for seeking a law degree.",
-                      reader.ratingLabels.whyLaw
-                    )}
-                    ${renderReaderRatingRow(
-                      "This candidate will thrive in law school.",
-                      reader.ratingLabels.thrive
-                    )}
-                    ${renderReaderRatingRow(
-                      "This candidate would positively contribute to a law school community.",
-                      reader.ratingLabels.contribute
-                    )}
-                    ${renderReaderRatingRow(
-                      "i feel like I know this candidate.",
-                      reader.ratingLabels.know
-                    )}
-                  </div>
-                  <div class="reader-col bands">
-                    ${renderReaderBandRow("Reach", reader.bands.reach)}
-                    ${renderReaderBandRow("Target", reader.bands.target)}
-                    ${renderReaderBandRow("Safety", reader.bands.safety)}
-                    ${renderReaderBandRow("Softs", reader.softs)}
-                  </div>
-                  <div class="reader-col tags">
-                    ${renderReaderTags(reader.tags)}
-                  </div>
-                </div>
-                <div class="reader-row reader-row-notes">
-                  ${renderReaderNotes(reader)}
-                </div>
-              </div>
-            </article>`
-            )
-            .join("")}
-        </div>
-      </div>
-      <div class="reader-page-footer">
+    <section class="page reader-summary-page">
+      <div class="reader-summary-grid">
         <div class="reader-footer-box">
           <div class="reader-footer-title">Summary</div>
           <div class="reader-footer-body">${escapeHtml(summaryText)}</div>
@@ -1363,7 +1375,8 @@ function renderStudentDocument(report) {
       </div>
     </section>
 
-    ${renderReaderDetailPage(report)}
+    ${renderReaderPages(report)}
+    ${renderSummaryNextStepsPage(report)}
     ${renderTagExplanationPages(report)}
   `;
 }
@@ -1452,15 +1465,15 @@ function renderPreviewFromCurrent() {
   }
   previewRoot.innerHTML = `<div class="doc-shell">${renderStudentDocument(report)}</div>`;
   fitAllSummarySections(previewRoot);
-  fitReaderNotes(previewRoot);
+  paginateReaderNotes(previewRoot);
   requestAnimationFrame(() => {
     fitAllSummarySections(previewRoot);
-    fitReaderNotes(previewRoot);
+    paginateReaderNotes(previewRoot);
   });
   if (document.fonts?.ready) {
     document.fonts.ready.then(() => {
       fitAllSummarySections(previewRoot);
-      fitReaderNotes(previewRoot);
+      paginateReaderNotes(previewRoot);
     });
   }
 }
@@ -1554,57 +1567,87 @@ function fitTagFonts(root = document) {
   });
 }
 
-function fitReaderNotes(root = document) {
-  const notesBlocks = root.querySelectorAll(".reader-notes");
-  notesBlocks.forEach((notes) => {
-    const body = notes.querySelector(".reader-notes-body");
-    if (!body) return;
+function paginateReaderNotes(root = document) {
+  const scope = root.querySelector(".doc-shell") || root;
+  scope.querySelectorAll(".reader-detail-page.continued").forEach((page) => page.remove());
 
-    const label = notes.querySelector(".label");
-    const computed = window.getComputedStyle(notes);
-    const paddingTop = parseFloat(computed.paddingTop) || 0;
-    const paddingBottom = parseFloat(computed.paddingBottom) || 0;
-    const labelHeight = label ? label.offsetHeight : 0;
-    const labelMarginBottom = label ? parseFloat(window.getComputedStyle(label).marginBottom) || 0 : 0;
+  const basePages = [...scope.querySelectorAll(".reader-detail-page")].filter(
+    (page) => !page.classList.contains("continued")
+  );
 
-    const availableHeight =
-      notes.clientHeight - paddingTop - paddingBottom - labelHeight - labelMarginBottom;
-    if (!availableHeight) return;
+  basePages.forEach((page) => {
+    const notes = page.querySelector(".reader-notes");
+    const body = notes?.querySelector(".reader-notes-body");
+    if (!notes || !body) return;
 
-    const setFont = (sizePx) => {
-      notes.style.setProperty("--notes-font-size", `${sizePx}px`);
-    };
-    const setLineHeight = (value) => {
-      notes.style.setProperty("--notes-line-height", `${value}`);
-    };
-
-    setLineHeight(NOTES_LINE_BASE);
-    setFont(NOTES_FONT_BASE_PX);
-    if (body.scrollHeight <= availableHeight) return;
-
-    let low = NOTES_FONT_MIN_PX;
-    let high = NOTES_FONT_BASE_PX;
-    let best = NOTES_FONT_MIN_PX;
-
-    while (low <= high) {
-      const mid = Math.floor((low + high) / 2);
-      setFont(mid);
-      if (body.scrollHeight <= availableHeight) {
-        best = mid;
-        low = mid + 1;
-      } else {
-        high = mid - 1;
-      }
+    if (!body.dataset.fullText) {
+      body.dataset.fullText = body.textContent || "";
     }
-    setFont(best);
-    setLineHeight(NOTES_LINE_BASE);
 
-    if (body.scrollHeight <= availableHeight) return;
-    setLineHeight(NOTES_LINE_TIGHT);
-    if (body.scrollHeight <= availableHeight) return;
-    setLineHeight(NOTES_LINE_TIGHTER);
-    if (body.scrollHeight <= availableHeight) return;
-    setLineHeight(NOTES_LINE_MIN);
+    let remaining = String(body.dataset.fullText || "").trim();
+    if (!remaining) {
+      body.textContent = "—";
+      return;
+    }
+
+    let currentPage = page;
+    while (true) {
+      const currentNotes = currentPage.querySelector(".reader-notes");
+      const currentBody = currentNotes?.querySelector(".reader-notes-body");
+      if (!currentNotes || !currentBody) break;
+
+      currentBody.textContent = remaining;
+      if (currentNotes.scrollHeight <= currentNotes.clientHeight + 0.5) {
+        break;
+      }
+
+      const tokens = remaining.match(/\S+|\s+/g) || [];
+      let low = 1;
+      let high = tokens.length;
+      let best = 0;
+
+      while (low <= high) {
+        const mid = Math.floor((low + high) / 2);
+        currentBody.textContent = tokens.slice(0, mid).join("");
+        if (currentNotes.scrollHeight <= currentNotes.clientHeight + 0.5) {
+          best = mid;
+          low = mid + 1;
+        } else {
+          high = mid - 1;
+        }
+      }
+
+      if (best <= 0 || best >= tokens.length) {
+        currentBody.textContent = remaining;
+        break;
+      }
+
+      const fitText = tokens.slice(0, best).join("");
+      const restText = tokens.slice(best).join("").trimStart();
+      currentBody.textContent = fitText;
+
+      if (!restText) break;
+
+      const continuation = currentPage.cloneNode(true);
+      continuation.classList.add("continued");
+      const header = continuation.querySelector(".reader-section-title");
+      if (header && !header.textContent.includes("(cont.)")) {
+        header.textContent = `${header.textContent} (cont.)`;
+      }
+      const topGrid = continuation.querySelector(".reader-top-grid");
+      if (topGrid) topGrid.remove();
+
+      const contNotes = continuation.querySelector(".reader-notes");
+      const contBody = contNotes?.querySelector(".reader-notes-body");
+      if (contBody) {
+        contBody.textContent = restText;
+        contBody.dataset.fullText = restText;
+      }
+
+      currentPage.parentNode.insertBefore(continuation, currentPage.nextSibling);
+      currentPage = continuation;
+      remaining = restText;
+    }
   });
 }
 
@@ -1655,7 +1698,7 @@ function onWindowResize() {
   requestAnimationFrame(() => {
     fitResizeScheduled = false;
     fitAllSummarySections(previewRoot);
-    fitReaderNotes(previewRoot);
+    paginateReaderNotes(previewRoot);
   });
 }
 
@@ -1890,10 +1933,10 @@ async function onDownloadCurrentStudentPdf() {
       await document.fonts.ready;
     }
     fitAllSummarySections(staging);
-    fitReaderNotes(staging);
+    paginateReaderNotes(staging);
     await new Promise((resolve) => requestAnimationFrame(resolve));
     fitAllSummarySections(staging);
-    fitReaderNotes(staging);
+    paginateReaderNotes(staging);
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
     const filename = `${sanitizeFileName(report.fileName) || "student-report"}.pdf`;
