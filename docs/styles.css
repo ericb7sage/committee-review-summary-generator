@@ -1060,15 +1060,13 @@ button:disabled {
 
 .page.reader-detail-page {
   padding: 18px;
-  display: grid;
-  grid-template-rows: auto auto 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 10px;
   background: #fffffe;
+  position: relative;
 }
 
-.page.reader-detail-page.continued {
-  grid-template-rows: auto 1fr;
-}
 
 .reader-top-grid {
   display: grid;
@@ -1087,6 +1085,41 @@ button:disabled {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   height: 100%;
+}
+
+.reader-cards-source {
+  display: none;
+}
+
+.reader-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  height: 100%;
+  flex: 1;
+}
+
+.reader-card {
+  border: 2px solid var(--line);
+  border-radius: 12px;
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.page-continue-note {
+  position: absolute;
+  right: 18px;
+  bottom: 12px;
+  font-size: 9px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  opacity: 0;
+}
+
+.page.reader-detail-page.has-continue .page-continue-note {
+  opacity: 1;
 }
 
 .reader-footer-box {

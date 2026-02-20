@@ -174,7 +174,11 @@ const PRINT_CSS = `
   .tag-badges { display: inline-flex; gap: 4px; position: absolute; top: -12px; right: 8px; margin-left: 0; vertical-align: baseline; z-index: 2; }
   .tag-badge { min-width: 14px; height: 14px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; background: #111827; color: #fff; border: 1px solid #fff; }
   .tag-pill.inactive { color: #5e6778; background: #fff; }
-  .reader-card { border: 1px solid #d8dee9; border-radius: 8px; padding: 10px; margin-bottom: 10px; }
+  .reader-cards-source { display: none; }
+  .reader-cards { display: flex; flex-direction: column; gap: 12px; height: 100%; flex: 1; }
+  .reader-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 12px; display: grid; gap: 10px; }
+  .page-continue-note { position: absolute; right: 18px; bottom: 12px; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; opacity: 0; }
+  .page.reader-detail-page.has-continue .page-continue-note { opacity: 1; }
   .reader-title { margin: 0 0 8px; font-size: 14px; }
   .notes-box { border: 1px solid #333; min-height: 1.5in; padding: 10px; white-space: pre-wrap; margin-bottom: 8px; }
   .summary-banner { height: 58px; background: linear-gradient(-45deg, #15b79e 0%, #227f9c 100%); color: #fcfaf8; text-align: center; font-family: "Fraunces", "Times New Roman", serif; font-size: 30px; font-weight: 700; line-height: 58px; margin-bottom: 0; }
@@ -252,8 +256,7 @@ const PRINT_CSS = `
   .band-range.range-safety { background: #dcfce7; border: 1px solid #86efac; }
   .band-chip { display: flex; align-items: center; justify-content: center; text-align: center; padding: 2px 0; min-height: 18px; font-weight: 700; color: #111827; position: relative; z-index: 2; }
   .design-tag-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); grid-template-rows: repeat(8, minmax(0, 1fr)); gap: 6px 8px; height: 100%; align-content: stretch; flex: 1; min-height: 0; }
-  .page.reader-detail-page { padding: 18px; display: grid; grid-template-rows: auto auto 1fr; gap: 10px; background: #fffffe; }
-  .page.reader-detail-page.continued { grid-template-rows: auto 1fr; }
+  .page.reader-detail-page { padding: 18px; display: flex; flex-direction: column; gap: 10px; background: #fffffe; position: relative; }
   .reader-top-grid { display: grid; grid-template-columns: 1.35fr 0.6fr 1.05fr; gap: 10px; min-height: 0; }
   .page.reader-summary-page { padding: 24px; background: #fffffe; }
   .reader-summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; height: 100%; }
@@ -355,91 +358,129 @@ const PRINT_FIT_SCRIPT = `
       });
     }
 
-    function paginateReaderNotes(root = document) {
-      const scope = root.querySelector(".doc-shell") || root;
-      scope.querySelectorAll(".reader-detail-page.continued").forEach((page) => page.remove());
+    function paginateReaderCards(root = document) {
+  const scope = root.querySelector(".doc-shell") || root;
+  const source = scope.querySelector("[data-reader-source]");
+  if (!source) return;
 
-      const basePages = [...scope.querySelectorAll(".reader-detail-page")].filter(
-        (page) => !page.classList.contains("continued")
-      );
+  scope.querySelectorAll(".reader-detail-page").forEach((page) => page.remove());
 
-      basePages.forEach((page) => {
-        const notes = page.querySelector(".reader-notes");
-        const body = notes?.querySelector(".reader-notes-body");
-        if (!notes || !body) return;
+  const parent = source.parentNode;
+  const anchor = source.nextSibling;
+  const cardTemplates = [...source.querySelectorAll(".reader-card")];
+  if (!cardTemplates.length) return;
 
-        if (!body.dataset.fullText) {
-          body.dataset.fullText = body.textContent || "";
+  const createPage = () => {
+    const page = document.createElement("section");
+    page.className = "page reader-detail-page";
+    page.innerHTML = `
+      <div class="reader-cards"></div>
+      <div class="page-continue-note">Section continues on next page.</div>
+    `;
+    return page;
+  };
+
+  const pages = [];
+  let currentPage = createPage();
+  parent.insertBefore(currentPage, anchor);
+  pages.push(currentPage);
+  let container = currentPage.querySelector(".reader-cards");
+
+  const addPage = () => {
+    currentPage = createPage();
+    parent.insertBefore(currentPage, anchor);
+    pages.push(currentPage);
+    container = currentPage.querySelector(".reader-cards");
+  };
+
+  const tryAppendCard = (card) => {
+    container.appendChild(card);
+    const fits = container.scrollHeight <= container.clientHeight + 0.5;
+    if (!fits) container.removeChild(card);
+    return fits;
+  };
+
+  const splitCardIntoPages = (baseCard, fullText) => {
+    let remaining = fullText.trim();
+    let first = true;
+    while (remaining) {
+      let card = first ? baseCard : baseCard.cloneNode(true);
+      if (!first) {
+        card.classList.add("continued");
+        const header = card.querySelector(".reader-section-title");
+        if (header && !header.textContent.includes("(cont.)")) {
+          header.textContent = `${header.textContent} (cont.)`;
         }
+        const topGrid = card.querySelector(".reader-top-grid");
+        if (topGrid) topGrid.remove();
+      }
 
-        let remaining = String(body.dataset.fullText || "").trim();
-        if (!remaining) {
-          body.textContent = "—";
-          return;
+      const notesBody = card.querySelector(".reader-notes-body");
+      if (!notesBody) {
+        container.appendChild(card);
+        return;
+      }
+
+      const tokens = remaining.match(/\S+|\s+/g) || [];
+      container.appendChild(card);
+
+      let low = 1;
+      let high = tokens.length;
+      let best = 0;
+
+      while (low <= high) {
+        const mid = Math.floor((low + high) / 2);
+        notesBody.textContent = tokens.slice(0, mid).join("");
+        if (container.scrollHeight <= container.clientHeight + 0.5) {
+          best = mid;
+          low = mid + 1;
+        } else {
+          high = mid - 1;
         }
+      }
 
-        let currentPage = page;
-        while (true) {
-          const currentNotes = currentPage.querySelector(".reader-notes");
-          const currentBody = currentNotes?.querySelector(".reader-notes-body");
-          if (!currentNotes || !currentBody) break;
+      if (best <= 0) {
+        notesBody.textContent = remaining;
+        return;
+      }
 
-          currentBody.textContent = remaining;
-          if (currentNotes.scrollHeight <= currentNotes.clientHeight + 0.5) {
-            break;
-          }
+      notesBody.textContent = tokens.slice(0, best).join("");
+      remaining = tokens.slice(best).join("").trimStart();
 
-          const tokens = remaining.match(/\\S+|\\s+/g) || [];
-          let low = 1;
-          let high = tokens.length;
-          let best = 0;
+      if (remaining) {
+        addPage();
+        first = false;
+      } else {
+        return;
+      }
+    }
+  };
+  cardTemplates.forEach((template) => {
+    const card = template.cloneNode(true);
+    const notesBody = card.querySelector(".reader-notes-body");
+    if (notesBody && !notesBody.dataset.fullText) {
+      notesBody.dataset.fullText = notesBody.textContent || "";
+    }
+    const fullText = notesBody?.dataset.fullText || "";
+    if (notesBody) notesBody.textContent = fullText;
 
-          while (low <= high) {
-            const mid = Math.floor((low + high) / 2);
-            currentBody.textContent = tokens.slice(0, mid).join("");
-            if (currentNotes.scrollHeight <= currentNotes.clientHeight + 0.5) {
-              best = mid;
-              low = mid + 1;
-            } else {
-              high = mid - 1;
-            }
-          }
+    if (tryAppendCard(card)) return;
 
-          if (best <= 0 || best >= tokens.length) {
-            currentBody.textContent = remaining;
-            break;
-          }
-
-          const fitText = tokens.slice(0, best).join("");
-          const restText = tokens.slice(best).join("").trimStart();
-          currentBody.textContent = fitText;
-
-          if (!restText) break;
-
-          const continuation = currentPage.cloneNode(true);
-          continuation.classList.add("continued");
-          const header = continuation.querySelector(".reader-section-title");
-          if (header && !header.textContent.includes("(cont.)")) {
-            header.textContent = header.textContent + " (cont.)";
-          }
-          const topGrid = continuation.querySelector(".reader-top-grid");
-          if (topGrid) topGrid.remove();
-
-          const contNotes = continuation.querySelector(".reader-notes");
-          const contBody = contNotes?.querySelector(".reader-notes-body");
-          if (contBody) {
-            contBody.textContent = restText;
-            contBody.dataset.fullText = restText;
-          }
-
-          currentPage.parentNode.insertBefore(continuation, currentPage.nextSibling);
-          currentPage = continuation;
-          remaining = restText;
-        }
-      });
+    if (container.children.length) {
+      addPage();
     }
 
-    function fitSectionContent(section) {
+    splitCardIntoPages(card, fullText);
+  });
+
+  pages.forEach((page, index) => {
+    if (index < pages.length - 1) {
+      page.classList.add("has-continue");
+    }
+  });
+}
+
+function fitSectionContent(section) {
       const container = section.querySelector(".section-body");
       const content = container?.querySelector(".fit-content");
       if (!container || !content) return;
@@ -480,10 +521,10 @@ const PRINT_FIT_SCRIPT = `
 
     window.addEventListener("load", () => {
       fitAllSummarySections();
-      paginateReaderNotes();
+      paginateReaderCards();
       const finish = () => {
         fitAllSummarySections();
-        paginateReaderNotes();
+        paginateReaderCards();
         window.focus();
         window.print();
       };
@@ -1123,47 +1164,51 @@ function renderReaderNotesBlock(text) {
   </div>`;
 }
 
+function renderReaderCard(reader) {
+  const notesText = getReaderNotesText(reader);
+  return `
+    <article class="reader-card">
+      <div class="reader-section-title">${escapeHtml(reader.label)}</div>
+      <div class="reader-top-grid">
+        <div class="reader-col ratings">
+          ${renderReaderRatingRow(
+            "I understand the candidate's reason for seeking a law degree.",
+            reader.ratingLabels.whyLaw
+          )}
+          ${renderReaderRatingRow(
+            "This candidate will thrive in law school.",
+            reader.ratingLabels.thrive
+          )}
+          ${renderReaderRatingRow(
+            "This candidate would positively contribute to a law school community.",
+            reader.ratingLabels.contribute
+          )}
+          ${renderReaderRatingRow(
+            "i feel like I know this candidate.",
+            reader.ratingLabels.know
+          )}
+        </div>
+        <div class="reader-col bands">
+          ${renderReaderBandRow("Reach", reader.bands.reach)}
+          ${renderReaderBandRow("Target", reader.bands.target)}
+          ${renderReaderBandRow("Safety", reader.bands.safety)}
+          ${renderReaderBandRow("Softs", reader.softs)}
+        </div>
+        <div class="reader-col tags">
+          ${renderReaderTags(reader.tags)}
+        </div>
+      </div>
+      ${renderReaderNotesBlock(notesText)}
+    </article>
+  `;
+}
+
 function renderReaderPages(report) {
-  return report.readers
-    .map((reader) => {
-      const notesText = getReaderNotesText(reader);
-      return `
-        <section class="page reader-detail-page">
-          <div class="reader-section-title">${escapeHtml(reader.label)}</div>
-          <div class="reader-top-grid">
-            <div class="reader-col ratings">
-              ${renderReaderRatingRow(
-                "I understand the candidate's reason for seeking a law degree.",
-                reader.ratingLabels.whyLaw
-              )}
-              ${renderReaderRatingRow(
-                "This candidate will thrive in law school.",
-                reader.ratingLabels.thrive
-              )}
-              ${renderReaderRatingRow(
-                "This candidate would positively contribute to a law school community.",
-                reader.ratingLabels.contribute
-              )}
-              ${renderReaderRatingRow(
-                "i feel like I know this candidate.",
-                reader.ratingLabels.know
-              )}
-            </div>
-            <div class="reader-col bands">
-              ${renderReaderBandRow("Reach", reader.bands.reach)}
-              ${renderReaderBandRow("Target", reader.bands.target)}
-              ${renderReaderBandRow("Safety", reader.bands.safety)}
-              ${renderReaderBandRow("Softs", reader.softs)}
-            </div>
-            <div class="reader-col tags">
-              ${renderReaderTags(reader.tags)}
-            </div>
-          </div>
-          ${renderReaderNotesBlock(notesText)}
-        </section>
-      `;
-    })
-    .join("");
+  return `
+    <div class="reader-cards-source" data-reader-source>
+      ${report.readers.map((reader) => renderReaderCard(reader)).join("")}
+    </div>
+  `;
 }
 
 function renderSummaryNextStepsPage(report) {
@@ -1465,15 +1510,15 @@ function renderPreviewFromCurrent() {
   }
   previewRoot.innerHTML = `<div class="doc-shell">${renderStudentDocument(report)}</div>`;
   fitAllSummarySections(previewRoot);
-  paginateReaderNotes(previewRoot);
+  paginateReaderCards(previewRoot);
   requestAnimationFrame(() => {
     fitAllSummarySections(previewRoot);
-    paginateReaderNotes(previewRoot);
+    paginateReaderCards(previewRoot);
   });
   if (document.fonts?.ready) {
     document.fonts.ready.then(() => {
       fitAllSummarySections(previewRoot);
-      paginateReaderNotes(previewRoot);
+      paginateReaderCards(previewRoot);
     });
   }
 }
@@ -1567,7 +1612,7 @@ function fitTagFonts(root = document) {
   });
 }
 
-function paginateReaderNotes(root = document) {
+function paginateReaderCards(root = document) {
   const scope = root.querySelector(".doc-shell") || root;
   scope.querySelectorAll(".reader-detail-page.continued").forEach((page) => page.remove());
 
@@ -1698,7 +1743,7 @@ function onWindowResize() {
   requestAnimationFrame(() => {
     fitResizeScheduled = false;
     fitAllSummarySections(previewRoot);
-    paginateReaderNotes(previewRoot);
+    paginateReaderCards(previewRoot);
   });
 }
 
@@ -1933,10 +1978,10 @@ async function onDownloadCurrentStudentPdf() {
       await document.fonts.ready;
     }
     fitAllSummarySections(staging);
-    paginateReaderNotes(staging);
+    paginateReaderCards(staging);
     await new Promise((resolve) => requestAnimationFrame(resolve));
     fitAllSummarySections(staging);
-    paginateReaderNotes(staging);
+    paginateReaderCards(staging);
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
     const filename = `${sanitizeFileName(report.fileName) || "student-report"}.pdf`;
