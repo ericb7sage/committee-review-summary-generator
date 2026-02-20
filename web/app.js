@@ -709,7 +709,22 @@ function readCsvRows(csvText) {
   const allRows = parseCsv(csvText);
   if (!allRows.length) throw new Error("CSV is empty.");
 
-  const headers = allRows[0].map((h) => h.replace(/^\uFEFF/, "").trim());
+  const normalizeHeaderKey = (value) =>
+    String(value || "")
+      .replace(/^\uFEFF/, "")
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, " ");
+  const normalizedHeaderMap = new Map(
+    REQUIRED_HEADERS.map((header) => [
+      normalizeHeaderKey(header),
+      header,
+    ])
+  );
+  const headers = allRows[0].map((h) => {
+    const normalized = normalizeHeaderKey(h);
+    return normalizedHeaderMap.get(normalized) || h.replace(/^\uFEFF/, "").trim();
+  });
   if (!headers.length || headers.every((h) => h.length === 0)) {
     throw new Error("CSV is missing a header row.");
   }
@@ -1816,6 +1831,11 @@ async function onCsvSelected(event) {
     state.warnings = [];
     if (blankFileRows > 0) {
       state.warnings.push(`Skipped ${blankFileRows} row(s) with blank File.`);
+    }
+    if (!groups.size && rows.length) {
+      state.warnings.push(
+        "No student names found. Check the File column for student names."
+      );
     }
 
     generateBtn.disabled = state.errors.length > 0 || state.availableStudents.length === 0;
