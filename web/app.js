@@ -318,7 +318,7 @@ const READER_PROFILES = [
   {
     fullName: "Jacob Baska",
     firstName: "Jacob",
-    aliases: ["Jacob Baska", "Jacob"],
+    aliases: ["Jacob Baska", "Jacob", "Jake Baska", "Jake"],
     headshotUrl:
       "https://www.gravatar.com/avatar/078822ac5e3142951af136795491c23c?size=320&default=robohash",
     bio:
@@ -872,6 +872,25 @@ function getReaderInitials(label) {
     .toUpperCase();
 }
 
+function getReaderDisplayName(rawReviewerName, fallbackLabel = "") {
+  const trimmed = String(rawReviewerName || "").trim();
+  const profile = getReaderProfile(trimmed);
+  return String(profile?.fullName || trimmed || fallbackLabel || "").trim();
+}
+
+function getReaderBadgeText(label) {
+  const trimmed = String(label || "").trim();
+  if (!trimmed) return "?";
+  const cleaned = trimmed.replace(/^Dr\.?\s+/i, "");
+  const parts = cleaned.split(/\s+/).filter(Boolean);
+  if (parts.length >= 2) {
+    const first = parts[0];
+    const last = parts[parts.length - 1];
+    return `${first} ${last[0] || ""}`.trim();
+  }
+  return parts[0];
+}
+
 function showValidationMessages() {
   const blocks = [];
   if (state.errors.length) {
@@ -1144,7 +1163,7 @@ function buildStudentReport(fileName, rows, manual) {
     });
     return {
       row,
-      label: `Reader ${index + 1}`,
+      label: getReaderDisplayName(row.Reviewer, `Reader ${index + 1}`),
       tags,
     };
   });
@@ -1284,7 +1303,7 @@ function renderBandList(label, values) {
 function renderTagBadges(readerLabels) {
   if (!readerLabels.length) return "";
   return `<span class="tag-badges">${readerLabels
-    .map((label) => `<span class="tag-badge">${escapeHtml(label.replace("Reader ", ""))}</span>`)
+    .map((label) => `<span class="tag-badge">${escapeHtml(getReaderBadgeText(label))}</span>`)
     .join("")}</span>`;
 }
 
@@ -1293,8 +1312,8 @@ function renderTagGrid(activeTags, tagReaderMap) {
     ${TAG_DEFINITIONS.map((tag) => {
       const isActive = activeTags.has(tag.name);
       const readerLabels = isActive
-        ? [...(tagReaderMap.get(tag.name) || new Set())].sort(
-            (a, b) => Number(a.replace("Reader ", "")) - Number(b.replace("Reader ", ""))
+        ? [...(tagReaderMap.get(tag.name) || new Set())].sort((a, b) =>
+            a.localeCompare(b)
           )
         : [];
       const className = isActive
@@ -1349,8 +1368,8 @@ function renderTagGridFourColumns(activeTags, tagReaderMap) {
     ${TAG_DEFINITIONS.map((tag) => {
       const isActive = activeTags.has(tag.name);
       const readerLabels = isActive
-        ? [...(tagReaderMap.get(tag.name) || new Set())].sort(
-            (a, b) => Number(a.replace("Reader ", "")) - Number(b.replace("Reader ", ""))
+        ? [...(tagReaderMap.get(tag.name) || new Set())].sort((a, b) =>
+            a.localeCompare(b)
           )
         : [];
       const className = isActive
