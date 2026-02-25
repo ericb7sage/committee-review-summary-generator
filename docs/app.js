@@ -878,19 +878,6 @@ function getReaderDisplayName(rawReviewerName, fallbackLabel = "") {
   return String(profile?.fullName || trimmed || fallbackLabel || "").trim();
 }
 
-function getReaderBadgeText(label) {
-  const trimmed = String(label || "").trim();
-  if (!trimmed) return "?";
-  const cleaned = trimmed.replace(/^Dr\.?\s+/i, "");
-  const parts = cleaned.split(/\s+/).filter(Boolean);
-  if (parts.length >= 2) {
-    const first = parts[0];
-    const last = parts[parts.length - 1];
-    return `${first} ${last[0] || ""}`.trim();
-  }
-  return parts[0];
-}
-
 function showValidationMessages() {
   const blocks = [];
   if (state.errors.length) {
@@ -1164,6 +1151,7 @@ function buildStudentReport(fileName, rows, manual) {
     return {
       row,
       label: getReaderDisplayName(row.Reviewer, `Reader ${index + 1}`),
+      badgeLabel: String(index + 1),
       tags,
     };
   });
@@ -1174,7 +1162,7 @@ function buildStudentReport(fileName, rows, manual) {
     return trimmed;
   };
 
-  const readers = labeledReaders.map(({ row, label, tags }) => {
+  const readers = labeledReaders.map(({ row, label, badgeLabel, tags }) => {
     const ratingLabels = {
       whyLaw: normalizeRubricValue(row["Why Law?"], fileName, "Why Law?"),
       thrive: normalizeRubricValue(row["Thrive?"], fileName, "Thrive?"),
@@ -1188,6 +1176,7 @@ function buildStudentReport(fileName, rows, manual) {
 
     return {
       label,
+      badgeLabel,
       notes: row.Notes || "",
       anythingElse: row["Anything Else?"] || "",
       rawReviewer: row.Reviewer || "",
@@ -1213,12 +1202,12 @@ function buildStudentReport(fileName, rows, manual) {
 
   const activeTags = new Set();
   const tagReaderMap = new Map();
-  labeledReaders.forEach(({ label, tags }) => {
+  labeledReaders.forEach(({ badgeLabel, tags }) => {
     tags.forEach((tag) => {
       if (TAG_NAME_SET.has(tag)) {
         activeTags.add(tag);
         if (!tagReaderMap.has(tag)) tagReaderMap.set(tag, new Set());
-        tagReaderMap.get(tag).add(label);
+        tagReaderMap.get(tag).add(badgeLabel);
       } else {
         unknownTags.add(tag);
       }
@@ -1303,7 +1292,7 @@ function renderBandList(label, values) {
 function renderTagBadges(readerLabels) {
   if (!readerLabels.length) return "";
   return `<span class="tag-badges">${readerLabels
-    .map((label) => `<span class="tag-badge">${escapeHtml(getReaderBadgeText(label))}</span>`)
+    .map((label) => `<span class="tag-badge">${escapeHtml(label)}</span>`)
     .join("")}</span>`;
 }
 
