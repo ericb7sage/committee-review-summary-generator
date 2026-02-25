@@ -46,6 +46,7 @@ function normalizeTagKey(value) {
     .toLowerCase();
 }
 
+// Generated from Tag Explanation (2).csv
 const TAG_DEFINITIONS = [
   {
     "name": "Likable",
@@ -252,26 +253,40 @@ const TAG_CANONICAL_NAME_MAP = new Map(
 );
 const READER_PROFILES = [
   {
+    fullName: "Tajira McCoy",
+    firstName: "Tajira",
+    aliases: ["Tajira McCoy", "Tajira"],
+    headshotUrl:
+      "https://www.gravatar.com/avatar/9cefff863fcd2cd8f5301fe9a68caf0b?size=320&default=robohash",
+    bio:
+      "Former Director of Admissions & Scholarships at Berkeley Law. 7Sage expert in scholarships & diversity.",
+  },
+  {
     fullName: "Brigitte Suhr",
     firstName: "Brigitte",
     aliases: ["Brigitte", "Briggite"],
     headshotUrl:
       "https://www.gravatar.com/avatar/759b37b8091b593596f86f07072fe396?size=320&default=robohash",
-    bio: "",
+    bio:
+      "Former UVA AO. Accomplished international human rights lawyer.",
   },
   {
-    fullName: "Sam Riley",
+    fullName: "Dr. Sam Riley",
     firstName: "Sam",
-    aliases: ["Sam Riley"],
-    headshotUrl: "",
-    bio: "",
+    aliases: ["Dr. Sam Riley", "Sam Riley"],
+    headshotUrl:
+      "https://www.gravatar.com/avatar/900993889789621e14e63ad6a9958ca7?size=320&default=robohash",
+    bio:
+      "Senior Director of Admissions Programs at Texas Law. 7Sage's expert on resume & KJD admissions.",
   },
   {
     fullName: "Sam Kwak",
     firstName: "Sam",
     aliases: ["Sam Kwak"],
-    headshotUrl: "",
-    bio: "",
+    headshotUrl:
+      "https://www.gravatar.com/avatar/c47ae9e0cd28ca0ad23e082ae6f6df1f?size=320&default=robohash",
+    bio:
+      "Former Stanford Law AO. Former Senior Associate Director of Admissions at Northwestern Law.",
   },
   {
     fullName: "Reyes Aguilar",
@@ -279,16 +294,78 @@ const READER_PROFILES = [
     aliases: ["Reyes Aguilar", "Reyes"],
     headshotUrl:
       "https://www.gravatar.com/avatar/5df779a3d2aef8fbdd29088b8cc485d2?size=320&default=robohash",
-    bio: "",
+    bio:
+      "30 years of experience in law school admissions at Utah Law. Currently reviews files at UCLA Law.",
   },
   {
-    fullName: "Jennifer Kott",
-    firstName: "Jennifer",
-    aliases: ["Jennifer Kott", "Jennifer"],
+    fullName: "Kory Hawkins",
+    firstName: "Kory",
+    aliases: ["Kory Hawkins", "Kory"],
+    headshotUrl:
+      "https://www.gravatar.com/avatar/74291fcb1e0ab570fd7e026e57dd278f?size=320&default=robohash",
+    bio:
+      "Former Columbia Law AO. Former Associate Director of Admissions at UC Law SF.",
+  },
+  {
+    fullName: "Kamil Brown",
+    firstName: "Kamil",
+    aliases: ["Kamil Brown", "Kamil"],
+    headshotUrl:
+      "https://www.gravatar.com/avatar/f3e721c5dc9708ebc13125ecd0db7716?size=320&default=robohash",
+    bio:
+      "Former Yale Law AO. Former admissions reader at Fordham Law.",
+  },
+  {
+    fullName: "Jacob Baska",
+    firstName: "Jacob",
+    aliases: ["Jacob Baska", "Jacob"],
+    headshotUrl:
+      "https://www.gravatar.com/avatar/078822ac5e3142951af136795491c23c?size=320&default=robohash",
+    bio:
+      "Former Director of Admissions at Notre Dame Law. Host of the 7Sage Admissions Podcast.",
+  },
+  {
+    fullName: "Jocelyn Glantz",
+    firstName: "Jocelyn",
+    aliases: ["Jocelyn Glantz", "Jocelyn"],
+    headshotUrl:
+      "https://www.gravatar.com/avatar/47947e4483a165443bbb98abecfdde40?size=320&default=robohash",
+    bio: "Former Assistant Director of Admissions at Brooklyn Law.",
+  },
+  {
+    fullName: "Jen Kott",
+    firstName: "Jen",
+    aliases: ["Jen Kott", "Jennifer Kott", "Jen", "Jennifer"],
     headshotUrl:
       "https://www.gravatar.com/avatar/29d0502c4ea11721ff29d3d1fa1c3bdd?size=320&default=robohash",
     bio:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tincidunt erat et quam lobortis porttitor. Proin eleifend nisi in neque commodo efficitur. Quisque fermentum mi.",
+      "Former AO at Northwestern, Tulane, & UNC Chapel Hill. Former Director of Admissions at Arizona Law.",
+  },
+  {
+    fullName: "Bette Bradley",
+    firstName: "Bette",
+    aliases: ["Bette Bradley", "Bette"],
+    headshotUrl:
+      "https://www.gravatar.com/avatar/c16339392d0ad8e50f41bb057d7a17d3?size=320&default=robohash",
+    bio:
+      "Former Assistant Dean for Admissions & Scholarships at Ole Miss Law. Accomplished healthcare attorney.",
+  },
+  {
+    fullName: "Sherolyn Hurst",
+    firstName: "Sherolyn",
+    aliases: ["Sherolyn Hurst", "Sherolyn"],
+    headshotUrl:
+      "https://www.gravatar.com/avatar/66552b1ad0715e56128d3163639a4ba4?size=320&default=robohash",
+    bio:
+      "Former Director of Admissions at Golden Gate Law. Former AO at Dedman, St. Thomas, & Texas Wesleyan.",
+  },
+  {
+    fullName: "Carol Cochran",
+    firstName: "Carol",
+    aliases: ["Carol Cochran", "Carol"],
+    headshotUrl:
+      "https://www.gravatar.com/avatar/cd528c47bc4c30f6418a7f422a9407b1?size=320&default=robohash",
+    bio: "Assistant Dean at Seattle University School of Law.",
   },
 ];
 
@@ -428,7 +505,7 @@ const PRINT_CSS = `
   .page.reader-detail-page { padding: 18px; display: flex; flex-direction: column; gap: 10px; background: #fffffe; position: relative; }
   .reader-top-grid { display: grid; grid-template-columns: 1.35fr 0.6fr 1.05fr; gap: 10px; min-height: 0; }
   .page.reader-summary-page { padding: 24px; background: #fffffe; }
-  .reader-summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; height: 100%; }
+  .reader-summary-grid { display: grid; grid-template-columns: 1fr; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 12px; height: 100%; }
   .reader-footer-box { border: 1px solid #d8dee9; border-radius: 8px; padding: 6px 8px; display: grid; grid-template-rows: auto 1fr; gap: 4px; overflow: hidden; font-size: 10px; line-height: 1.3; }
   .reader-footer-title { font-family: "Fraunces", "Times New Roman", serif; font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: #475467; }
   .reader-footer-body { white-space: pre-wrap; }
