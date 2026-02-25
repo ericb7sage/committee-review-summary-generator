@@ -36,51 +36,220 @@ const BAND_LABELS = {
   "T100+": "Top 100+",
 };
 
+function normalizeTagKey(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[’‘]/g, "'")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+}
+
 const TAG_DEFINITIONS = [
-  { name: "Academics Need Explanation", polarity: "negative" },
-  { name: "Repetitive Statements", polarity: "negative" },
-  { name: "Generic Why X", polarity: "negative" },
-  { name: "Writing Needs Improvement", polarity: "negative" },
-  { name: "Too Much Early Life", polarity: "negative" },
-  { name: "Impressive Experiences", polarity: "positive" },
-  { name: "Lovely PS", polarity: "positive" },
-  { name: "Likable", polarity: "positive" },
-  { name: "Overcame Challenges", polarity: "positive" },
-  { name: "Unique Perspective", polarity: "positive" },
-  { name: "Good Writer", polarity: "positive" },
-  { name: "Useful addendum", polarity: "positive" },
-  { name: "Be More Professional", polarity: "negative" },
-  { name: "Moving Story", polarity: "positive" },
-  { name: "Good Community Member", polarity: "positive" },
-  { name: "Test History Needs Explanation", polarity: "negative" },
-  { name: "Workplace-Bound", polarity: "negative" },
-  { name: "Questionable Formatting", polarity: "negative" },
-  { name: "Lovely DS", polarity: "positive" },
-  { name: "Unnecessary Addendum", polarity: "negative" },
-  { name: "Lovely Supplemental", polarity: "positive" },
-  { name: "Rigorous Undergrad", polarity: "positive" },
-  { name: "Leadership Evidence", polarity: "positive" },
-  { name: "Strong Service Record", polarity: "positive" },
-  { name: "Clear Career Vision", polarity: "positive" },
-  { name: "Cohesive Narrative", polarity: "positive" },
-  { name: "Strong Recommendation Signals", polarity: "positive" },
-  { name: "Compelling Why Law", polarity: "positive" },
-  { name: "Thin Why Law Narrative", polarity: "negative" },
-  { name: "Limited Impact Evidence", polarity: "negative" },
-  { name: "Overly Broad Goals", polarity: "negative" },
-  { name: "Resume-PS Mismatch", polarity: "negative" },
-  { name: "Needs More Specificity", polarity: "negative" },
-  { name: "Outstanding Writing Voice", polarity: "positive" },
-  { name: "Strong Professional Maturity", polarity: "positive" },
-  { name: "Interview Ready", polarity: "positive" },
-  { name: "Application Timing Risk", polarity: "negative" },
-  { name: "Score Band Risk", polarity: "negative" },
-  { name: "GPA Context Needed", polarity: "negative" },
-  { name: "Exceptional Fit Signals", polarity: "positive" },
+  {
+    "name": "Likable",
+    "polarity": "positive",
+    "description": "Admissions committees are building a community, not filling seats. Something about your writing made us feel like we know and like you. Likability is often established through a warm tone, a flash of humor, or a moment of genuine vulnerability. Being likable doesn’t get you into law school—but it might be the slight edge that gets you picked over someone equally qualified."
+  },
+  {
+    "name": "Unique Perspective",
+    "polarity": "positive",
+    "description": "We can imagine how your background would help you make a unique contribution to a law school class. This can come from cultural diversity or diversity of life experiences. This is particularly helpful for top schools—with so many excellent candidates, T14 admissions officers often consider how you might complement their goal of building a well-rounded class. Law school classrooms work best when the people in them have genuinely different ways of seeing the world."
+  },
+  {
+    "name": "Strong Hire",
+    "polarity": "positive",
+    "description": "Your profile suggests you'll be a strong candidate on the job market. In recent years, this has become one of the primary things admissions officers search for. Employment outcomes dominate school ranking metrics. You probably have some combination of professional polish, clear career direction, domain expertise, or the kind of résumé that signals to employers that you can hit the ground running."
+  },
+  {
+    "name": "Overcame Challenges",
+    "polarity": "positive",
+    "description": "We can tell that you’ve overcome disadvantages, be they economic hardship or difficult personal situations. While we never recommend telling a “sob story” to get into law school, it is important for the committee to understand what you’ve overcome on your way here. Emphasis on the ‘overcome.’ Committees like to see how you’ve grown and changed in response to adversity. But they also want to know that those hardships are behind you and that you’ll be able to focus on your legal studies."
+  },
+  {
+    "name": "Impressive Experiences",
+    "polarity": "positive",
+    "description": "We’re impressed by your résumé! At some schools, there are specific AO-codes left on files to mark someone whose experience gives them extra consideration. With the right résumé, you can punch above your weight — particularly when you’re a splitter or very close to meeting both medians."
+  },
+  {
+    "name": "Moving Story",
+    "polarity": "positive",
+    "description": "We were moved by the story you told. Admissions officers are humans—while their job is to figure out why you want to come to law school (and if you’ll be a good fit), they’re going to advocate for those they feel a connection with. Telling a moving story makes it more likely for an admissions officer to fight for you—that can make a lot of difference, but they’ll need other things to point to that make you admittable."
+  },
+  {
+    "name": "Good Writer",
+    "polarity": "positive",
+    "description": "We think you’re the kind of writer law schools look for. Dexterous writing is one of the best indicators of dexterous thinking. Good personal statement writing is intimate but bright, intellectual but never stuffy. Good writing is an amplifier—it doesn’t get you into a school by itself, but it does make the other elements of your application shine."
+  },
+  {
+    "name": "Good Community Member",
+    "polarity": "positive",
+    "description": "We can tell that you’ve contributed significantly to past academic or professional communities. This is something admissions officers look for to estimate how you’ll contribute to your law school community. It might be useful for you to spell out how you plan to contribute to law school organizations or discussions to add a greater impact to this perspective."
+  },
+  {
+    "name": "Lovely PS",
+    "polarity": "positive",
+    "description": "We loved your personal statement. That probably means you’ve both answered ‘Why Law?’ to our complete satisfaction while also using the space to tell a story that interested us. The personal statement is the place we go to ‘figure out’ as an applicant. The questions about your motivation and personality we have from your resume need to be answered by the rest of your application documents. You’ve done well."
+  },
+  {
+    "name": "Lovely DS",
+    "polarity": "positive",
+    "description": "We love your diversity/perspective statement. You can think about the DS this way. Admissions officers know if you’re ‘admittable’ by the end of your personal statement. They look to the diversity statement to help them make a decision between admittable candidates. What else do you offer? The easiest way to have a great diversity statement is to offer an obviously diverse background. The other way is to evidence a strong voice and a unique way of reflecting on your life."
+  },
+  {
+    "name": "Strong Why X",
+    "polarity": "positive",
+    "description": "We think you have a compelling reason for attending this particular school. Strong Why X answers are specific to both the school and the applicant. You’ve connected something about yourself to something unique that the school offers, whether that’s an academic program or just a personal connection. Some schools don’t care about Why X answers—Harvard knows everyone wants to go to Harvard. Other schools, particularly those in locations people aren’t often excited to move to, scrutinize Why X answers for evidence that you will actually come to their school. If a school doesn’t think you’ll accept their offer, they’d prefer not to make it."
+  },
+  {
+    "name": "Lovely Supplemental",
+    "polarity": "positive",
+    "description": "We loved one of your supplemental statements. Supplemental essays are often places to complicate your file—to show an element of yourself that doesn’t come across in your other writing. Some, like the Yale 250, are places to show your intellectual chops. Others, like Georgetown’s Top 10 List, are simply places to demonstrate you have a winning personality."
+  },
+  {
+    "name": "Useful addendum",
+    "polarity": "positive",
+    "description": "We got useful context into your situation from an addendum. Addenda should do just that: provide context we wouldn’t otherwise have. It’s not the place to tell a long story or show off your writing chops. Good addenda are simple, frank, and as short as possible. Be contrite and never defensive. If you’re explaining past behavior, show what’s changed."
+  },
+  {
+    "name": "Rigorous Undergrad",
+    "polarity": "positive",
+    "description": "We can tell that you challenged yourself in undergrad beyond what your raw GPA demonstrates. While your raw UGPA is essential for determining if you help a school reach its medians, your transcript is also a story—and one that admissions officers are trained to read well. Did you challenge yourself with difficult classes? Did you take too many pass/fails without explanation? Was your major hard? Does your undergrad grade harshly compared to its peers? Did you do well despite many other commitments? These are the questions committees ask to figure out how you’ll do in the significantly more rigorous environment of a top law school."
+  },
+  {
+    "name": "Unnecessary Addendum",
+    "polarity": "negative",
+    "description": "You might not need an addendum you submitted. We only recommend submitting addenda when they genuinely help add context to your file. While no two admissions readers have the exact same opinion on when an addendum is truly needed, there are some clear-cut cases. In the middle, it’s a strategic decision. Consider whether you’re actually telling the committee something they need to know. Academic addenda should provide blow-by-blow context for what went wrong and what changed in college. LSAT addenda are less useful unless they’re explaining test-day difficulties or guarding against an easy misunderstanding."
+  },
+  {
+    "name": "Tone Check",
+    "polarity": "negative",
+    "description": "Even though you don’t mean it, something about your tone struck us the wrong way. The most common error in tone is inadvertently  coming across as arrogant or presumptuous. if you’re applying to law school, you want to show off your accomplishments. But sometimes things come across differently in writing. Avoid name-dropping or anything that can be misread as arrogance. This is one of the most common AO pet peeves."
+  },
+  {
+    "name": "Questionable Formatting",
+    "polarity": "negative",
+    "description": "I think you need to fix the formatting of one or more documents. AOs love things to be formatted in clean, predictable ways. Your creativity should come across in your essays, not your choice of font or placement of headers. Luckily, there are usually very clear expectations when it comes to both resumes and application essays. For resumes, check out this portion of the 7Sage admissions course. For essays, read this."
+  },
+  {
+    "name": "Generic Why X",
+    "polarity": "negative",
+    "description": "I think your explanation for why you want to attend a specific school is lacking. Bad Why X answers often involve things that could be true about any school. Cornell knows that Columbia also has clinics and experiential learning opportunities that will allow you to dive into immigration law. What it doesn’t know is if you’d prefer the Finger Lakes to the Upper West Side. If you’re going to focus on academic reasons for preferring one school over the other, make sure that they’re legitimately unique."
+  },
+  {
+    "name": "Test History Needs Explanation",
+    "polarity": "negative",
+    "description": "Your LSAT or GRE history left us wanting context. This can be a tricky one. Some admissions readers want an explanation for as little as a six-point jump. Often, the answer is just a simple ‘I studied more.’ Check school instructions for specific guidance. Generally, if you’ve canceled your score twice or have a very significant outlier, an explanation doesn’t hurt. If your score history reads 160, 162, 158, 172, C, almost any reader will be desperate to know why they should think that 172 is actually more representative of your abilities."
+  },
+  {
+    "name": "Academics Need Explanation",
+    "polarity": "negative",
+    "description": "Looking over your transcript and/or UPGA, we need context. Schools expect academic addenda when you had one or two semesters that were significantly worse without apparent explanation or if you’ve taken too many withdrawals or pass/fails. Avoid writing an academic addendum for a single C. But multiple Cs or a D or F likely warrants an explanation."
+  },
+  {
+    "name": "Résumé Rehash",
+    "polarity": "negative",
+    "description": "You’re spending too much time repeating your accomplishments in your essays. AOs often look for more information about your experiences in your personal statement. Something becomes a “résumé rehash” when it feels like you’re going through too many experiences and mostly focusing on the surface level. Moving chronologically “I did this, then I did this” is the biggest sign of a résumé rehash. You should probably revise your personal statement in one of two ways. Either pick one or two experiences to go dive into with much more detail — or make sure that there’s a clear throughline through each paragraph that isn’t just about what you did next: what ideas, questions, and personal quests drove your movement through your various experiences?"
+  },
+  {
+    "name": "Résumé Needs Polish",
+    "polarity": "negative",
+    "description": "Your résumé could use more polish. When it comes to résumés, consistency is the most important aspect. Make sure that your formatting for each section is clear and identical—down to consistently using the same kind of dash between dates (one of the most common mistakes.) The best place to start is with a clear, law-school approved template. We recommend one of our own."
+  },
+  {
+    "name": "Padded Résumé",
+    "polarity": "negative",
+    "description": "It seemed like you were trying to fluff up your résumé. If you’re onto a second page, consider going down to just one page. Don’t try to overplay your hand: three bullets are almost always enough even for complex roles. Don’t try to play limited volunteer engagements off as full employment."
+  },
+  {
+    "name": "Cramped Résumé",
+    "polarity": "negative",
+    "description": "There wasn’t enough white space in your résumé— it made it difficult to read. AOs need at least .75” margins on all sides — and most prefer 1-inch. Readability is the key — your résumé is essential, but AOs aren’t spending too much time here. Readability depends on two things: information being where AOs expect it (dates on the right, education at the top, personal at the bottom) and breathability. The whitespace on your résumé is essential. If you haven’t gone onto a second page, consider it. Also consider if you can cut back on some bullets (three is enough for almost every position.)"
+  },
+  {
+    "name": "Repetitive Statements",
+    "polarity": "negative",
+    "description": "You’re repeating too much material between different parts of your application. An application isn’t like a college paper — you actually don’t need to fill up every space. Only write an essay if it will add a significant new element to your file. Often applicants struggle to avoid repeating material between their personal statement and ‘perspective’ statement. Put your most important story, the one that really explains who you are and why you’re going to law school, in the PS. Then use your diversity statement to show some other element of who you are."
+  },
+  {
+    "name": "A Little Stiff",
+    "polarity": "negative",
+    "description": "Your personality isn’t coming through strongly enough in your writing. After we read files, AOs ask “Do I feel like I really know this person?” Sounding too formal sends the wrong signal. Yes, schools need to know that you can be professional. But they also need to know that you’re a human with quirks and passions. Imagine writing a letter to a professor you’re very comfortable with. You want to still present yourself at your best, of course, but you also want to connect with them. That’s your goal here."
+  },
+  {
+    "name": "Degree Collector?",
+    "polarity": "negative",
+    "description": "A lot of people apply to law school after doing previous graduate work. A master’s can be a great way to show academic potential, personal growth, and commitment to your interests. But if you’re applying to law school after multiple MAs, or after an MBA or PhD, committees might start to wonder if you’re more interested in being a law student than a lawyer. Because law school rankings depend on job outcomes, schools are fastidious in filtering out those whose J.D.-motivations they don’t understand. The antidote to this is a strong Why Law — spend more of your application explaining, and then proving, why you really do need a J.D., and why you’re certain this professional path is now the only one for you. If a J.D. can be convincingly portrayed as a continuation of your studies, turning your previous graduate studies into a compelling advantage you’ll have, make that argument. If it’s a genuine change of direction, tell a story that gives your reader insight."
+  },
+  {
+    "name": "Be More Professional",
+    "polarity": "negative",
+    "description": "While it’s important not to come across as too stiff, something in your file made us question your professionalism. We mean no offense: law school sits on the intersection of academia and the professional world. 1Ls often come in little more than college students. They leave prepared to make decisions with the highest human stakes. We look to the application to figure out if you can walk a fine line between the personal and the professional. Humor is good, but don’t be too jokey. You can be open about things you’ve gone through, but be mindful of reader’s sensibilities. And don’t presume you know the law before you’ve become a lawyer—committees often respond negatively to that."
+  },
+  {
+    "name": "C&F Not Sufficiently Addressed",
+    "polarity": "negative",
+    "description": "You needed to write an explanation for a character & fitness issue, and it’s still not quite there. We still have fundamental questions about what happened or how you’ve changed as a result. C&F addenda are tricky—while of course you shouldn’t reveal anything that you don’t have to, you do need to be open and contrite in response to a university’s questions. Avoid anything that seems like you’re making an excuse for yourself. Give context in a clear, contrite tone."
+  },
+  {
+    "name": "Show More Maturity",
+    "polarity": "negative",
+    "description": "A lot of people apply to law school when they’re still very young. For KJDs or other applicants without extensive work experiences, law school admissions officers need to find the ones who seem like they’re already ready for the working world and civil but heated classroom discussions with people who might profoundly disagree with you. Don’t force it, but try to spend more of your application demonstrating a mature personality and reflections. If you’re particularly young, avoid portraying yourself as young in your personal statement by focusing too much on early life."
+  },
+  {
+    "name": "Writing Needs Improvement",
+    "polarity": "negative",
+    "description": "Law school admissions officers look at your writing as evidence of your thinking. It’s very, very important that you’re writing at your best. And we do mean your best. Law schools have your LSAT writing on file and will notice if your writing voice differs drastically between the two documents. That doesn’t mean that you shouldn’t put your writing through multiple rounds of revision. Focus specifically on a clear sequence of ideas, paragraphs that each serve a unique purpose, and prose that’s easy-to-follow but still vivid an unique."
+  },
+  {
+    "name": "Show More Openness",
+    "polarity": "negative",
+    "description": "Strong opinions are good, but law schools look for extra reassurance that you can “connect across differences.” Law schools are more ideologically diverse than most undergrad classrooms — there will be students (and professors) with radically different opinions than you. Don’t hide key parts of who you are, but do signal that you’re excited to connect with people who disagree with you through productive discussion."
+  },
+  {
+    "name": "Unexplained Gap",
+    "polarity": "negative",
+    "description": "You have a gap in your work history or academic record I need an explanation for. Sometimes it’s possible to quickly address a gap on your résumé by showing what you were doing during that time, such as taking care of a family member. If you took academic leave or have been out of work for a while, committees will likely expect an addendum to explain why you took that time. As always, they’re worried about students who might take similar gaps after law school, which would hurt their employment rankings. Don’t overdo it—just give the needed context."
+  },
+  {
+    "name": "Unforced Error",
+    "polarity": "negative",
+    "description": "While they want you to be contrite, law schools also don’t want you to disclose unnecessarily harmful information. If you did something against the rules but were never caught, now isn’t the time for a confession. Law schools look for the lawyerly skill of knowing what to reveal when. Make sure you know how to show your best face."
+  },
+  {
+    "name": "Too Much Early Life",
+    "polarity": "negative",
+    "description": "Reading your file, we learned too much about your childhood and not enough about who you are now. Now isn’t the time to tackle a topic that could have worked as a college application essay. Introduce yourself to AOs as a fully-formed adult—then go back to establish things about your early life if they’re necessary to understanding why you’re seeking a law degree today."
+  },
+  {
+    "name": "AI?",
+    "polarity": "negative",
+    "description": "Even if you didn’t use it, something in your statements sounded like AI. Our admissions readers are trained to detect AI-generated text. If an AO suspects you composed your application documents with generative AI, the safest thing they can do is auto-deny. The ethical demands of the legal profession are profound and if they can’t trust you to apply without AI, they can’t trust you to actually do the work required in law school. If you used AI to write your statements, rewrite them without AI. If this is a false positive, you should identify the features of your writing giving that impression and revise to err on the side of caution."
+  },
+  {
+    "name": "Workplace-Bound",
+    "polarity": "negative",
+    "description": "Legacy tag from committee ballots. Explanation not yet provided in the tag explanation CSV."
+  },
+  {
+    "name": "Stretched Résumé",
+    "polarity": "negative",
+    "description": "Legacy tag from committee ballots. Explanation not yet provided in the tag explanation CSV."
+  },
+  {
+    "name": "Unnecessary Disclosure",
+    "polarity": "negative",
+    "description": "Legacy tag from committee ballots. Explanation not yet provided in the tag explanation CSV."
+  }
 ];
 
 const TAG_NAME_SET = new Set(TAG_DEFINITIONS.map((tag) => tag.name));
 const TAG_POLARITY_MAP = new Map(TAG_DEFINITIONS.map((tag) => [tag.name, tag.polarity]));
+const TAG_DESCRIPTION_MAP = new Map(TAG_DEFINITIONS.map((tag) => [tag.name, tag.description]));
+const TAG_CANONICAL_NAME_MAP = new Map(
+  TAG_DEFINITIONS.map((tag) => [normalizeTagKey(tag.name), tag.name])
+);
 const READER_PROFILES = [
   {
     fullName: "Brigitte Suhr",
@@ -799,6 +968,11 @@ function parseTags(csvTagString) {
     .filter(Boolean);
 }
 
+function canonicalizeTagName(tag) {
+  const key = normalizeTagKey(tag);
+  return TAG_CANONICAL_NAME_MAP.get(key) || "";
+}
+
 function mapBandValue(value, fileName, fieldLabel) {
   const trimmed = String(value || "").trim();
   if (!trimmed) return "";
@@ -882,10 +1056,13 @@ function buildStudentReport(fileName, rows, manual) {
   const randomizedRows = shuffleReaders(rows);
   const labeledReaders = randomizedRows.map((row, index) => {
     const rawTags = parseTags(row.Tags);
-    const tags = rawTags.filter((tag) => TAG_NAME_SET.has(tag));
-    rawTags.forEach((tag) => {
-      if (!TAG_NAME_SET.has(tag)) {
-        unknownTags.add(tag);
+    const tags = [];
+    rawTags.forEach((rawTag) => {
+      const canonicalTag = canonicalizeTagName(rawTag);
+      if (canonicalTag && TAG_NAME_SET.has(canonicalTag)) {
+        if (!tags.includes(canonicalTag)) tags.push(canonicalTag);
+      } else if (rawTag) {
+        unknownTags.add(rawTag);
       }
     });
     return {
@@ -1271,9 +1448,9 @@ function renderTagExplanationPage(tags) {
                   <span class="tag-text">${escapeHtml(tag)}</span>
                 </span>
               </div>
-              <div class="tag-explanation-body">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </div>
+              <div class="tag-explanation-body">${escapeHtml(
+                TAG_DESCRIPTION_MAP.get(tag) || "Description coming soon."
+              )}</div>
             </article>`;
             }
           )
