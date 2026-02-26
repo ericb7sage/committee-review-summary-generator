@@ -428,12 +428,18 @@ const PRINT_CSS = `
   .tag-pill.active-negative { background: #fef2f2; border-color: #fecaca; color: #7f1d1d; }
   .tag-badges { display: inline-flex; gap: 4px; position: absolute; top: -12px; right: 8px; margin-left: 0; vertical-align: baseline; z-index: 2; }
   .tag-badge { min-width: 14px; height: 14px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; background: #111827; color: #fff; border: 1px solid #fff; }
+  .tag-badge.reader-slot-1 { background: #227f9c; }
+  .tag-badge.reader-slot-2 { background: #15b79e; }
+  .tag-badge.reader-slot-3 { background: #db2777; }
   .tag-pill.inactive { color: #5e6778; background: #fff; }
   .reader-cards-source { display: none; }
   .reader-cards { display: flex; flex-direction: column; gap: 12px; height: 100%; flex: 1; }
   .reader-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 12px; display: grid; gap: 10px; }
+  .reader-card.reader-slot-1 { border-color: #227f9c; }
+  .reader-card.reader-slot-2 { border-color: #15b79e; }
+  .reader-card.reader-slot-3 { border-color: #db2777; }
   .page-continue-note { position: absolute; right: 18px; bottom: 12px; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; opacity: 0; }
-  .page.reader-detail-page.has-continue .page-continue-note { opacity: 1; }
+  .page.has-continue .page-continue-note { opacity: 1; }
   .reader-title { margin: 0 0 8px; font-size: 14px; }
   .notes-box { border: 1px solid #333; min-height: 1.5in; padding: 10px; white-space: pre-wrap; margin-bottom: 8px; }
   .summary-banner { height: 58px; background: linear-gradient(-45deg, #15b79e 0%, #227f9c 100%); color: #fcfaf8; text-align: center; font-family: "Fraunces", "Times New Roman", serif; font-size: 30px; font-weight: 700; line-height: 58px; margin-bottom: 0; }
@@ -480,8 +486,11 @@ const PRINT_CSS = `
   .reader-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: 1fr; gap: 10px; height: 100%; align-content: stretch; }
   .reader-col { padding: 2px 0; position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 0; }
   .summary-page .reader-col:not(:last-child)::after { content: ""; position: absolute; top: 10%; bottom: 10%; right: -6px; width: 2px; background: #d8dee9; }
-  .avatar { width: 52px; height: 52px; border-radius: 12px; margin: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #2b7abf, #14b8a6); color: #fff; font-weight: 800; font-size: 14px; }
+  .avatar { width: 52px; height: 52px; border-radius: 12px; margin: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #2b7abf, #14b8a6); color: #fff; font-weight: 800; font-size: 14px; border: 1px solid transparent; }
   .avatar.has-photo { background: transparent; padding: 0; }
+  .avatar.reader-slot-1 { border-color: #227f9c; }
+  .avatar.reader-slot-2 { border-color: #15b79e; }
+  .avatar.reader-slot-3 { border-color: #db2777; }
   .avatar img { width: 100%; height: 100%; border-radius: inherit; object-fit: cover; display: block; }
   .reader-name { text-align: center; margin: 0 0 1px; font-size: 16px; font-family: "Fraunces", "Times New Roman", serif; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
   .reader-bio { margin: 0; text-align: center; font-size: 11px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
@@ -545,8 +554,9 @@ const PRINT_CSS = `
   .reader-tag-pill.active-negative { background: #fef2f2; border-color: #fecaca; color: #7f1d1d; }
   .reader-tag-pill.inactive { color: #5e6778; background: #fff; }
   .reader-tag-empty { font-size: 10px; color: #98a2b3; align-self: center; }
-  .tag-explanation-page { padding: 24px; background: #fffffe; display: flex; flex-direction: column; height: 792px; }
-  .tag-explanation-grid { display: grid; grid-template-columns: 1fr; grid-template-rows: repeat(6, minmax(0, 1fr)); gap: 12px; height: 100%; align-content: stretch; flex: 1; }
+  .tag-explanation-source { display: none; }
+  .tag-explanation-page { padding: 24px; background: #fffffe; display: flex; flex-direction: column; height: 792px; position: relative; }
+  .tag-explanation-cards { display: flex; flex-direction: column; gap: 12px; flex: 1; min-height: 0; padding-bottom: 22px; }
   .tag-explanation-item { border: 1px solid #d8dee9; border-radius: 8px; padding: 10px 12px; background: transparent; display: grid; gap: 6px; min-height: 0; }
   .tag-explanation-title { display: flex; align-items: center; gap: 8px; }
   .tag-explanation-pill { padding: 4px 10px; font-size: 10px; line-height: 1.1; }
@@ -740,6 +750,65 @@ const PRINT_FIT_SCRIPT = `
   });
 }
 
+    function paginateTagExplanationCards(root = document) {
+  const scope = root.querySelector(".doc-shell") || root;
+  const source = scope.querySelector("[data-tag-explanation-source]");
+  if (!source) return;
+
+  scope.querySelectorAll(".tag-explanation-page").forEach((page) => page.remove());
+
+  const parent = source.parentNode;
+  const anchor = source.nextSibling;
+  const itemTemplates = [...source.querySelectorAll(".tag-explanation-item")];
+  if (!itemTemplates.length) return;
+
+  const createPage = () => {
+    const page = document.createElement("section");
+    page.className = "page tag-explanation-page";
+    page.innerHTML =
+      '<div class="tag-explanation-cards"></div><div class="page-continue-note">Section continues on next page.</div>';
+    return page;
+  };
+
+  const pages = [];
+  let currentPage = createPage();
+  parent.insertBefore(currentPage, anchor);
+  pages.push(currentPage);
+  let container = currentPage.querySelector(".tag-explanation-cards");
+
+  const addPage = () => {
+    currentPage = createPage();
+    parent.insertBefore(currentPage, anchor);
+    pages.push(currentPage);
+    container = currentPage.querySelector(".tag-explanation-cards");
+  };
+
+  const tryAppendCard = (card) => {
+    container.appendChild(card);
+    const fits = container.scrollHeight <= container.clientHeight + 0.5;
+    if (!fits) container.removeChild(card);
+    return fits;
+  };
+
+  itemTemplates.forEach((template) => {
+    const card = template.cloneNode(true);
+    if (tryAppendCard(card)) return;
+
+    if (container.children.length) {
+      addPage();
+      if (tryAppendCard(card)) return;
+    }
+
+    container.appendChild(card);
+  });
+
+  pages.forEach((page, index) => {
+    if (index < pages.length - 1) {
+      page.classList.add("has-continue");
+    }
+  });
+}
+
 function fitSectionContent(section) {
       const container = section.querySelector(".section-body");
       const content = container?.querySelector(".fit-content");
@@ -782,9 +851,11 @@ function fitSectionContent(section) {
     window.addEventListener("load", () => {
       fitAllSummarySections();
       paginateReaderCards();
+      paginateTagExplanationCards();
       const finish = () => {
         fitAllSummarySections();
         paginateReaderCards();
+        paginateTagExplanationCards();
         window.focus();
         window.print();
       };
@@ -892,6 +963,11 @@ function getReaderDisplayName(rawReviewerName, fallbackLabel = "") {
   const trimmed = String(rawReviewerName || "").trim();
   const profile = getReaderProfile(trimmed);
   return String(profile?.fullName || trimmed || fallbackLabel || "").trim();
+}
+
+function getReaderSlotClass(slotLabel) {
+  const normalized = String(slotLabel || "").trim();
+  return /^(1|2|3)$/.test(normalized) ? `reader-slot-${normalized}` : "";
 }
 
 function showValidationMessages() {
@@ -1308,7 +1384,10 @@ function renderBandList(label, values) {
 function renderTagBadges(readerLabels) {
   if (!readerLabels.length) return "";
   return `<span class="tag-badges">${readerLabels
-    .map((label) => `<span class="tag-badge">${escapeHtml(label)}</span>`)
+    .map((label) => {
+      const slotClass = getReaderSlotClass(label);
+      return `<span class="tag-badge${slotClass ? ` ${slotClass}` : ""}">${escapeHtml(label)}</span>`;
+    })
     .join("")}</span>`;
 }
 
@@ -1487,8 +1566,9 @@ function renderReaderNotesBlock(text) {
 
 function renderReaderCard(reader) {
   const notesText = getReaderNotesText(reader);
+  const slotClass = getReaderSlotClass(reader.badgeLabel);
   return `
-    <article class="reader-card">
+    <article class="reader-card${slotClass ? ` ${slotClass}` : ""}">
       <div class="reader-section-title">${escapeHtml(reader.label)}</div>
       <div class="reader-top-grid">
         <div class="reader-col ratings">
@@ -1559,36 +1639,24 @@ function renderWaitingPage() {
   `;
 }
 
-function renderTagExplanationPage(tags) {
-  return `
-    <section class="page tag-explanation-page">
-      <div class="tag-explanation-grid">
-        ${tags
-          .map(
-            (tag) => {
-              const polarity = TAG_POLARITY_MAP.get(tag);
-              const className =
-                polarity === "positive"
-                  ? "tag-pill active-positive"
-                  : polarity === "negative"
-                    ? "tag-pill active-negative"
-                    : "tag-pill inactive";
-              return `<article class="tag-explanation-item">
-              <div class="tag-explanation-title">
-                <span class="${className} tag-explanation-pill">
-                  <span class="tag-text">${escapeHtml(tag)}</span>
-                </span>
-              </div>
-              <div class="tag-explanation-body">${escapeHtml(
-                TAG_DESCRIPTION_MAP.get(tag) || "Description coming soon."
-              )}</div>
-            </article>`;
-            }
-          )
-          .join("")}
-      </div>
-    </section>
-  `;
+function renderTagExplanationItem(tag) {
+  const polarity = TAG_POLARITY_MAP.get(tag);
+  const className =
+    polarity === "positive"
+      ? "tag-pill active-positive"
+      : polarity === "negative"
+        ? "tag-pill active-negative"
+        : "tag-pill inactive";
+  return `<article class="tag-explanation-item">
+    <div class="tag-explanation-title">
+      <span class="${className} tag-explanation-pill">
+        <span class="tag-text">${escapeHtml(tag)}</span>
+      </span>
+    </div>
+    <div class="tag-explanation-body">${escapeHtml(
+      TAG_DESCRIPTION_MAP.get(tag) || "Description coming soon."
+    )}</div>
+  </article>`;
 }
 
 function renderTagExplanationPages(report) {
@@ -1602,13 +1670,11 @@ function renderTagExplanationPages(report) {
       </section>
     `;
   }
-
-  const pages = [];
-  const perPage = 6;
-  for (let i = 0; i < tags.length; i += perPage) {
-    pages.push(renderTagExplanationPage(tags.slice(i, i + perPage)));
-  }
-  return pages.join("");
+  return `
+    <div class="tag-explanation-source" data-tag-explanation-source>
+      ${tags.map((tag) => renderTagExplanationItem(tag)).join("")}
+    </div>
+  `;
 }
 
 function getReaderSortKey(reader) {
@@ -1669,14 +1735,15 @@ function renderStudentDocument(report) {
                 .map((reader) => {
                   const profile = getReaderProfile(reader.rawReviewer);
                   const name = profile?.fullName || reader.rawReviewer || reader.label;
+                  const slotClass = getReaderSlotClass(reader.badgeLabel);
                   const avatarContent = profile?.headshotUrl
                     ? `<img src="${escapeHtml(profile.headshotUrl)}" alt="${escapeHtml(name)}" />`
-                    : escapeHtml(getReaderInitials(reader.label.replace("Reader ", "R")));
+                    : escapeHtml(getReaderInitials(name));
                   const bio =
                     profile?.bio ||
                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
                   return `<div class="reader-col">
-                    <div class="avatar${profile?.headshotUrl ? " has-photo" : ""}">${avatarContent}</div>
+                    <div class="avatar${profile?.headshotUrl ? " has-photo" : ""}${slotClass ? ` ${slotClass}` : ""}">${avatarContent}</div>
                     <div>
                       <h3 class="reader-name">${escapeHtml(name)}</h3>
                       ${renderReaderSummaryBio(bio)}
@@ -1832,14 +1899,17 @@ function renderPreviewFromCurrent() {
   previewRoot.innerHTML = `<div class="doc-shell">${renderStudentDocument(report)}</div>`;
   fitAllSummarySections(previewRoot);
   paginateReaderCards(previewRoot);
+  paginateTagExplanationCards(previewRoot);
   requestAnimationFrame(() => {
     fitAllSummarySections(previewRoot);
     paginateReaderCards(previewRoot);
+    paginateTagExplanationCards(previewRoot);
   });
   if (document.fonts?.ready) {
     document.fonts.ready.then(() => {
       fitAllSummarySections(previewRoot);
       paginateReaderCards(previewRoot);
+      paginateTagExplanationCards(previewRoot);
     });
   }
 }
@@ -2054,6 +2124,70 @@ function paginateReaderCards(root = document) {
   });
 }
 
+function paginateTagExplanationCards(root = document) {
+  const scope = root.querySelector(".doc-shell") || root;
+  const source = scope.querySelector("[data-tag-explanation-source]");
+  if (!source) return;
+
+  scope.querySelectorAll(".tag-explanation-page").forEach((page) => page.remove());
+
+  const parent = source.parentNode;
+  const anchor = source.nextSibling;
+  const itemTemplates = [...source.querySelectorAll(".tag-explanation-item")];
+  if (!itemTemplates.length) return;
+
+  const createPage = () => {
+    const page = document.createElement("section");
+    page.className = "page tag-explanation-page";
+    page.innerHTML =
+      '<div class="tag-explanation-cards"></div><div class="page-continue-note">Section continues on next page.</div>';
+    return page;
+  };
+
+  const pages = [];
+  let currentPage = createPage();
+  parent.insertBefore(currentPage, anchor);
+  pages.push(currentPage);
+  let container = currentPage.querySelector(".tag-explanation-cards");
+
+  const addPage = () => {
+    currentPage = createPage();
+    parent.insertBefore(currentPage, anchor);
+    pages.push(currentPage);
+    container = currentPage.querySelector(".tag-explanation-cards");
+  };
+
+  const appendEvenIfOversized = (card) => {
+    container.appendChild(card);
+  };
+
+  const tryAppendCard = (card) => {
+    container.appendChild(card);
+    const fits = container.scrollHeight <= container.clientHeight + 0.5;
+    if (!fits) container.removeChild(card);
+    return fits;
+  };
+
+  itemTemplates.forEach((template) => {
+    const card = template.cloneNode(true);
+    if (tryAppendCard(card)) return;
+
+    if (container.children.length) {
+      addPage();
+      if (tryAppendCard(card)) return;
+    }
+
+    // Fallback: if a single explanation card exceeds one page, keep it intact.
+    appendEvenIfOversized(card);
+  });
+
+  pages.forEach((page, index) => {
+    if (index < pages.length - 1) {
+      page.classList.add("has-continue");
+    }
+  });
+}
+
 function fitSectionContent(section) {
   const container = section.querySelector(".section-body");
   const content = container?.querySelector(".fit-content");
@@ -2102,6 +2236,7 @@ function onWindowResize() {
     fitResizeScheduled = false;
     fitAllSummarySections(previewRoot);
     paginateReaderCards(previewRoot);
+    paginateTagExplanationCards(previewRoot);
   });
 }
 
@@ -2342,9 +2477,11 @@ async function onDownloadCurrentStudentPdf() {
     }
     fitAllSummarySections(staging);
     paginateReaderCards(staging);
+    paginateTagExplanationCards(staging);
     await new Promise((resolve) => requestAnimationFrame(resolve));
     fitAllSummarySections(staging);
     paginateReaderCards(staging);
+    paginateTagExplanationCards(staging);
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
     const filename = `${sanitizeFileName(report.fileName) || "student-report"}.pdf`;

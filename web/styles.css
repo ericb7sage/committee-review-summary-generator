@@ -505,6 +505,18 @@ button:disabled {
   border: 1px solid #fff;
 }
 
+.tag-badge.reader-slot-1 {
+  background: #227f9c;
+}
+
+.tag-badge.reader-slot-2 {
+  background: #15b79e;
+}
+
+.tag-badge.reader-slot-3 {
+  background: #db2777;
+}
+
 .tag-pill.inactive {
   color: var(--muted);
   background: #fff;
@@ -848,11 +860,24 @@ button:disabled {
   color: #fff;
   font-weight: 800;
   font-size: 14px;
+  border: 1px solid transparent;
 }
 
 .avatar.has-photo {
   background: transparent;
   padding: 0;
+}
+
+.avatar.reader-slot-1 {
+  border-color: #227f9c;
+}
+
+.avatar.reader-slot-2 {
+  border-color: #15b79e;
+}
+
+.avatar.reader-slot-3 {
+  border-color: #db2777;
 }
 
 .avatar img {
@@ -1139,6 +1164,18 @@ button:disabled {
   gap: 10px;
 }
 
+.reader-card.reader-slot-1 {
+  border-color: #227f9c;
+}
+
+.reader-card.reader-slot-2 {
+  border-color: #15b79e;
+}
+
+.reader-card.reader-slot-3 {
+  border-color: #db2777;
+}
+
 .page-continue-note {
   position: absolute;
   right: 18px;
@@ -1150,7 +1187,7 @@ button:disabled {
   opacity: 0;
 }
 
-.page.reader-detail-page.has-continue .page-continue-note {
+.page.has-continue .page-continue-note {
   opacity: 1;
 }
 
@@ -1354,22 +1391,26 @@ button:disabled {
   align-self: center;
 }
 
+.tag-explanation-source {
+  display: none;
+}
+
 .tag-explanation-page {
   padding: 24px;
   background: #fffffe;
   display: flex;
   flex-direction: column;
   height: 792px;
+  position: relative;
 }
 
-.tag-explanation-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: repeat(6, minmax(0, 1fr));
+.tag-explanation-cards {
+  display: flex;
+  flex-direction: column;
   gap: 12px;
-  height: 100%;
-  align-content: stretch;
   flex: 1;
+  min-height: 0;
+  padding-bottom: 22px;
 }
 
 .tag-explanation-item {
