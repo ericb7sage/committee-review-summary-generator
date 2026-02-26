@@ -445,6 +445,8 @@ const PRINT_CSS = `
   .section-block.readers-section .avatar { width: 36px; height: 36px; border-radius: 9px; font-size: 11px; }
   .section-block.readers-section .reader-name { font-size: 13px; }
   .section-block.readers-section .reader-bio { font-size: 10px; line-height: 1.2; -webkit-line-clamp: 4; }
+  .section-block.readers-section .reader-bio-list { font-size: 10px; line-height: 1.2; margin: 0; padding-left: 14px; display: grid; gap: 2px; max-height: calc(4 * 1.2em + 6px); overflow: hidden; }
+  .section-block.readers-section .reader-bio-list li { margin: 0; }
   .fit-readers { display: block; }
   .readers-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 4px 6px; height: calc(100% - 14px); }
   .section-block.basics-section .section-body { height: 100%; padding: 4px 10px; }
@@ -483,6 +485,8 @@ const PRINT_CSS = `
   .avatar img { width: 100%; height: 100%; border-radius: inherit; object-fit: cover; display: block; }
   .reader-name { text-align: center; margin: 0 0 1px; font-size: 16px; font-family: "Fraunces", "Times New Roman", serif; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
   .reader-bio { margin: 0; text-align: center; font-size: 11px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .reader-bio-list { margin: 0; padding-left: 16px; text-align: left; font-size: 11px; line-height: 1.3; display: grid; gap: 2px; max-height: calc(4 * 1.3em + 6px); overflow: hidden; }
+  .reader-bio-list li { margin: 0; }
   .key-card { border: 0; border-radius: 0; overflow: hidden; width: 100%; height: 100%; display: flex; flex-direction: column; }
   .key-top { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 0.8fr) minmax(0, 1.4fr) minmax(0, 0.9fr); border-bottom: 2px solid #d8dee9; }
   .key-top-item { padding: 8px 12px; font-size: 19px; font-weight: 700; white-space: nowrap; position: relative; }
@@ -525,6 +529,9 @@ const PRINT_CSS = `
   .reader-rating-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   .reader-rating-label { font-size: 8px; font-weight: 600; text-transform: none; letter-spacing: 0; color: #475467; min-width: 0; flex: 1; line-height: 1.2; }
   .reader-rating-pill { border: 1px solid #e2e8f0; border-radius: 999px; padding: 2px 6px; font-size: 8px; font-weight: 600; line-height: 1.1; background: #f8fafc; color: #334155; white-space: nowrap; }
+  .reader-rating-pill.is-positive, .reader-rating-pill.is-positive-strong { background: #ecfdf3; border-color: #34d399; color: #166534; }
+  .reader-rating-pill.is-negative, .reader-rating-pill.is-negative-strong { background: #fef2f2; border-color: #f87171; color: #991b1b; }
+  .reader-rating-pill.is-positive, .reader-rating-pill.is-negative { opacity: 0.5; }
   .reader-rating-pill.empty { color: #94a3b8; background: #fff; }
   .reader-rating-empty { font-size: 8px; color: #98a2b3; }
   .reader-band-row { display: grid; grid-template-columns: auto 1fr; gap: 4px; align-items: center; font-size: 9px; }
@@ -1396,9 +1403,38 @@ function renderReaders(readers) {
     .join("");
 }
 
+function splitBioIntoPoints(bioText) {
+  const normalized = String(bioText || "")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (!normalized) return [];
+  return (normalized.match(/[^.!?]+[.!?]?/g) || [])
+    .map((part) => part.trim())
+    .filter(Boolean);
+}
+
+function renderReaderSummaryBio(bioText) {
+  const points = splitBioIntoPoints(bioText);
+  if (!points.length) {
+    return '<p class="reader-bio">—</p>';
+  }
+  return `<ul class="reader-bio-list">${points
+    .map((point) => `<li>${escapeHtml(point)}</li>`)
+    .join("")}</ul>`;
+}
+
 function renderReaderRatingRow(label, ratingValue) {
   const display = ratingValue ? String(ratingValue) : "—";
-  const pillClass = ratingValue ? "reader-rating-pill" : "reader-rating-pill empty";
+  const toneClassMap = {
+    "Strongly Agree": "is-positive-strong",
+    Agree: "is-positive",
+    Disagree: "is-negative",
+    "Strongly Disagree": "is-negative-strong",
+  };
+  const toneClass = ratingValue ? toneClassMap[String(ratingValue)] || "" : "";
+  const pillClass = ratingValue
+    ? `reader-rating-pill${toneClass ? ` ${toneClass}` : ""}`
+    : "reader-rating-pill empty";
   return `<div class="reader-rating-row">
     <div class="reader-rating-label">${escapeHtml(label)}</div>
     <span class="${pillClass}">${escapeHtml(display)}</span>
@@ -1643,7 +1679,7 @@ function renderStudentDocument(report) {
                     <div class="avatar${profile?.headshotUrl ? " has-photo" : ""}">${avatarContent}</div>
                     <div>
                       <h3 class="reader-name">${escapeHtml(name)}</h3>
-                      <p class="reader-bio">${escapeHtml(bio)}</p>
+                      ${renderReaderSummaryBio(bio)}
                     </div>
                   </div>`;
                 })
