@@ -510,7 +510,7 @@ const PRINT_CSS = `
   .band-range.range-target { background: #e0f2fe; border: 1px solid #7dd3fc; }
   .band-range.range-safety { background: #dcfce7; border: 1px solid #86efac; }
   .band-chip { display: flex; align-items: center; justify-content: center; text-align: center; padding: 2px 0; min-height: 18px; font-weight: 700; color: #111827; position: relative; z-index: 2; }
-  .design-tag-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); grid-template-rows: repeat(8, minmax(0, 1fr)); gap: 6px 8px; height: 100%; align-content: stretch; flex: 1; min-height: 0; }
+  .design-tag-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); grid-template-rows: repeat(7, minmax(0, 1fr)); gap: 8px; height: 100%; align-content: stretch; flex: 1; min-height: 0; }
   .page.reader-detail-page { padding: 18px; display: flex; flex-direction: column; gap: 10px; background: #fffffe; position: relative; }
   .reader-top-grid { display: grid; grid-template-columns: 1.35fr 0.6fr 1.05fr; gap: 10px; min-height: 0; }
   .page.reader-summary-page { padding: 24px; background: #fffffe; }
