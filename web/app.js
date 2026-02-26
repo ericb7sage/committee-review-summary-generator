@@ -251,6 +251,15 @@ const TAG_DESCRIPTION_MAP = new Map(TAG_DEFINITIONS.map((tag) => [tag.name, tag.
 const TAG_CANONICAL_NAME_MAP = new Map(
   TAG_DEFINITIONS.map((tag) => [normalizeTagKey(tag.name), tag.name])
 );
+const HIDDEN_TAG_NAMES = new Set([
+  "Cramped Résumé",
+  "Workplace-Bound",
+  "Stretched Résumé",
+  "Unnecessary Disclosure",
+]);
+const DISPLAY_TAG_DEFINITIONS = TAG_DEFINITIONS.filter(
+  (tag) => !HIDDEN_TAG_NAMES.has(tag.name)
+);
 const READER_PROFILES = [
   {
     fullName: "Tajira McCoy",
@@ -1298,7 +1307,7 @@ function renderTagBadges(readerLabels) {
 
 function renderTagGrid(activeTags, tagReaderMap) {
   return `<div class="tag-grid">
-    ${TAG_DEFINITIONS.map((tag) => {
+    ${DISPLAY_TAG_DEFINITIONS.map((tag) => {
       const isActive = activeTags.has(tag.name);
       const readerLabels = isActive
         ? [...(tagReaderMap.get(tag.name) || new Set())].sort((a, b) =>
@@ -1354,7 +1363,7 @@ function renderBandRow(label, className, values) {
 
 function renderTagGridFourColumns(activeTags, tagReaderMap) {
   return `<div class="design-tag-grid">
-    ${TAG_DEFINITIONS.map((tag) => {
+    ${DISPLAY_TAG_DEFINITIONS.map((tag) => {
       const isActive = activeTags.has(tag.name);
       const readerLabels = isActive
         ? [...(tagReaderMap.get(tag.name) || new Set())].sort((a, b) =>
@@ -1405,10 +1414,11 @@ function renderReaderBandRow(label, value) {
 }
 
 function renderReaderTags(tags) {
-  if (!tags.length) {
+  const visibleTags = tags.filter((tag) => !HIDDEN_TAG_NAMES.has(tag));
+  if (!visibleTags.length) {
     return `<div class="reader-tag-empty">—</div>`;
   }
-  return tags
+  return visibleTags
     .map((tag) => {
       const polarity = TAG_POLARITY_MAP.get(tag);
       const className =
@@ -1546,9 +1556,9 @@ function renderTagExplanationPage(tags) {
 }
 
 function renderTagExplanationPages(report) {
-  const tags = [...(report.activeTags || new Set())].sort((a, b) =>
-    a.localeCompare(b)
-  );
+  const tags = [...(report.activeTags || new Set())]
+    .filter((tag) => !HIDDEN_TAG_NAMES.has(tag))
+    .sort((a, b) => a.localeCompare(b));
   if (!tags.length) {
     return `
       <section class="page tag-explanation-page">
