@@ -579,13 +579,13 @@ button:disabled {
 
 .section-block.readers-section {
   height: 150px;
-  margin-top: -8px;
+  margin-top: 0;
 }
 
 .section-block.readers-section .section-body {
   height: 100%;
   overflow: hidden;
-  padding: 4px 8px;
+  padding: 2px 8px;
 }
 
 .section-block.readers-section .avatar {
@@ -621,19 +621,22 @@ button:disabled {
 }
 
 .fit-readers {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .readers-card {
   border: 2px solid var(--line);
   border-radius: 12px;
   padding: 4px 6px;
-  height: calc(100% - 14px);
+  flex: 1;
+  min-height: 0;
 }
 
 .section-block.key-takeaways-section {
   height: 232px;
-  margin-top: 16px;
+  margin-top: 0;
 }
 
 .section-block.basics-section .section-body {
@@ -643,7 +646,7 @@ button:disabled {
 
 .section-block.key-takeaways-section .section-body {
   height: 100%;
-  padding: 6px 12px;
+  padding: 3px 12px;
 }
 
 .section-block.tags-section {
@@ -772,6 +775,14 @@ button:disabled {
   padding: 8px 10px;
   display: grid;
   gap: 8px;
+  flex: 1;
+  min-height: 0;
+}
+
+.fit-takeaways {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .section-title {
@@ -786,7 +797,7 @@ button:disabled {
 }
 
 .section-block.readers-section .section-title {
-  margin-bottom: 2px;
+  margin-bottom: 1px;
 }
 
 .rail-label {

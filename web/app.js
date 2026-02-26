@@ -446,18 +446,18 @@ const PRINT_CSS = `
   .section-block { display: grid; grid-template-columns: 1fr; gap: 0; margin-bottom: 0; width: 100%; background: #fff; border-top: 0; border-bottom: 0; }
   .summary-page .section-block { background: #fffffe; }
   .section-block.basics-section { height: 52px; }
-  .section-block.readers-section { height: 150px; margin-top: -8px; }
-  .section-block.readers-section .section-body { height: 100%; overflow: hidden; padding: 4px 8px; }
+  .section-block.readers-section { height: 150px; margin-top: 0; }
+  .section-block.readers-section .section-body { height: 100%; overflow: hidden; padding: 2px 8px; }
   .section-block.readers-section .avatar { width: 36px; height: 36px; border-radius: 9px; font-size: 11px; }
   .section-block.readers-section .reader-name { font-size: 13px; }
   .section-block.readers-section .reader-bio { font-size: 10px; line-height: 1.2; -webkit-line-clamp: 4; }
   .section-block.readers-section .reader-bio-list { font-size: 10px; line-height: 1.2; margin: 0; padding-left: 14px; display: grid; gap: 2px; max-height: calc(4 * 1.2em + 6px); overflow: hidden; }
   .section-block.readers-section .reader-bio-list li { margin: 0; }
-  .fit-readers { display: block; }
-  .readers-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 4px 6px; height: calc(100% - 14px); }
+  .fit-readers { display: flex; flex-direction: column; height: 100%; }
+  .readers-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 4px 6px; flex: 1; min-height: 0; }
   .section-block.basics-section .section-body { height: 100%; padding: 4px 10px; }
-  .section-block.key-takeaways-section { height: 232px; margin-top: 16px; }
-  .section-block.key-takeaways-section .section-body { height: 100%; padding: 6px 12px; }
+  .section-block.key-takeaways-section { height: 232px; margin-top: 0; }
+  .section-block.key-takeaways-section .section-body { height: 100%; padding: 3px 12px; }
   .section-block.tags-section { height: 300px; border-bottom: 0; }
   .section-block.tags-section .section-body { height: 100%; overflow: hidden; }
   .section-block.tags-section .section-body { padding: 6px 8px; }
@@ -477,9 +477,10 @@ const PRINT_CSS = `
   .takeaway-title { font-family: "Fraunces", "Times New Roman", serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #475467; }
   .takeaway-softs-value { font-size: 14px; font-weight: 700; }
   .takeaways-bands .band-row { font-size: 9px; gap: 0; padding: 3px 6px; grid-template-columns: 52px repeat(9, minmax(0, 1fr)); }
-  .takeaways-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 8px 10px; display: grid; gap: 8px; }
+  .takeaways-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 8px 10px; display: grid; gap: 8px; flex: 1; min-height: 0; }
+  .fit-takeaways { display: flex; flex-direction: column; height: 100%; }
   .section-title { font-family: "Fraunces", "Times New Roman", serif; text-transform: uppercase; letter-spacing: 0.22em; font-size: 10px; font-weight: 700; color: #94a3b8; text-align: center; margin: 0 0 4px; }
-  .section-block.readers-section .section-title { margin-bottom: 2px; }
+  .section-block.readers-section .section-title { margin-bottom: 1px; }
   .rail-label { writing-mode: vertical-rl; transform: rotate(180deg); background: #334155; color: #fff; width: 40px; border-radius: 18px 0 0 18px; text-align: center; font-family: "Fraunces", "Times New Roman", serif; font-size: 22px; font-weight: 700; letter-spacing: 0.4px; padding: 16px 8px; }
   .section-body { border: 0; border-radius: 0; padding: 14px 16px; background: transparent; width: 100%; min-width: 0; overflow: hidden; }
   .fit-content { transform-origin: top left; width: 100%; }
@@ -1751,26 +1752,10 @@ function renderTagExplanationPages(report) {
   `;
 }
 
-function getReaderSortKey(reader) {
-  const profile = getReaderProfile(reader.rawReviewer);
-  const name = String(profile?.fullName || reader.rawReviewer || "").trim();
-  if (!name) {
-    return String(reader.label || "").toLowerCase();
-  }
-  const parts = name.split(/\s+/);
-  const key = parts.length > 1 ? parts[parts.length - 1] : parts[0];
-  return key.toLowerCase();
-}
-
 function renderStudentDocument(report) {
   const summaryReaders = report.readers
-    .map((reader, index) => ({ reader, index }))
-    .sort((a, b) => {
-      const aKey = getReaderSortKey(a.reader);
-      const bKey = getReaderSortKey(b.reader);
-      const byName = aKey.localeCompare(bKey);
-      return byName !== 0 ? byName : a.index - b.index;
-    })
+    .map((reader) => ({ reader, slot: Number.parseInt(reader.badgeLabel, 10) || 999 }))
+    .sort((a, b) => a.slot - b.slot)
     .map(({ reader }) => reader);
 
   return `
