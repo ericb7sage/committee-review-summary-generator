@@ -486,12 +486,12 @@ const PRINT_CSS = `
   .reader-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: 1fr; gap: 10px; height: 100%; align-content: stretch; }
   .reader-col { padding: 2px 0; position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 0; }
   .summary-page .reader-col:not(:last-child)::after { content: ""; position: absolute; top: 10%; bottom: 10%; right: -6px; width: 2px; background: #d8dee9; }
-  .avatar { width: 52px; height: 52px; border-radius: 12px; margin: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #2b7abf, #14b8a6); color: #fff; font-weight: 800; font-size: 14px; border: 1px solid transparent; }
+  .avatar { width: 52px; height: 52px; border-radius: 12px; margin: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #2b7abf, #14b8a6); color: #fff; font-weight: 800; font-size: 14px; border: 1px solid transparent; overflow: hidden; }
   .avatar.has-photo { background: transparent; padding: 0; }
   .avatar.reader-slot-1 { border-color: #227f9c; }
   .avatar.reader-slot-2 { border-color: #15b79e; }
   .avatar.reader-slot-3 { border-color: #db2777; }
-  .avatar img { width: 100%; height: 100%; border-radius: inherit; object-fit: cover; display: block; }
+  .avatar img { width: 100%; height: 100%; border-radius: 0; object-fit: cover; display: block; }
   .reader-name { text-align: center; margin: 0 0 1px; font-size: 16px; font-family: "Fraunces", "Times New Roman", serif; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
   .reader-bio { margin: 0; text-align: center; font-size: 11px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
   .reader-bio-list { margin: 0; padding-left: 16px; text-align: left; font-size: 11px; line-height: 1.3; display: grid; gap: 2px; max-height: calc(4 * 1.3em + 6px); overflow: hidden; }
@@ -531,7 +531,7 @@ const PRINT_CSS = `
   .reader-footer-box { border: 1px solid #d8dee9; border-radius: 8px; padding: 6px 8px; display: grid; grid-template-rows: auto 1fr; gap: 4px; overflow: hidden; font-size: 10px; line-height: 1.3; }
   .reader-footer-title { font-family: "Fraunces", "Times New Roman", serif; font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: #475467; }
   .reader-footer-body { white-space: pre-wrap; }
-  .reader-section-title { font-family: "Fraunces", "Times New Roman", serif; font-weight: 700; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #94a3b8; margin-bottom: 0; text-align: center; }
+  .reader-section-title { font-family: "Fraunces", "Times New Roman", serif; font-weight: 700; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #344054; margin-bottom: 0; text-align: center; }
   .reader-detail-page .reader-col { padding: 0; position: relative; display: grid; grid-template-columns: 1fr; align-items: start; }
   .reader-col.ratings, .reader-col.bands { display: grid; grid-template-columns: 1fr; grid-auto-rows: minmax(0, 1fr); gap: 6px; min-height: 0; }
   .reader-col.tags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; align-content: start; min-height: 0; }
@@ -558,8 +558,9 @@ const PRINT_CSS = `
   .tag-explanation-page { padding: 24px; background: #fffffe; display: flex; flex-direction: column; height: 792px; position: relative; }
   .tag-explanation-cards { display: flex; flex-direction: column; gap: 12px; flex: 1; min-height: 0; padding-bottom: 22px; }
   .tag-explanation-item { border: 1px solid #d8dee9; border-radius: 8px; padding: 10px 12px; background: transparent; display: grid; gap: 6px; min-height: 0; }
-  .tag-explanation-title { display: flex; align-items: center; gap: 8px; }
+  .tag-explanation-title { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .tag-explanation-pill { padding: 4px 10px; font-size: 10px; line-height: 1.1; }
+  .tag-explanation-cont { font-size: 10px; line-height: 1; color: #98a2b3; font-weight: 600; }
   .tag-explanation-body { font-size: 11px; line-height: 1.4; color: #1f2937; }
   .tag-explanation-empty { display: flex; align-items: center; justify-content: center; height: 100%; font-size: 14px; color: #98a2b3; }
 `;
@@ -790,8 +791,81 @@ const PRINT_FIT_SCRIPT = `
     return fits;
   };
 
+  const markContinuation = (card) => {
+    card.classList.add("continued");
+    const title = card.querySelector(".tag-explanation-title");
+    if (title && !title.querySelector(".tag-explanation-cont")) {
+      const marker = document.createElement("span");
+      marker.className = "tag-explanation-cont";
+      marker.textContent = "(cont.)";
+      title.appendChild(marker);
+    }
+  };
+
+  const splitCardIntoPages = (baseCard, fullText) => {
+    let remaining = String(fullText || "").trim();
+    if (!remaining) {
+      container.appendChild(baseCard);
+      return;
+    }
+
+    let first = true;
+    while (remaining) {
+      const card = first ? baseCard : baseCard.cloneNode(true);
+      if (!first) {
+        markContinuation(card);
+      }
+
+      const body = card.querySelector(".tag-explanation-body");
+      if (!body) {
+        container.appendChild(card);
+        return;
+      }
+
+      const tokens = remaining.match(/\\S+|\\s+/g) || [];
+      container.appendChild(card);
+
+      let low = 1;
+      let high = tokens.length;
+      let best = 0;
+
+      while (low <= high) {
+        const mid = Math.floor((low + high) / 2);
+        body.textContent = tokens.slice(0, mid).join("");
+        if (container.scrollHeight <= container.clientHeight + 0.5) {
+          best = mid;
+          low = mid + 1;
+        } else {
+          high = mid - 1;
+        }
+      }
+
+      if (best <= 0) {
+        body.textContent = remaining;
+        return;
+      }
+
+      body.textContent = tokens.slice(0, best).join("");
+      remaining = tokens.slice(best).join("").trimStart();
+
+      if (remaining) {
+        addPage();
+        first = false;
+      } else {
+        return;
+      }
+    }
+  };
+
   itemTemplates.forEach((template) => {
     const card = template.cloneNode(true);
+    const body = card.querySelector(".tag-explanation-body");
+    if (body && !body.dataset.fullText) {
+      body.dataset.fullText = body.textContent || "";
+    }
+    const fullText = body?.dataset.fullText || "";
+    if (body) body.textContent = fullText;
+
     if (tryAppendCard(card)) return;
 
     if (container.children.length) {
@@ -799,7 +873,7 @@ const PRINT_FIT_SCRIPT = `
       if (tryAppendCard(card)) return;
     }
 
-    container.appendChild(card);
+    splitCardIntoPages(card, fullText);
   });
 
   pages.forEach((page, index) => {
@@ -2157,10 +2231,6 @@ function paginateTagExplanationCards(root = document) {
     container = currentPage.querySelector(".tag-explanation-cards");
   };
 
-  const appendEvenIfOversized = (card) => {
-    container.appendChild(card);
-  };
-
   const tryAppendCard = (card) => {
     container.appendChild(card);
     const fits = container.scrollHeight <= container.clientHeight + 0.5;
@@ -2168,8 +2238,81 @@ function paginateTagExplanationCards(root = document) {
     return fits;
   };
 
+  const markContinuation = (card) => {
+    card.classList.add("continued");
+    const title = card.querySelector(".tag-explanation-title");
+    if (title && !title.querySelector(".tag-explanation-cont")) {
+      const marker = document.createElement("span");
+      marker.className = "tag-explanation-cont";
+      marker.textContent = "(cont.)";
+      title.appendChild(marker);
+    }
+  };
+
+  const splitCardIntoPages = (baseCard, fullText) => {
+    let remaining = String(fullText || "").trim();
+    if (!remaining) {
+      container.appendChild(baseCard);
+      return;
+    }
+
+    let first = true;
+    while (remaining) {
+      const card = first ? baseCard : baseCard.cloneNode(true);
+      if (!first) {
+        markContinuation(card);
+      }
+
+      const body = card.querySelector(".tag-explanation-body");
+      if (!body) {
+        container.appendChild(card);
+        return;
+      }
+
+      const tokens = remaining.match(/\S+|\s+/g) || [];
+      container.appendChild(card);
+
+      let low = 1;
+      let high = tokens.length;
+      let best = 0;
+
+      while (low <= high) {
+        const mid = Math.floor((low + high) / 2);
+        body.textContent = tokens.slice(0, mid).join("");
+        if (container.scrollHeight <= container.clientHeight + 0.5) {
+          best = mid;
+          low = mid + 1;
+        } else {
+          high = mid - 1;
+        }
+      }
+
+      if (best <= 0) {
+        body.textContent = remaining;
+        return;
+      }
+
+      body.textContent = tokens.slice(0, best).join("");
+      remaining = tokens.slice(best).join("").trimStart();
+
+      if (remaining) {
+        addPage();
+        first = false;
+      } else {
+        return;
+      }
+    }
+  };
+
   itemTemplates.forEach((template) => {
     const card = template.cloneNode(true);
+    const body = card.querySelector(".tag-explanation-body");
+    if (body && !body.dataset.fullText) {
+      body.dataset.fullText = body.textContent || "";
+    }
+    const fullText = body?.dataset.fullText || "";
+    if (body) body.textContent = fullText;
+
     if (tryAppendCard(card)) return;
 
     if (container.children.length) {
@@ -2177,8 +2320,7 @@ function paginateTagExplanationCards(root = document) {
       if (tryAppendCard(card)) return;
     }
 
-    // Fallback: if a single explanation card exceeds one page, keep it intact.
-    appendEvenIfOversized(card);
+    splitCardIntoPages(card, fullText);
   });
 
   pages.forEach((page, index) => {
