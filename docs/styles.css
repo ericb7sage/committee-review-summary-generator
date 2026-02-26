@@ -1163,6 +1163,7 @@ button:disabled {
   padding: 12px;
   display: grid;
   gap: 10px;
+  flex: 0 0 auto;
 }
 
 .reader-card.reader-slot-1 {
@@ -1422,6 +1423,7 @@ button:disabled {
   display: grid;
   gap: 6px;
   min-height: 0;
+  flex: 0 0 auto;
 }
 
 .tag-explanation-title {

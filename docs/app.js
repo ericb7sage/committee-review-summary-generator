@@ -557,7 +557,7 @@ const PRINT_CSS = `
   .tag-explanation-source { display: none; }
   .tag-explanation-page { padding: 24px; background: #fffffe; display: flex; flex-direction: column; height: 792px; position: relative; }
   .tag-explanation-cards { display: flex; flex-direction: column; gap: 12px; flex: 1; min-height: 0; padding-bottom: 22px; }
-  .tag-explanation-item { border: 1px solid #d8dee9; border-radius: 8px; padding: 10px 12px; background: transparent; display: grid; gap: 6px; min-height: 0; }
+  .tag-explanation-item { border: 1px solid #d8dee9; border-radius: 8px; padding: 10px 12px; background: transparent; display: grid; gap: 6px; min-height: 0; flex: 0 0 auto; }
   .tag-explanation-title { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .tag-explanation-pill { padding: 4px 10px; font-size: 10px; line-height: 1.1; }
   .tag-explanation-cont { font-size: 10px; line-height: 1; color: #98a2b3; font-weight: 600; }
