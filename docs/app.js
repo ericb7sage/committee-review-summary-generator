@@ -954,7 +954,6 @@ const lsatInput = document.getElementById("lsatInput");
 const gpaInput = document.getElementById("gpaInput");
 const kjdSelect = document.getElementById("kjdSelect");
 const urmSelect = document.getElementById("urmSelect");
-const summaryInput = document.getElementById("summaryInput");
 const nextStepsInput = document.getElementById("nextStepsInput");
 const inputHintEl = document.getElementById("inputHint");
 const downloadPdfBtn = document.getElementById("downloadPdfBtn");
@@ -969,7 +968,6 @@ lsatInput.addEventListener("input", onManualInputChange);
 gpaInput.addEventListener("input", onManualInputChange);
 kjdSelect.addEventListener("change", onManualInputChange);
 urmSelect.addEventListener("change", onManualInputChange);
-summaryInput.addEventListener("input", onManualInputChange);
 nextStepsInput.addEventListener("input", onManualInputChange);
 downloadPdfBtn.addEventListener("click", onDownloadCurrentStudentPdf);
 window.addEventListener("resize", onWindowResize);
@@ -1636,11 +1634,21 @@ function getReaderNotesText(reader) {
     : notes || anythingElse || "—";
 }
 
-function renderReaderNotesBlock(text) {
+function renderReaderNotesBlock(text, label = "Notes") {
   return `<div class="reader-notes">
-    <div class="label">Notes</div>
+    <div class="label">${escapeHtml(label)}</div>
     <div class="reader-notes-body">${escapeHtml(text)}</div>
   </div>`;
+}
+
+function renderNextStepsCard(report) {
+  const nextStepsText = String(report.manual.nextSteps || "").trim() || "—";
+  return `
+    <article class="reader-card next-steps-card">
+      <div class="reader-section-title">Next Steps</div>
+      ${renderReaderNotesBlock(nextStepsText, "Next Steps")}
+    </article>
+  `;
 }
 
 function renderReaderCard(reader) {
@@ -1687,26 +1695,8 @@ function renderReaderPages(report) {
   return `
     <div class="reader-cards-source" data-reader-source>
       ${report.readers.map((reader) => renderReaderCard(reader)).join("")}
+      ${renderNextStepsCard(report)}
     </div>
-  `;
-}
-
-function renderSummaryNextStepsPage(report) {
-  const summaryText = String(report.manual.summary || "").trim() || "—";
-  const nextStepsText = String(report.manual.nextSteps || "").trim() || "—";
-  return `
-    <section class="page reader-summary-page">
-      <div class="reader-summary-grid">
-        <div class="reader-footer-box">
-          <div class="reader-footer-title">Summary</div>
-          <div class="reader-footer-body">${escapeHtml(summaryText)}</div>
-        </div>
-        <div class="reader-footer-box">
-          <div class="reader-footer-title">Recommended Next Steps</div>
-          <div class="reader-footer-body">${escapeHtml(nextStepsText)}</div>
-        </div>
-      </div>
-    </section>
   `;
 }
 
@@ -1872,7 +1862,6 @@ function renderStudentDocument(report) {
     </section>
 
     ${renderReaderPages(report)}
-    ${renderSummaryNextStepsPage(report)}
     ${renderTagExplanationPages(report)}
   `;
 }
@@ -1883,7 +1872,6 @@ function getDefaultStudentInput() {
     gpa: "",
     kjd: "Not KJD",
     urm: "Non-URM",
-    summary: "",
     nextSteps: "",
   };
 }
@@ -1893,7 +1881,6 @@ function setManualControlsEnabled(enabled) {
   gpaInput.disabled = !enabled;
   kjdSelect.disabled = !enabled;
   urmSelect.disabled = !enabled;
-  summaryInput.disabled = !enabled;
   nextStepsInput.disabled = !enabled;
 }
 
@@ -1917,7 +1904,6 @@ function syncManualFormFromSelection() {
     gpaInput.value = "";
     kjdSelect.value = "Not KJD";
     urmSelect.value = "Non-URM";
-    summaryInput.value = "";
     nextStepsInput.value = "";
     inputHintEl.textContent = "";
     return;
@@ -1928,7 +1914,6 @@ function syncManualFormFromSelection() {
   gpaInput.value = manual.gpa;
   kjdSelect.value = manual.kjd;
   urmSelect.value = manual.urm;
-  summaryInput.value = manual.summary || "";
   nextStepsInput.value = manual.nextSteps || "";
   validateManualInputs();
 }
@@ -2000,7 +1985,6 @@ function onManualInputChange() {
   manual.gpa = gpaInput.value.trim();
   manual.kjd = kjdSelect.value;
   manual.urm = urmSelect.value;
-  manual.summary = summaryInput.value.trim();
   manual.nextSteps = nextStepsInput.value.trim();
   validateManualInputs();
 }
@@ -2467,7 +2451,6 @@ function onGenerateDocuments() {
     gpa: manual.gpa,
     kjd: manual.kjd,
     urm: manual.urm,
-    summary: manual.summary,
     nextSteps: manual.nextSteps,
     otherText: `${manual.kjd} • ${manual.urm}`,
   };
