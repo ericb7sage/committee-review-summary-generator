@@ -745,6 +745,11 @@ button:disabled {
   gap: 6px;
 }
 
+.takeaways-row .compact-stars .star {
+  width: 7px;
+  height: 7px;
+}
+
 .takeaway-item {
   text-align: center;
   display: grid;
@@ -772,14 +777,26 @@ button:disabled {
   grid-template-columns: 52px repeat(9, minmax(0, 1fr));
 }
 
-.takeaways-card {
+.takeaways-metrics-card,
+.takeaways-ranges-card {
   border: 2px solid var(--line);
   border-radius: 12px;
   padding: 8px 10px;
+}
+
+.takeaways-metrics-card {
   display: grid;
   gap: 8px;
+}
+
+.takeaways-ranges-card {
   flex: 1;
   min-height: 0;
+  display: flex;
+}
+
+.takeaways-ranges-card .takeaways-bands {
+  width: 100%;
 }
 
 .fit-takeaways {

@@ -473,11 +473,15 @@ const PRINT_CSS = `
   .basics-divider { font-size: 12px; color: #98a2b3; padding: 0 4px; }
   .takeaways-row { display: grid; gap: 8px; margin-bottom: 8px; }
   .takeaways-row-single { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
+  .takeaways-row .compact-stars .star { width: 7px; height: 7px; }
   .takeaway-item { text-align: center; display: grid; gap: 4px; }
   .takeaway-title { font-family: "Fraunces", "Times New Roman", serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #475467; }
   .takeaway-softs-value { font-size: 14px; font-weight: 700; }
   .takeaways-bands .band-row { font-size: 9px; gap: 0; padding: 3px 6px; grid-template-columns: 52px repeat(9, minmax(0, 1fr)); }
-  .takeaways-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 8px 10px; display: grid; gap: 8px; flex: 1; min-height: 0; }
+  .takeaways-metrics-card, .takeaways-ranges-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 8px 10px; }
+  .takeaways-metrics-card { display: grid; gap: 8px; }
+  .takeaways-ranges-card { flex: 1; min-height: 0; display: flex; }
+  .takeaways-ranges-card .takeaways-bands { width: 100%; }
   .fit-takeaways { display: flex; flex-direction: column; height: 100%; }
   .section-title { font-family: "Fraunces", "Times New Roman", serif; text-transform: uppercase; letter-spacing: 0.22em; font-size: 10px; font-weight: 700; color: #94a3b8; text-align: center; margin: 0 0 4px; }
   .section-block.readers-section .section-title { margin-bottom: 1px; }
@@ -1819,7 +1823,7 @@ function renderStudentDocument(report) {
         <div class="section-body">
           <div class="fit-content fit-takeaways">
             <div class="section-title">Key Takeaways</div>
-            <div class="takeaways-card">
+            <div class="takeaways-metrics-card">
               <div class="takeaways-row takeaways-row-single">
                 <div class="takeaway-item">
                   <div class="takeaway-title">Why Law</div>
@@ -1829,6 +1833,10 @@ function renderStudentDocument(report) {
                   <div class="takeaway-title">Readiness</div>
                   ${renderCompactStars(report.summaryStars.thrive)}
                 </div>
+                <div class="takeaway-item takeaway-softs">
+                  <div class="takeaway-title">Softs</div>
+                  <div class="takeaway-softs-value">${escapeHtml(report.softsDisplay || "—")}</div>
+                </div>
                 <div class="takeaway-item">
                   <div class="takeaway-title">Perspective</div>
                   ${renderCompactStars(report.summaryStars.contribute)}
@@ -1837,11 +1845,9 @@ function renderStudentDocument(report) {
                   <div class="takeaway-title">Personality</div>
                   ${renderCompactStars(report.summaryStars.know)}
                 </div>
-                <div class="takeaway-item takeaway-softs">
-                  <div class="takeaway-title">Softs</div>
-                  <div class="takeaway-softs-value">${escapeHtml(report.softsDisplay || "—")}</div>
-                </div>
               </div>
+            </div>
+            <div class="takeaways-ranges-card">
               <div class="takeaways-bands">
                 ${renderBandRow("Reach", "reach", report.bands.reach)}
                 ${renderBandRow("Target", "target", report.bands.target)}
