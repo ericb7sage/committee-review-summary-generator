@@ -746,8 +746,8 @@ button:disabled {
 }
 
 .takeaways-row .compact-stars .star {
-  width: 7px;
-  height: 7px;
+  width: 10.5px;
+  height: 10.5px;
 }
 
 .takeaway-item {
@@ -777,25 +777,18 @@ button:disabled {
   grid-template-columns: 52px repeat(9, minmax(0, 1fr));
 }
 
-.takeaways-metrics-card,
-.takeaways-ranges-card {
+.takeaways-card {
   border: 2px solid var(--line);
   border-radius: 12px;
   padding: 8px 10px;
-}
-
-.takeaways-metrics-card {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 8px;
-}
-
-.takeaways-ranges-card {
   flex: 1;
   min-height: 0;
-  display: flex;
 }
 
-.takeaways-ranges-card .takeaways-bands {
+.takeaways-card .takeaways-bands {
   width: 100%;
 }
 
