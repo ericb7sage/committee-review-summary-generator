@@ -479,7 +479,7 @@ const PRINT_CSS = `
   .takeaway-softs-value { font-size: 14px; font-weight: 700; }
   .takeaways-bands .band-row { font-size: 9px; gap: 0; padding: 3px 6px; grid-template-columns: 52px repeat(9, minmax(0, 1fr)); }
   .takeaways-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 8px 10px; display: flex; flex-direction: column; gap: 8px; flex: 1; min-height: 0; }
-  .takeaways-card .takeaways-bands { width: 100%; }
+  .takeaways-card .takeaways-bands { width: 100%; display: flex; flex-direction: column; flex: 1; min-height: 0; }
   .fit-takeaways { display: flex; flex-direction: column; height: 100%; }
   .section-title { font-family: "Fraunces", "Times New Roman", serif; text-transform: uppercase; letter-spacing: 0.22em; font-size: 10px; font-weight: 700; color: #94a3b8; text-align: center; margin: 0 0 4px; }
   .section-block.readers-section .section-title { margin-bottom: 1px; }
@@ -1810,7 +1810,7 @@ function renderStudentDocument(report) {
       <div class="section-block key-takeaways-section">
         <div class="section-body">
           <div class="fit-content fit-takeaways">
-            <div class="section-title">Key Takeaways</div>
+            <div class="section-title">Assessment</div>
             <div class="takeaways-card">
               <div class="takeaways-row takeaways-row-single">
                 <div class="takeaway-item">
