@@ -421,6 +421,12 @@ button:disabled {
   stroke: #b78600;
 }
 
+.star.ghost polygon {
+  fill: #fef3c7;
+  stroke: #d6b85f;
+  opacity: 0.35;
+}
+
 .star.half polygon {
   stroke: #b78600;
 }
@@ -734,12 +740,9 @@ button:disabled {
   margin-bottom: 8px;
 }
 
-.takeaways-row-top {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.takeaways-row-bottom {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+.takeaways-row-single {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 6px;
 }
 
 .takeaway-item {

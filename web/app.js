@@ -416,6 +416,7 @@ const PRINT_CSS = `
   .stars { display: inline-flex; gap: 4px; }
   .star { width: 18px; height: 18px; }
   .star.filled polygon { fill: #f4b400; stroke: #b78600; }
+  .star.ghost polygon { fill: #fef3c7; stroke: #d6b85f; opacity: 0.35; }
   .star.half polygon { stroke: #b78600; }
   .waiting-page { display: flex; align-items: center; justify-content: center; }
   .waiting-copy { font-family: "Fraunces", "Times New Roman", serif; font-size: 36px; font-weight: 700; color: #98a2b3; text-transform: lowercase; }
@@ -471,8 +472,7 @@ const PRINT_CSS = `
   .basics-value { font-size: 12px; font-weight: 700; }
   .basics-divider { font-size: 12px; color: #98a2b3; padding: 0 4px; }
   .takeaways-row { display: grid; gap: 8px; margin-bottom: 8px; }
-  .takeaways-row-top { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .takeaways-row-bottom { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .takeaways-row-single { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
   .takeaway-item { text-align: center; display: grid; gap: 4px; }
   .takeaway-title { font-family: "Fraunces", "Times New Roman", serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #475467; }
   .takeaway-softs-value { font-size: 14px; font-weight: 700; }
@@ -1432,8 +1432,8 @@ function renderStarRow(label, starCount) {
   }
 
   const count = Math.max(1, Math.min(5, Math.round(starCount)));
-  const stars = Array.from({ length: count }, (_, idx) =>
-    renderStarSvg("filled", `${label}-full-${idx}`)
+  const stars = Array.from({ length: 5 }, (_, idx) =>
+    renderStarSvg(idx < count ? "filled" : "ghost", `${label}-star-${idx}`)
   ).join("");
   return `<div class="rating-row">
     <div class="label">${escapeHtml(label)}</div>
@@ -1493,8 +1493,8 @@ function renderCompactStars(starCount) {
   }
 
   const count = Math.max(1, Math.min(5, Math.round(starCount)));
-  const stars = Array.from({ length: count }, (_, idx) =>
-    renderStarSvg("filled", `compact-full-${idx}`)
+  const stars = Array.from({ length: 5 }, (_, idx) =>
+    renderStarSvg(idx < count ? "filled" : "ghost", `compact-star-${idx}`)
   ).join("");
   return `<span class="compact-stars">${stars}</span>`;
 }
@@ -1820,7 +1820,7 @@ function renderStudentDocument(report) {
           <div class="fit-content fit-takeaways">
             <div class="section-title">Key Takeaways</div>
             <div class="takeaways-card">
-              <div class="takeaways-row takeaways-row-top">
+              <div class="takeaways-row takeaways-row-single">
                 <div class="takeaway-item">
                   <div class="takeaway-title">Why Law</div>
                   ${renderCompactStars(report.summaryStars.whyLaw)}
@@ -1829,12 +1829,6 @@ function renderStudentDocument(report) {
                   <div class="takeaway-title">Readiness</div>
                   ${renderCompactStars(report.summaryStars.thrive)}
                 </div>
-                <div class="takeaway-item takeaway-softs">
-                  <div class="takeaway-title">Softs</div>
-                  <div class="takeaway-softs-value">${escapeHtml(report.softsDisplay || "—")}</div>
-                </div>
-              </div>
-              <div class="takeaways-row takeaways-row-bottom">
                 <div class="takeaway-item">
                   <div class="takeaway-title">Perspective</div>
                   ${renderCompactStars(report.summaryStars.contribute)}
@@ -1842,6 +1836,10 @@ function renderStudentDocument(report) {
                 <div class="takeaway-item">
                   <div class="takeaway-title">Personality</div>
                   ${renderCompactStars(report.summaryStars.know)}
+                </div>
+                <div class="takeaway-item takeaway-softs">
+                  <div class="takeaway-title">Softs</div>
+                  <div class="takeaway-softs-value">${escapeHtml(report.softsDisplay || "—")}</div>
                 </div>
               </div>
               <div class="takeaways-bands">
