@@ -471,15 +471,15 @@ const PRINT_CSS = `
   .basics-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #475467; }
   .basics-value { font-size: 12px; font-weight: 700; }
   .basics-divider { font-size: 12px; color: #98a2b3; padding: 0 4px; }
-  .takeaways-row { display: grid; gap: 8px; margin-bottom: 8px; }
+  .takeaways-row { display: grid; gap: 8px; margin-bottom: 0; align-content: center; min-height: 0; }
   .takeaways-row-single { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
   .takeaways-row .compact-stars .star { width: 10.5px; height: 10.5px; }
-  .takeaway-item { text-align: center; display: grid; gap: 4px; }
+  .takeaway-item { text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px; min-height: 0; }
   .takeaway-title { font-family: "Fraunces", "Times New Roman", serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #475467; }
   .takeaway-softs-value { font-size: 14px; font-weight: 700; }
   .takeaways-bands .band-row { font-size: 9px; gap: 0; padding: 3px 6px; grid-template-columns: 52px repeat(9, minmax(0, 1fr)); }
-  .takeaways-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 8px 10px; display: flex; flex-direction: column; gap: 8px; flex: 1; min-height: 0; }
-  .takeaways-card .takeaways-bands { width: 100%; display: flex; flex-direction: column; flex: 1; min-height: 0; }
+  .takeaways-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 8px 10px; display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 8px; flex: 1; min-height: 0; }
+  .takeaways-card .takeaways-bands { width: 100%; }
   .fit-takeaways { display: flex; flex-direction: column; height: 100%; }
   .section-title { font-family: "Fraunces", "Times New Roman", serif; text-transform: uppercase; letter-spacing: 0.22em; font-size: 10px; font-weight: 700; color: #94a3b8; text-align: center; margin: 0 0 4px; }
   .section-block.readers-section .section-title { margin-bottom: 1px; }

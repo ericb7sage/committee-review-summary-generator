@@ -737,7 +737,9 @@ button:disabled {
 .takeaways-row {
   display: grid;
   gap: 8px;
-  margin-bottom: 8px;
+  margin-bottom: 0;
+  align-content: center;
+  min-height: 0;
 }
 
 .takeaways-row-single {
@@ -752,8 +754,12 @@ button:disabled {
 
 .takeaway-item {
   text-align: center;
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 4px;
+  min-height: 0;
 }
 
 .takeaway-title {
@@ -781,8 +787,8 @@ button:disabled {
   border: 2px solid var(--line);
   border-radius: 12px;
   padding: 8px 10px;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
   gap: 8px;
   flex: 1;
   min-height: 0;
@@ -790,10 +796,6 @@ button:disabled {
 
 .takeaways-card .takeaways-bands {
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  min-height: 0;
 }
 
 .fit-takeaways {
