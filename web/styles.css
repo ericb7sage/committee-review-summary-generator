@@ -633,15 +633,15 @@ button:disabled {
 }
 
 .readers-card {
-  border: 2px solid var(--line);
-  border-radius: 12px;
-  padding: 4px 6px;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
   flex: 1;
   min-height: 0;
 }
 
 .section-block.key-takeaways-section {
-  height: 232px;
+  height: 208px;
   margin-top: 0;
 }
 
@@ -656,7 +656,7 @@ button:disabled {
 }
 
 .section-block.tags-section {
-  height: 300px;
+  height: 324px;
   border-bottom: 0;
 }
 
@@ -760,6 +760,17 @@ button:disabled {
   align-items: center;
   gap: 4px;
   min-height: 0;
+  position: relative;
+}
+
+.takeaway-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 20%;
+  bottom: 20%;
+  right: -3px;
+  width: 1.5px;
+  background: var(--line);
 }
 
 .takeaway-title {
@@ -796,6 +807,8 @@ button:disabled {
 
 .takeaways-card .takeaways-bands {
   width: 100%;
+  border-top: 1.5px solid var(--line);
+  padding-top: 6px;
 }
 
 .fit-takeaways {
@@ -853,29 +866,33 @@ button:disabled {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   grid-template-rows: 1fr;
-  gap: 10px;
+  gap: 8px;
   height: 100%;
   align-content: stretch;
 }
 
 .reader-col {
-  padding: 2px 0;
+  padding: 4px 6px;
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
   min-height: 0;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
 }
 
-.summary-page .reader-col:not(:last-child)::after {
-  content: "";
-  position: absolute;
-  top: 10%;
-  bottom: 10%;
-  right: -6px;
-  width: 2px;
-  background: var(--line);
+.reader-col.reader-slot-1 {
+  border-color: #227f9c;
+}
+
+.reader-col.reader-slot-2 {
+  border-color: #15b79e;
+}
+
+.reader-col.reader-slot-3 {
+  border-color: #db2777;
 }
 
 .avatar {

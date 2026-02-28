@@ -455,11 +455,11 @@ const PRINT_CSS = `
   .section-block.readers-section .reader-bio-list { font-size: 10px; line-height: 1.2; margin: 0; padding-left: 14px; display: grid; gap: 2px; max-height: calc(4 * 1.2em + 6px); overflow: hidden; }
   .section-block.readers-section .reader-bio-list li { margin: 0; }
   .fit-readers { display: flex; flex-direction: column; height: 100%; }
-  .readers-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 4px 6px; flex: 1; min-height: 0; }
+  .readers-card { border: 0; border-radius: 0; padding: 0; flex: 1; min-height: 0; }
   .section-block.basics-section .section-body { height: 100%; padding: 4px 10px; }
-  .section-block.key-takeaways-section { height: 232px; margin-top: 0; }
+  .section-block.key-takeaways-section { height: 208px; margin-top: 0; }
   .section-block.key-takeaways-section .section-body { height: 100%; padding: 3px 12px; }
-  .section-block.tags-section { height: 300px; border-bottom: 0; }
+  .section-block.tags-section { height: 324px; border-bottom: 0; }
   .section-block.tags-section .section-body { height: 100%; overflow: hidden; }
   .section-block.tags-section .section-body { padding: 6px 8px; }
   .fit-tags { display: flex; flex-direction: column; height: 100%; }
@@ -474,21 +474,24 @@ const PRINT_CSS = `
   .takeaways-row { display: grid; gap: 8px; margin-bottom: 0; align-content: center; min-height: 0; }
   .takeaways-row-single { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
   .takeaways-row .compact-stars .star { width: 10.5px; height: 10.5px; }
-  .takeaway-item { text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px; min-height: 0; }
+  .takeaway-item { text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px; min-height: 0; position: relative; }
+  .takeaway-item:not(:last-child)::after { content: ""; position: absolute; top: 20%; bottom: 20%; right: -3px; width: 1.5px; background: #d8dee9; }
   .takeaway-title { font-family: "Fraunces", "Times New Roman", serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #475467; }
   .takeaway-softs-value { font-size: 14px; font-weight: 700; }
   .takeaways-bands .band-row { font-size: 9px; gap: 0; padding: 3px 6px; grid-template-columns: 52px repeat(9, minmax(0, 1fr)); }
   .takeaways-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 8px 10px; display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 8px; flex: 1; min-height: 0; }
-  .takeaways-card .takeaways-bands { width: 100%; }
+  .takeaways-card .takeaways-bands { width: 100%; border-top: 1.5px solid #d8dee9; padding-top: 6px; }
   .fit-takeaways { display: flex; flex-direction: column; height: 100%; }
   .section-title { font-family: "Fraunces", "Times New Roman", serif; text-transform: uppercase; letter-spacing: 0.22em; font-size: 10px; font-weight: 700; color: #94a3b8; text-align: center; margin: 0 0 4px; }
   .section-block.readers-section .section-title { margin-bottom: 1px; }
   .rail-label { writing-mode: vertical-rl; transform: rotate(180deg); background: #334155; color: #fff; width: 40px; border-radius: 18px 0 0 18px; text-align: center; font-family: "Fraunces", "Times New Roman", serif; font-size: 22px; font-weight: 700; letter-spacing: 0.4px; padding: 16px 8px; }
   .section-body { border: 0; border-radius: 0; padding: 14px 16px; background: transparent; width: 100%; min-width: 0; overflow: hidden; }
   .fit-content { transform-origin: top left; width: 100%; }
-  .reader-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: 1fr; gap: 10px; height: 100%; align-content: stretch; }
-  .reader-col { padding: 2px 0; position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 0; }
-  .summary-page .reader-col:not(:last-child)::after { content: ""; position: absolute; top: 10%; bottom: 10%; right: -6px; width: 2px; background: #d8dee9; }
+  .reader-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: 1fr; gap: 8px; height: 100%; align-content: stretch; }
+  .reader-col { padding: 4px 6px; position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 0; border: 1.5px solid #d8dee9; border-radius: 10px; }
+  .reader-col.reader-slot-1 { border-color: #227f9c; }
+  .reader-col.reader-slot-2 { border-color: #15b79e; }
+  .reader-col.reader-slot-3 { border-color: #db2777; }
   .avatar { width: 52px; height: 52px; border-radius: 12px; margin: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #2b7abf, #14b8a6); color: #fff; font-weight: 800; font-size: 14px; border: 1px solid transparent; overflow: hidden; }
   .avatar.has-photo { background: transparent; padding: 0; }
   .avatar.reader-slot-1 { border-color: #227f9c; }
@@ -1793,7 +1796,7 @@ function renderStudentDocument(report) {
                   const bio =
                     profile?.bio ||
                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
-                  return `<div class="reader-col">
+                  return `<div class="reader-col${slotClass ? ` ${slotClass}` : ""}">
                     <div class="avatar${profile?.headshotUrl ? " has-photo" : ""}${slotClass ? ` ${slotClass}` : ""}">${avatarContent}</div>
                     <div>
                       <h3 class="reader-name">${escapeHtml(name)}</h3>
