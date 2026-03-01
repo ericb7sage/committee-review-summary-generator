@@ -538,7 +538,7 @@ const PRINT_CSS = `
   .reader-footer-title { font-family: "Fraunces", "Times New Roman", serif; font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: #475467; }
   .reader-footer-body { white-space: pre-wrap; }
   .reader-section-title { font-family: "Fraunces", "Times New Roman", serif; font-weight: 700; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #344054; margin-bottom: 0; text-align: center; }
-  .reader-detail-page .reader-col { padding: 0; position: relative; display: grid; grid-template-columns: 1fr; align-items: start; }
+  .reader-detail-page .reader-col { padding: 0; position: relative; display: grid; grid-template-columns: 1fr; align-items: start; border: 0; border-radius: 0; }
   .reader-col.ratings, .reader-col.bands { display: grid; grid-template-columns: 1fr; grid-auto-rows: minmax(0, 1fr); gap: 6px; min-height: 0; }
   .reader-col.tags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; align-content: start; min-height: 0; }
   .reader-rating-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
