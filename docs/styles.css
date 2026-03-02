@@ -76,7 +76,7 @@ h1 {
   position: sticky;
   top: 16px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.78) 0%, rgba(243, 248, 255, 0.62) 100%);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .preview-panel {
@@ -113,6 +113,70 @@ h1 {
   gap: 6px;
   margin-bottom: 12px;
   min-width: 0;
+}
+
+.field-head {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #344054;
+}
+
+.field-help {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
+
+.field-help-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 127, 156, 0.35);
+  background: rgba(255, 255, 255, 0.88);
+  color: #227f9c;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.field-help-panel {
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  min-width: 220px;
+  max-width: 280px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(188, 204, 228, 0.95);
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+  color: #334155;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.35;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 20;
+  transition: opacity 120ms ease;
+}
+
+.field-help:hover .field-help-panel,
+.field-help:focus .field-help-panel,
+.field-help:focus-visible .field-help-panel {
+  opacity: 1;
+}
+
+.field-help:focus-visible .field-help-icon {
+  box-shadow: 0 0 0 2px rgba(21, 183, 158, 0.24);
 }
 
 .field input,
@@ -279,6 +343,14 @@ button:disabled {
 
   .meta-grid {
     grid-template-columns: 1fr;
+  }
+
+  .field-help-panel {
+    left: 0;
+    top: calc(100% + 8px);
+    transform: none;
+    min-width: 200px;
+    max-width: min(78vw, 280px);
   }
 
   .preview-root {

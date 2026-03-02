@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Coda CSV PDF Generator</title>
-    <link rel="stylesheet" href="./styles.css?v=20260301a" />
+    <link rel="stylesheet" href="./styles.css?v=20260301b" />
   </head>
   <body>
     <main class="container">
@@ -12,12 +12,24 @@
         <section class="panel control-panel">
           <h2>Control Center</h2>
           <label class="field">
-            <span>CSV file</span>
+            <span class="field-head">
+              <span>CSV file</span>
+              <span class="field-help" tabindex="0" aria-label="CSV help">
+                <span class="field-help-icon">i</span>
+                <span class="field-help-panel">Upload the CSV exported from Coda with the required headers.</span>
+              </span>
+            </span>
             <input id="csvFile" type="file" accept=".csv,text/csv" />
           </label>
 
           <label class="field">
-            <span>Select student</span>
+            <span class="field-head">
+              <span>Select student</span>
+              <span class="field-help" tabindex="0" aria-label="Student selector help">
+                <span class="field-help-icon">i</span>
+                <span class="field-help-panel">After upload, choose one student (`File` value) to generate a report.</span>
+              </span>
+            </span>
             <select id="studentSelect" disabled>
               <option>Upload CSV first</option>
             </select>
@@ -25,22 +37,46 @@
 
           <div class="meta-grid">
             <label class="field">
-              <span>LSAT</span>
+              <span class="field-head">
+                <span>LSAT</span>
+                <span class="field-help" tabindex="0" aria-label="LSAT help">
+                  <span class="field-help-icon">i</span>
+                  <span class="field-help-panel">Enter the student's LSAT score for page-1 Basics.</span>
+                </span>
+              </span>
               <input id="lsatInput" type="text" inputmode="numeric" placeholder="e.g. 171" disabled />
             </label>
             <label class="field">
-              <span>GPA</span>
+              <span class="field-head">
+                <span>GPA</span>
+                <span class="field-help" tabindex="0" aria-label="GPA help">
+                  <span class="field-help-icon">i</span>
+                  <span class="field-help-panel">Enter cumulative GPA for page-1 Basics.</span>
+                </span>
+              </span>
               <input id="gpaInput" type="text" inputmode="decimal" placeholder="e.g. 3.74" disabled />
             </label>
             <label class="field">
-              <span>KJD Status</span>
+              <span class="field-head">
+                <span>KJD Status</span>
+                <span class="field-help" tabindex="0" aria-label="KJD help">
+                  <span class="field-help-icon">i</span>
+                  <span class="field-help-panel">Set whether the student is KJD or Not KJD. This is used in the Other field.</span>
+                </span>
+              </span>
               <select id="kjdSelect" disabled>
                 <option value="Not KJD">Not KJD</option>
                 <option value="KJD">KJD</option>
               </select>
             </label>
             <label class="field">
-              <span>URM Status</span>
+              <span class="field-head">
+                <span>URM Status</span>
+                <span class="field-help" tabindex="0" aria-label="URM help">
+                  <span class="field-help-icon">i</span>
+                  <span class="field-help-panel">Set URM or Non-URM. This is combined with KJD in the Other field.</span>
+                </span>
+              </span>
               <select id="urmSelect" disabled>
                 <option value="Non-URM">Non-URM</option>
                 <option value="URM">URM</option>
@@ -48,7 +84,13 @@
             </label>
           </div>
           <label class="field">
-            <span>Next Steps</span>
+            <span class="field-head">
+              <span>Next Steps</span>
+              <span class="field-help" tabindex="0" aria-label="Next steps help">
+                <span class="field-help-icon">i</span>
+                <span class="field-help-panel">This text is appended as a separate Next Steps card after reader notes.</span>
+              </span>
+            </span>
             <textarea
               id="nextStepsInput"
               rows="3"
@@ -79,6 +121,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="./app.js?v=20260301a"></script>
+    <script src="./app.js?v=20260301b"></script>
   </body>
 </html>
