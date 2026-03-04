@@ -47,7 +47,7 @@ function normalizeTagKey(value) {
 }
 
 // Generated from Tag Explanation (2).csv
-const TAG_DEFINITIONS = [
+const DEFAULT_TAG_DEFINITIONS = [
   {
     "name": "Likable",
     "polarity": "positive",
@@ -245,21 +245,90 @@ const TAG_DEFINITIONS = [
   }
 ];
 
-const TAG_NAME_SET = new Set(TAG_DEFINITIONS.map((tag) => tag.name));
-const TAG_POLARITY_MAP = new Map(TAG_DEFINITIONS.map((tag) => [tag.name, tag.polarity]));
-const TAG_DESCRIPTION_MAP = new Map(TAG_DEFINITIONS.map((tag) => [tag.name, tag.description]));
-const TAG_CANONICAL_NAME_MAP = new Map(
-  TAG_DEFINITIONS.map((tag) => [normalizeTagKey(tag.name), tag.name])
-);
-const HIDDEN_TAG_NAMES = new Set([
+const LEGACY_HIDDEN_TAG_NAMES = new Set([
   "Cramped Résumé",
   "Workplace-Bound",
   "Stretched Résumé",
   "Unnecessary Disclosure",
 ]);
-const DISPLAY_TAG_DEFINITIONS = TAG_DEFINITIONS.filter(
-  (tag) => !HIDDEN_TAG_NAMES.has(tag.name)
-);
+
+let TAG_DEFINITIONS = [];
+let TAG_NAME_SET = new Set();
+let TAG_POLARITY_MAP = new Map();
+let TAG_DESCRIPTION_MAP = new Map();
+let TAG_CANONICAL_NAME_MAP = new Map();
+let HIDDEN_TAG_NAMES = new Set();
+let DISPLAY_TAG_DEFINITIONS = [];
+
+function setTagDefinitions(definitions) {
+  TAG_DEFINITIONS = definitions.map((tag) => ({
+    name: String(tag.name || "").trim(),
+    polarity: String(tag.polarity || "").trim().toLowerCase(),
+    description: String(tag.description || "").trim(),
+    hidden: Boolean(tag.hidden),
+  }));
+  TAG_NAME_SET = new Set(TAG_DEFINITIONS.map((tag) => tag.name));
+  TAG_POLARITY_MAP = new Map(TAG_DEFINITIONS.map((tag) => [tag.name, tag.polarity]));
+  TAG_DESCRIPTION_MAP = new Map(TAG_DEFINITIONS.map((tag) => [tag.name, tag.description]));
+  TAG_CANONICAL_NAME_MAP = new Map(
+    TAG_DEFINITIONS.map((tag) => [normalizeTagKey(tag.name), tag.name])
+  );
+
+  const hiddenNames = new Set(LEGACY_HIDDEN_TAG_NAMES);
+  TAG_DEFINITIONS.forEach((tag) => {
+    if (tag.hidden) hiddenNames.add(tag.name);
+  });
+  HIDDEN_TAG_NAMES = hiddenNames;
+  DISPLAY_TAG_DEFINITIONS = TAG_DEFINITIONS.filter(
+    (tag) => !HIDDEN_TAG_NAMES.has(tag.name)
+  );
+}
+
+function validateTagDefinitions(definitions) {
+  if (!Array.isArray(definitions)) {
+    return { valid: false, errors: ["Tag catalog must be an array."] };
+  }
+
+  const errors = [];
+  const nameKeySet = new Set();
+  definitions.forEach((rawTag, index) => {
+    if (!rawTag || typeof rawTag !== "object" || Array.isArray(rawTag)) {
+      errors.push(`Row ${index + 1} must be an object.`);
+      return;
+    }
+
+    const name = String(rawTag.name || "").trim();
+    const description = String(rawTag.description || "").trim();
+    const polarity = String(rawTag.polarity || "").trim().toLowerCase();
+    const hasHidden = Object.prototype.hasOwnProperty.call(rawTag, "hidden");
+
+    if (!name) {
+      errors.push(`Row ${index + 1} is missing a name.`);
+    } else {
+      const normalizedName = normalizeTagKey(name);
+      if (nameKeySet.has(normalizedName)) {
+        errors.push(`Duplicate tag name "${name}".`);
+      }
+      nameKeySet.add(normalizedName);
+    }
+
+    if (polarity !== "positive" && polarity !== "negative") {
+      errors.push(`Invalid polarity for "${name || `row ${index + 1}`}".`);
+    }
+
+    if (!description) {
+      errors.push(`Missing description for "${name || `row ${index + 1}`}".`);
+    }
+
+    if (hasHidden && typeof rawTag.hidden !== "boolean") {
+      errors.push(`Invalid hidden value for "${name || `row ${index + 1}`}".`);
+    }
+  });
+
+  return { valid: errors.length === 0, errors };
+}
+
+setTagDefinitions(DEFAULT_TAG_DEFINITIONS);
 const READER_PROFILES = [
   {
     fullName: "Tajira McCoy",
@@ -391,6 +460,8 @@ const state = {
   currentReport: null,
   warnings: [],
   errors: [],
+  tagCatalogLoaded: false,
+  tagCatalogWarning: "",
 };
 
 let fitResizeScheduled = false;
@@ -401,7 +472,8 @@ const PRINT_CSS = `
   @page { size: 8.5in 11in; margin: 0; }
   body { margin: 0; font-family: "Lexend", "Segoe UI", Tahoma, sans-serif; color: #202530; background: #fffffe; }
   .doc-shell { background: #fff; }
-  .page { width: 612px; min-height: 792px; height: 792px; padding: 24px; margin: 0; break-after: page; background: #fffffe; }
+  .page { width: 612px; min-height: 792px; height: 792px; padding: 24px; margin: 0; break-after: page; background: #fffffe; position: relative; }
+  .page::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: #cfd7e6; pointer-events: none; }
   .page.summary-page { padding: 0; min-height: 792px; height: 792px; width: 612px; transform: scale(1.3333333333); transform-origin: top left; margin-bottom: 264px; background: #fffffe; }
   .page:last-child { break-after: auto; }
   .page-header { border-bottom: 2px solid #111; padding-bottom: 0.1in; margin-bottom: 0.2in; }
@@ -957,6 +1029,7 @@ const kjdSelect = document.getElementById("kjdSelect");
 const urmSelect = document.getElementById("urmSelect");
 const nextStepsInput = document.getElementById("nextStepsInput");
 const inputHintEl = document.getElementById("inputHint");
+const tagSourceStatusEl = document.getElementById("tagSourceStatus");
 const downloadPdfBtn = document.getElementById("downloadPdfBtn");
 const statusEl = document.getElementById("status");
 const validationEl = document.getElementById("validation");
@@ -973,8 +1046,15 @@ nextStepsInput.addEventListener("input", onManualInputChange);
 downloadPdfBtn.addEventListener("click", onDownloadCurrentStudentPdf);
 window.addEventListener("resize", onWindowResize);
 
+void initializeTagCatalog();
+
 function setStatus(message) {
   statusEl.textContent = message;
+}
+
+function setTagSourceStatus(label) {
+  if (!tagSourceStatusEl) return;
+  tagSourceStatusEl.textContent = `Tag source: ${label}`;
 }
 
 function escapeHtml(value) {
@@ -1050,6 +1130,10 @@ function getReaderSlotClass(slotLabel) {
 
 function showValidationMessages() {
   const blocks = [];
+  const combinedWarnings = [...state.warnings];
+  if (state.tagCatalogWarning) {
+    combinedWarnings.unshift(state.tagCatalogWarning);
+  }
   if (state.errors.length) {
     blocks.push(
       `<div class="error"><strong>Errors:</strong> ${escapeHtml(
@@ -1057,14 +1141,75 @@ function showValidationMessages() {
       )}</div>`
     );
   }
-  if (state.warnings.length) {
+  if (combinedWarnings.length) {
     blocks.push(
       `<div class="warn"><strong>Warnings:</strong> ${escapeHtml(
-        state.warnings.join(" | ")
+        combinedWarnings.join(" | ")
       )}</div>`
     );
   }
   validationEl.innerHTML = blocks.length ? blocks.join("") : "No validation issues.";
+}
+
+function syncGenerateButtonState() {
+  generateBtn.disabled =
+    !state.tagCatalogLoaded ||
+    state.errors.length > 0 ||
+    state.availableStudents.length === 0;
+}
+
+async function loadTagDefinitions() {
+  const fallbackToDefaults = (warningMessage, details = "") => {
+    setTagDefinitions(DEFAULT_TAG_DEFINITIONS);
+    state.tagCatalogLoaded = true;
+    state.tagCatalogWarning = warningMessage;
+    setTagSourceStatus("fallback defaults");
+    if (details) {
+      console.warn("Tag catalog fallback reason:", details);
+    }
+    syncGenerateButtonState();
+  };
+
+  try {
+    const response = await fetch(`./tags.json?ts=${Date.now()}`, {
+      cache: "no-store",
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    const definitions = await response.json();
+    const validation = validateTagDefinitions(definitions);
+    if (!validation.valid) {
+      fallbackToDefaults(
+        "Tag catalog failed validation; using built-in defaults.",
+        validation.errors.join(" | ")
+      );
+      return;
+    }
+
+    setTagDefinitions(definitions);
+    state.tagCatalogLoaded = true;
+    state.tagCatalogWarning = "";
+    setTagSourceStatus("repo file");
+    syncGenerateButtonState();
+  } catch (error) {
+    fallbackToDefaults(
+      "Could not load repo tag catalog; using built-in defaults.",
+      error?.message || String(error)
+    );
+  }
+}
+
+async function initializeTagCatalog() {
+  state.tagCatalogLoaded = false;
+  state.tagCatalogWarning = "";
+  setTagSourceStatus("loading...");
+  syncGenerateButtonState();
+  await loadTagDefinitions();
+  if (state.currentReport) {
+    renderPreviewFromCurrent();
+  }
+  showValidationMessages();
 }
 
 function clearGeneratedResults({ resetSelector } = { resetSelector: false }) {
@@ -2356,7 +2501,7 @@ function onWindowResize() {
 
 async function onCsvSelected(event) {
   clearGeneratedResults({ resetSelector: true });
-  generateBtn.disabled = true;
+  syncGenerateButtonState();
   state.parsedRows = [];
   state.groupedRows = new Map();
   state.availableStudents = [];
@@ -2395,7 +2540,7 @@ async function onCsvSelected(event) {
       );
     }
 
-    generateBtn.disabled = state.errors.length > 0 || state.availableStudents.length === 0;
+    syncGenerateButtonState();
     setStudentSelectorOptions();
     setStatus(
       state.errors.length
@@ -2404,7 +2549,7 @@ async function onCsvSelected(event) {
     );
   } catch (error) {
     state.errors = [`Could not parse CSV: ${error.message}`];
-    generateBtn.disabled = true;
+    syncGenerateButtonState();
     setStatus("CSV load failed.");
   }
 
@@ -2413,6 +2558,13 @@ async function onCsvSelected(event) {
 
 function onGenerateDocuments() {
   clearGeneratedResults();
+  if (!state.tagCatalogLoaded) {
+    state.errors = ["Tag catalog is still loading. Try again in a moment."];
+    setStatus("Generation blocked.");
+    showValidationMessages();
+    return;
+  }
+
   if (!state.parsedRows.length) {
     state.errors = ["No CSV rows available. Upload a file first."];
     setStatus("Generation blocked.");

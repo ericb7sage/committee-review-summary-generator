@@ -23,6 +23,35 @@ Open `web/index.html` in a browser.
 
 Set Pages source to `main` + `/docs`. `/docs` is a published copy of `/web`.
 
+## Centralized tag explanations (no server)
+
+Tag explanations are centralized in:
+
+- `docs/tags.json` (source of truth for GitHub Pages)
+
+The app loads this file at runtime. If it cannot be loaded or fails validation, the app falls back to built-in defaults and shows a warning.
+
+### Coworker update workflow
+
+1. Open `docs/tags.json` in GitHub
+2. Click edit (pencil icon)
+3. Update tag `description` values (and optionally `hidden`)
+4. Commit to `main`
+5. Wait for GitHub Pages to republish
+6. Hard refresh the app (`Cmd/Ctrl + Shift + R`)
+
+### `tags.json` format
+
+Each item must include:
+
+- `name` (string, unique)
+- `polarity` (`positive` or `negative`)
+- `description` (string)
+
+Optional:
+
+- `hidden` (boolean; if true, hidden from the page-1 tag grid)
+
 ## Current flow
 
 1. Upload CSV

@@ -247,6 +247,13 @@ h1 {
   min-height: 16px;
 }
 
+.tag-source-status {
+  margin: -4px 0 10px;
+  color: #64748b;
+  font-size: 11px;
+  min-height: 16px;
+}
+
 .actions {
   display: flex;
   flex-wrap: wrap;
@@ -405,6 +412,18 @@ button:disabled {
   border: 1px solid #cfd7e6;
   background: #fffffe;
   break-after: page;
+  position: relative;
+}
+
+.page::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: #cfd7e6;
+  pointer-events: none;
 }
 
 .page.summary-page {
