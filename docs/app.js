@@ -530,7 +530,7 @@ const PRINT_CSS = `
   .readers-card { border: 0; border-radius: 0; padding: 0; flex: 1; min-height: 0; }
   .section-block.basics-section .section-body { height: 100%; padding: 4px 10px; }
   .section-block.key-takeaways-section { height: 208px; margin-top: 0; }
-  .section-block.key-takeaways-section .section-body { height: 100%; padding: 3px 12px; }
+  .section-block.key-takeaways-section .section-body { height: 100%; padding: 3px 8px; }
   .section-block.tags-section { height: 324px; border-bottom: 0; }
   .section-block.tags-section .section-body { height: 100%; overflow: hidden; }
   .section-block.tags-section .section-body { padding: 6px 8px; }
