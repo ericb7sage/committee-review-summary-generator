@@ -11,8 +11,16 @@ const REQUIRED_HEADERS = [
   "Safety",
   "Softs",
   "Notes",
-  "Anything Else?",
 ];
+
+const HEADER_ALIASES = {
+  Submission: "File",
+  "Ready?": "Thrive?",
+  "Perspective?": "Contribute?",
+  "Personality?": "Know?",
+  "Experience Rating (Softs Tier)": "Softs",
+  Explanation: "Notes",
+};
 
 const RUBRIC_DELTA = {
   "Strongly Agree": 1,
@@ -36,7 +44,7 @@ const BAND_LABELS = {
   "T100+": "Top 100+",
 };
 
-const LOGO_SRC_PATH = "./assets/7sage-logo.png";
+const LOGO_SRC_PATH = "./assets/7sage-logo.svg";
 
 function normalizeTagKey(value) {
   return String(value || "")
@@ -517,11 +525,11 @@ const PRINT_CSS = `
   .page.has-continue .page-continue-note { opacity: 1; }
   .reader-title { margin: 0 0 8px; font-size: 14px; }
   .notes-box { border: 1px solid #333; min-height: 1.5in; padding: 10px; white-space: pre-wrap; margin-bottom: 8px; }
-  .summary-banner { height: 58px; background: linear-gradient(-45deg, #15b79e 0%, #227f9c 100%); color: #fcfaf8; margin-bottom: 0; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 10px; padding: 6px 10px; }
-  .summary-banner-logo-wrap { width: 112px; height: 44px; border-radius: 8px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; padding: 3px 6px; overflow: hidden; flex-shrink: 0; }
-  .summary-banner-logo { width: 100%; height: 100%; object-fit: contain; display: block; }
-  .summary-banner-logo-fallback { display: none; align-items: center; justify-content: center; width: 100%; height: 100%; font-family: "Lexend", "Segoe UI", Tahoma, sans-serif; font-size: 14px; font-weight: 800; letter-spacing: 0.02em; color: #fcfaf8; }
-  .summary-banner-title { text-align: center; font-family: "Fraunces", "Times New Roman", serif; font-size: 30px; font-weight: 700; line-height: 1.05; text-transform: none; padding-right: 90px; }
+  .summary-banner { height: 58px; background: linear-gradient(-45deg, #15b79e 0%, #227f9c 100%); color: #fcfaf8; margin-bottom: 0; display: flex; align-items: center; justify-content: center; padding: 0 10px; }
+  .summary-banner-brand { height: 100%; display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-width: 0; }
+  .summary-banner-logo { height: 80%; width: auto; object-fit: contain; display: block; flex: 0 0 auto; }
+  .summary-banner-logo-fallback { display: none; align-items: center; justify-content: center; height: 80%; padding: 0 8px; font-family: "Lexend", "Segoe UI", Tahoma, sans-serif; font-size: 16px; font-weight: 800; letter-spacing: 0.02em; color: #fcfaf8; }
+  .summary-banner-title { text-align: center; font-family: "Fraunces", "Times New Roman", serif; font-size: 30px; font-weight: 700; line-height: 1.05; text-transform: none; white-space: nowrap; }
   .section-block { display: grid; grid-template-columns: 1fr; gap: 0; margin-bottom: 0; width: 100%; background: #fff; border-top: 0; border-bottom: 0; }
   .summary-page .section-block { background: #fffffe; }
   .section-block.basics-section { height: 52px; }
@@ -577,6 +585,8 @@ const PRINT_CSS = `
   .avatar.reader-slot-3 { border-color: #db2777; }
   .avatar img { width: 100%; height: 100%; border-radius: 0; object-fit: cover; display: block; }
   .reader-name { text-align: center; margin: 0 0 1px; font-size: 16px; font-family: "Fraunces", "Times New Roman", serif; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
+  .reader-name-line { display: inline-flex; align-items: center; gap: 6px; justify-content: center; width: 100%; }
+  .reader-chair-pill { display: inline-flex; align-items: center; justify-content: center; padding: 1px 6px; border-radius: 999px; border: 1px solid rgba(34, 127, 156, 0.35); background: rgba(34, 127, 156, 0.08); color: #227f9c; font-family: "Lexend", "Segoe UI", Tahoma, sans-serif; font-size: 8px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; line-height: 1.2; flex: 0 0 auto; }
   .reader-bio { margin: 0; text-align: center; font-size: 11px; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
   .reader-bio-list { margin: 0; padding-left: 16px; text-align: left; font-size: 11px; line-height: 1.3; display: grid; gap: 2px; max-height: calc(4 * 1.3em + 6px); overflow: hidden; }
   .reader-bio-list li { margin: 0; }
@@ -615,7 +625,7 @@ const PRINT_CSS = `
   .reader-footer-box { border: 1px solid #d8dee9; border-radius: 8px; padding: 6px 8px; display: grid; grid-template-rows: auto 1fr; gap: 4px; overflow: hidden; font-size: 10px; line-height: 1.3; }
   .reader-footer-title { font-family: "Fraunces", "Times New Roman", serif; font-weight: 700; font-size: 9px; text-transform: uppercase; letter-spacing: 0.12em; color: #475467; }
   .reader-footer-body { white-space: pre-wrap; }
-  .reader-section-title { font-family: "Fraunces", "Times New Roman", serif; font-weight: 700; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #344054; margin-bottom: 0; text-align: center; }
+  .reader-section-title { font-family: "Fraunces", "Times New Roman", serif; font-weight: 700; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #344054; margin-bottom: 0; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 100%; }
   .reader-detail-page .reader-col { padding: 0; position: relative; display: grid; grid-template-columns: 1fr; align-items: start; border: 0; border-radius: 0; }
   .reader-col.ratings, .reader-col.bands { display: grid; grid-template-columns: 1fr; grid-auto-rows: minmax(0, 1fr); gap: 6px; min-height: 0; }
   .reader-col.tags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; align-content: start; min-height: 0; }
@@ -1284,24 +1294,31 @@ function parseCsv(csvText) {
   return rows.filter((r) => r.some((c) => c.trim().length > 0));
 }
 
+function normalizeCsvHeaderKey(value) {
+  return String(value || "")
+    .replace(/^\uFEFF/, "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, " ");
+}
+
 function readCsvRows(csvText) {
   const allRows = parseCsv(csvText);
   if (!allRows.length) throw new Error("CSV is empty.");
 
-  const normalizeHeaderKey = (value) =>
-    String(value || "")
-      .replace(/^\uFEFF/, "")
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g, " ");
-  const normalizedHeaderMap = new Map(
-    REQUIRED_HEADERS.map((header) => [
-      normalizeHeaderKey(header),
-      header,
-    ])
-  );
+  const normalizedHeaderMap = new Map();
+  REQUIRED_HEADERS.forEach((header) => {
+    normalizedHeaderMap.set(normalizeCsvHeaderKey(header), header);
+  });
+  Object.entries(HEADER_ALIASES).forEach(([from, to]) => {
+    normalizedHeaderMap.set(normalizeCsvHeaderKey(from), to);
+  });
+  normalizedHeaderMap.set(normalizeCsvHeaderKey("Is Chair Review"), "Is Chair Review");
+  normalizedHeaderMap.set(normalizeCsvHeaderKey("Chair Summary"), "Chair Summary");
+  normalizedHeaderMap.set(normalizeCsvHeaderKey("Anything Else?"), "Anything Else?");
+
   const headers = allRows[0].map((h) => {
-    const normalized = normalizeHeaderKey(h);
+    const normalized = normalizeCsvHeaderKey(h);
     return normalizedHeaderMap.get(normalized) || h.replace(/^\uFEFF/, "").trim();
   });
   if (!headers.length || headers.every((h) => h.length === 0)) {
@@ -1347,6 +1364,46 @@ function shuffleReaders(rows) {
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
   return shuffled;
+}
+
+function isChairReview(value) {
+  const normalized = String(value || "").trim().toLowerCase();
+  return normalized === "true" || normalized === "1" || normalized === "yes";
+}
+
+function assignReaderSlots(rows, fileName) {
+  const flagged = rows.filter((row) => isChairReview(row["Is Chair Review"]));
+  if (flagged.length > 1) {
+    state.warnings.push(`${fileName}: multiple chair reviewers found; using first.`);
+  }
+
+  const chairRow = flagged[0] || null;
+  if (!chairRow) {
+    return shuffleReaders(rows).map((row, index) => ({
+      row,
+      badgeLabel: String(index + 1),
+      isChair: false,
+    }));
+  }
+
+  const otherRows = shuffleReaders(rows.filter((row) => row !== chairRow));
+  return [
+    {
+      row: otherRows[0],
+      badgeLabel: "1",
+      isChair: false,
+    },
+    {
+      row: chairRow,
+      badgeLabel: "2",
+      isChair: true,
+    },
+    {
+      row: otherRows[1],
+      badgeLabel: "3",
+      isChair: false,
+    },
+  ].filter((entry) => Boolean(entry.row));
 }
 
 function normalizeRubricValue(value, fileName, fieldLabel) {
@@ -1463,8 +1520,8 @@ function buildStudentReport(fileName, rows, manual) {
     contribute: [],
     know: [],
   };
-  const randomizedRows = shuffleReaders(rows);
-  const labeledReaders = randomizedRows.map((row, index) => {
+  const slottedRows = assignReaderSlots(rows, fileName);
+  const labeledReaders = slottedRows.map(({ row, badgeLabel, isChair }) => {
     const rawTags = parseTags(row.Tags);
     const tags = [];
     rawTags.forEach((rawTag) => {
@@ -1477,11 +1534,20 @@ function buildStudentReport(fileName, rows, manual) {
     });
     return {
       row,
-      label: getReaderDisplayName(row.Reviewer, `Reader ${index + 1}`),
-      badgeLabel: String(index + 1),
+      label: getReaderDisplayName(row.Reviewer, `Reader ${badgeLabel}`),
+      badgeLabel,
+      isChair,
       tags,
     };
   });
+
+  const chairSummary = String(
+    labeledReaders.find(
+      ({ isChair, row }) => isChair && String(row["Chair Summary"] || "").trim()
+    )?.row["Chair Summary"] ||
+      rows.find((row) => String(row["Chair Summary"] || "").trim())?.["Chair Summary"] ||
+      ""
+  ).trim();
 
   const normalizeBandDisplay = (value) => {
     const trimmed = String(value || "").trim();
@@ -1489,7 +1555,7 @@ function buildStudentReport(fileName, rows, manual) {
     return trimmed;
   };
 
-  const readers = labeledReaders.map(({ row, label, badgeLabel, tags }) => {
+  const readers = labeledReaders.map(({ row, label, badgeLabel, isChair, tags }) => {
     const ratingLabels = {
       whyLaw: normalizeRubricValue(row["Why Law?"], fileName, "Why Law?"),
       thrive: normalizeRubricValue(row["Thrive?"], fileName, "Thrive?"),
@@ -1504,6 +1570,7 @@ function buildStudentReport(fileName, rows, manual) {
     return {
       label,
       badgeLabel,
+      isChair,
       notes: row.Notes || "",
       anythingElse: row["Anything Else?"] || "",
       rawReviewer: row.Reviewer || "",
@@ -1563,6 +1630,7 @@ function buildStudentReport(fileName, rows, manual) {
       safety: uniqueNonEmpty(rows.map((row) => mapBandValue(row.Safety, fileName, "Safety"))),
     },
     softsDisplay: computeSoftsDisplay(rows, fileName),
+    chairSummary,
     activeTags,
     tagReaderMap,
   };
@@ -1800,11 +1868,14 @@ function renderReaderNotesBlock(text, label = "Notes") {
 }
 
 function renderNextStepsCard(report) {
-  const nextStepsText = String(report.manual.nextSteps || "").trim() || "—";
+  const chairSummaryText = String(report.chairSummary || "").trim();
+  const nextStepsText = String(report.manual.nextSteps || "").trim();
+  const cardTitle = chairSummaryText ? "Chair Summary" : "Next Steps";
+  const bodyText = chairSummaryText || nextStepsText || "—";
   return `
     <article class="reader-card next-steps-card">
-      <div class="reader-section-title">Next Steps</div>
-      ${renderReaderNotesBlock(nextStepsText, "Next Steps")}
+      <div class="reader-section-title">${escapeHtml(cardTitle)}</div>
+      ${renderReaderNotesBlock(bodyText, cardTitle)}
     </article>
   `;
 }
@@ -1812,9 +1883,14 @@ function renderNextStepsCard(report) {
 function renderReaderCard(reader) {
   const notesText = getReaderNotesText(reader);
   const slotClass = getReaderSlotClass(reader.badgeLabel);
+  const chairChip = reader.isChair
+    ? '<span class="reader-chair-pill">Chair</span>'
+    : "";
   return `
     <article class="reader-card${slotClass ? ` ${slotClass}` : ""}">
-      <div class="reader-section-title">${escapeHtml(reader.label)}</div>
+      <div class="reader-section-title">
+        <span>${escapeHtml(reader.label)}</span>${chairChip}
+      </div>
       <div class="reader-top-grid">
         <div class="reader-col ratings">
           ${renderReaderRatingRow(
@@ -1914,7 +1990,7 @@ function renderStudentDocument(report) {
   return `
     <section class="page summary-page">
       <div class="summary-banner">
-        <div class="summary-banner-logo-wrap">
+        <div class="summary-banner-brand">
           <img
             class="summary-banner-logo"
             src="${escapeHtml(LOGO_SRC_PATH)}"
@@ -1922,8 +1998,8 @@ function renderStudentDocument(report) {
             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
           />
           <span class="summary-banner-logo-fallback">7Sage</span>
+          <div class="summary-banner-title">${escapeHtml(docTitle)}</div>
         </div>
-        <div class="summary-banner-title">${escapeHtml(docTitle)}</div>
       </div>
       <div class="section-block basics-section">
         <div class="section-body">
@@ -1965,10 +2041,16 @@ function renderStudentDocument(report) {
                   const bio =
                     profile?.bio ||
                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
+                  const chairChip = reader.isChair
+                    ? '<span class="reader-chair-pill">Chair</span>'
+                    : "";
                   return `<div class="reader-col${slotClass ? ` ${slotClass}` : ""}">
                     <div class="avatar${profile?.headshotUrl ? " has-photo" : ""}${slotClass ? ` ${slotClass}` : ""}">${avatarContent}</div>
                     <div>
-                      <h3 class="reader-name">${escapeHtml(name)}</h3>
+                      <div class="reader-name-line">
+                        <h3 class="reader-name">${escapeHtml(name)}</h3>
+                        ${chairChip}
+                      </div>
                       ${renderReaderSummaryBio(bio)}
                     </div>
                   </div>`;

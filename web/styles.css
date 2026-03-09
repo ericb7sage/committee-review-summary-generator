@@ -648,41 +648,37 @@ button:disabled {
   background: linear-gradient(-45deg, #15b79e 0%, #227f9c 100%);
   color: #fcfaf8;
   margin-bottom: 0;
-  display: grid;
-  grid-template-columns: auto 1fr;
-  align-items: center;
-  gap: 10px;
-  padding: 6px 10px;
-}
-
-.summary-banner-logo-wrap {
-  width: 112px;
-  height: 44px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 3px 6px;
-  overflow: hidden;
-  flex-shrink: 0;
+  padding: 0 10px;
+}
+
+.summary-banner-brand {
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 0;
 }
 
 .summary-banner-logo {
-  width: 100%;
-  height: 100%;
+  height: 80%;
+  width: auto;
   object-fit: contain;
   display: block;
+  flex: 0 0 auto;
 }
 
 .summary-banner-logo-fallback {
   display: none;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
+  height: 80%;
+  padding: 0 8px;
   font-family: "Lexend", "Segoe UI", Tahoma, sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 800;
   letter-spacing: 0.02em;
   color: #fcfaf8;
@@ -694,7 +690,7 @@ button:disabled {
   font-size: 30px;
   font-weight: 700;
   line-height: 1.05;
-  padding-right: 90px;
+  white-space: nowrap;
 }
 
 .section-block {
@@ -1079,6 +1075,32 @@ button:disabled {
   overflow: hidden;
 }
 
+.reader-name-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+  width: 100%;
+}
+
+.reader-chair-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 127, 156, 0.35);
+  background: rgba(34, 127, 156, 0.08);
+  color: #227f9c;
+  font-family: "Lexend", "Segoe UI", Tahoma, sans-serif;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  flex: 0 0 auto;
+}
+
 .reader-bio {
   margin: 0;
   text-align: center;
@@ -1407,6 +1429,11 @@ button:disabled {
   color: #344054;
   margin-bottom: 0;
   text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
 }
 
 .reader-detail-page .reader-col {
