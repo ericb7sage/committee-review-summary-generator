@@ -36,6 +36,8 @@ const BAND_LABELS = {
   "T100+": "Top 100+",
 };
 
+const LOGO_SRC_PATH = "./assets/7sage-logo.png";
+
 function normalizeTagKey(value) {
   return String(value || "")
     .normalize("NFD")
@@ -515,7 +517,11 @@ const PRINT_CSS = `
   .page.has-continue .page-continue-note { opacity: 1; }
   .reader-title { margin: 0 0 8px; font-size: 14px; }
   .notes-box { border: 1px solid #333; min-height: 1.5in; padding: 10px; white-space: pre-wrap; margin-bottom: 8px; }
-  .summary-banner { height: 58px; background: linear-gradient(-45deg, #15b79e 0%, #227f9c 100%); color: #fcfaf8; text-align: center; font-family: "Fraunces", "Times New Roman", serif; font-size: 30px; font-weight: 700; line-height: 58px; margin-bottom: 0; }
+  .summary-banner { height: 58px; background: linear-gradient(-45deg, #15b79e 0%, #227f9c 100%); color: #fcfaf8; margin-bottom: 0; display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 10px; padding: 6px 10px; }
+  .summary-banner-logo-wrap { width: 112px; height: 44px; border-radius: 8px; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; padding: 3px 6px; overflow: hidden; flex-shrink: 0; }
+  .summary-banner-logo { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .summary-banner-logo-fallback { display: none; align-items: center; justify-content: center; width: 100%; height: 100%; font-family: "Lexend", "Segoe UI", Tahoma, sans-serif; font-size: 14px; font-weight: 800; letter-spacing: 0.02em; color: #fcfaf8; }
+  .summary-banner-title { text-align: center; font-family: "Fraunces", "Times New Roman", serif; font-size: 30px; font-weight: 700; line-height: 1.05; text-transform: none; padding-right: 90px; }
   .section-block { display: grid; grid-template-columns: 1fr; gap: 0; margin-bottom: 0; width: 100%; background: #fff; border-top: 0; border-bottom: 0; }
   .summary-page .section-block { background: #fffffe; }
   .section-block.basics-section { height: 52px; }
@@ -1023,6 +1029,7 @@ function fitSectionContent(section) {
 const csvFileInput = document.getElementById("csvFile");
 const generateBtn = document.getElementById("generateBtn");
 const studentSelect = document.getElementById("studentSelect");
+const docTitleSelect = document.getElementById("docTitleSelect");
 const lsatInput = document.getElementById("lsatInput");
 const gpaInput = document.getElementById("gpaInput");
 const kjdSelect = document.getElementById("kjdSelect");
@@ -1038,6 +1045,7 @@ const previewRoot = document.getElementById("previewRoot");
 csvFileInput.addEventListener("change", onCsvSelected);
 generateBtn.addEventListener("click", onGenerateDocuments);
 studentSelect.addEventListener("change", onStudentSelectionChange);
+docTitleSelect.addEventListener("change", onDocTitleChange);
 lsatInput.addEventListener("input", onManualInputChange);
 gpaInput.addEventListener("input", onManualInputChange);
 kjdSelect.addEventListener("change", onManualInputChange);
@@ -1152,10 +1160,14 @@ function showValidationMessages() {
 }
 
 function syncGenerateButtonState() {
+  const hasSelectedStudent = Boolean(getSelectedFile());
+  const hasDocTitle = Boolean(getSelectedDocTitle());
   generateBtn.disabled =
     !state.tagCatalogLoaded ||
     state.errors.length > 0 ||
-    state.availableStudents.length === 0;
+    state.availableStudents.length === 0 ||
+    !hasSelectedStudent ||
+    !hasDocTitle;
 }
 
 async function loadTagDefinitions() {
@@ -1897,10 +1909,22 @@ function renderStudentDocument(report) {
     .map((reader) => ({ reader, slot: Number.parseInt(reader.badgeLabel, 10) || 999 }))
     .sort((a, b) => a.slot - b.slot)
     .map(({ reader }) => reader);
+  const docTitle = String(report.manual.docTitle || "Committee Review").trim() || "Committee Review";
 
   return `
     <section class="page summary-page">
-      <div class="summary-banner">Summary</div>
+      <div class="summary-banner">
+        <div class="summary-banner-logo-wrap">
+          <img
+            class="summary-banner-logo"
+            src="${escapeHtml(LOGO_SRC_PATH)}"
+            alt="7Sage logo"
+            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+          />
+          <span class="summary-banner-logo-fallback">7Sage</span>
+        </div>
+        <div class="summary-banner-title">${escapeHtml(docTitle)}</div>
+      </div>
       <div class="section-block basics-section">
         <div class="section-body">
           <div class="fit-content fit-basics">
@@ -2021,6 +2045,7 @@ function getDefaultStudentInput() {
 }
 
 function setManualControlsEnabled(enabled) {
+  docTitleSelect.disabled = !enabled;
   lsatInput.disabled = !enabled;
   gpaInput.disabled = !enabled;
   kjdSelect.disabled = !enabled;
@@ -2030,6 +2055,10 @@ function setManualControlsEnabled(enabled) {
 
 function getSelectedFile() {
   return String(studentSelect.value || "").trim();
+}
+
+function getSelectedDocTitle() {
+  return String(docTitleSelect?.value || "").trim();
 }
 
 function ensureStudentInput(fileName) {
@@ -2043,6 +2072,7 @@ function syncManualFormFromSelection() {
   const fileName = getSelectedFile();
   const hasSelection = Boolean(fileName);
   setManualControlsEnabled(hasSelection);
+  docTitleSelect.value = "";
   if (!hasSelection) {
     lsatInput.value = "";
     gpaInput.value = "";
@@ -2050,6 +2080,7 @@ function syncManualFormFromSelection() {
     urmSelect.value = "Non-URM";
     nextStepsInput.value = "";
     inputHintEl.textContent = "";
+    syncGenerateButtonState();
     return;
   }
 
@@ -2060,6 +2091,7 @@ function syncManualFormFromSelection() {
   urmSelect.value = manual.urm;
   nextStepsInput.value = manual.nextSteps || "";
   validateManualInputs();
+  syncGenerateButtonState();
 }
 
 function setStudentSelectorOptions() {
@@ -2068,6 +2100,8 @@ function setStudentSelectorOptions() {
     studentSelect.innerHTML = "<option>No valid student names found</option>";
     studentSelect.disabled = true;
     setManualControlsEnabled(false);
+    docTitleSelect.value = "";
+    syncGenerateButtonState();
     return;
   }
 
@@ -2131,6 +2165,10 @@ function onManualInputChange() {
   manual.urm = urmSelect.value;
   manual.nextSteps = nextStepsInput.value.trim();
   validateManualInputs();
+}
+
+function onDocTitleChange() {
+  syncGenerateButtonState();
 }
 
 function fitTagFonts(root = document) {
@@ -2508,6 +2546,7 @@ async function onCsvSelected(event) {
   state.studentInputByFile = {};
   state.fileName = "";
   setManualControlsEnabled(false);
+  docTitleSelect.value = "";
   inputHintEl.textContent = "";
 
   const file = event.target.files[0];
@@ -2595,9 +2634,18 @@ function onGenerateDocuments() {
     return;
   }
 
+  const docTitle = getSelectedDocTitle();
+  if (!docTitle) {
+    state.errors = ["Select a document title before generating."];
+    setStatus("Generation blocked.");
+    showValidationMessages();
+    return;
+  }
+
   onManualInputChange();
   const manual = ensureStudentInput(selectedFile);
   const mergedManual = {
+    docTitle,
     lsat: manual.lsat,
     gpa: manual.gpa,
     kjd: manual.kjd,
@@ -2611,6 +2659,8 @@ function onGenerateDocuments() {
   state.reports = [report];
   renderPreviewFromCurrent();
   downloadPdfBtn.disabled = false;
+  docTitleSelect.value = "";
+  syncGenerateButtonState();
   setStatus(`Generated report for ${selectedFile}.`);
   showValidationMessages();
 }

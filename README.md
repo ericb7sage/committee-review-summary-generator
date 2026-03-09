@@ -56,9 +56,10 @@ Optional:
 
 1. Upload CSV
 2. Select a student (`File`)
-3. Enter LSAT, GPA, KJD status, and URM status
-4. Click **Generate Report**
-5. Click **Download PDF** (or use **Print Current Student** as fallback)
+3. Select a document title (`Application Autopsy` or `Committee Review`)
+4. Enter LSAT, GPA, KJD status, and URM status
+5. Click **Generate Report**
+6. Click **Download PDF** (or use **Print Current Student** as fallback)
 
 ## Aggregation behavior
 

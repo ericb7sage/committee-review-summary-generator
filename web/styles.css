@@ -647,12 +647,54 @@ button:disabled {
   height: 58px;
   background: linear-gradient(-45deg, #15b79e 0%, #227f9c 100%);
   color: #fcfaf8;
+  margin-bottom: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+}
+
+.summary-banner-logo-wrap {
+  width: 112px;
+  height: 44px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.summary-banner-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.summary-banner-logo-fallback {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-family: "Lexend", "Segoe UI", Tahoma, sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  color: #fcfaf8;
+}
+
+.summary-banner-title {
   text-align: center;
   font-family: "Fraunces", "Times New Roman", serif;
   font-size: 30px;
   font-weight: 700;
-  line-height: 58px;
-  margin-bottom: 0;
+  line-height: 1.05;
+  padding-right: 90px;
 }
 
 .section-block {

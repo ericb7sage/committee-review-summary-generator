@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Coda CSV PDF Generator</title>
-    <link rel="stylesheet" href="./styles.css?v=20260304c" />
+    <link rel="stylesheet" href="./styles.css?v=20260309a" />
   </head>
   <body>
     <main class="container">
@@ -32,6 +32,20 @@
             </span>
             <select id="studentSelect" disabled>
               <option>Upload CSV first</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="field-head">
+              <span>Document Title</span>
+              <span class="field-help" tabindex="0" aria-label="Document title help">
+                <span class="field-help-icon">i</span>
+                <span class="field-help-panel">Pick the page-1 banner title for this generation only. You must choose this each time before generating.</span>
+              </span>
+            </span>
+            <select id="docTitleSelect" disabled>
+              <option value="">Select document title</option>
+              <option value="Application Autopsy">Application Autopsy</option>
+              <option value="Committee Review">Committee Review</option>
             </select>
           </label>
 
@@ -122,6 +136,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="./app.js?v=20260304c"></script>
+    <script src="./app.js?v=20260309a"></script>
   </body>
 </html>
