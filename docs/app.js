@@ -660,14 +660,18 @@ const PRINT_CSS = `
   .reader-rating-pill.is-positive, .reader-rating-pill.is-negative { opacity: 0.5; }
   .reader-rating-pill.empty { color: #94a3b8; background: #fff; }
   .reader-rating-empty { font-size: 8px; color: #98a2b3; }
-  .reader-band-row { display: grid; grid-template-columns: auto 1fr; gap: 4px; align-items: center; font-size: 9px; }
+  .reader-band-row { display: grid; grid-template-columns: auto 1fr; gap: 6px; align-items: center; font-size: 9px; }
   .reader-band-label { font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; font-size: 8px; color: #475467; }
   .reader-band-value { font-weight: 600; text-align: right; justify-self: end; min-width: 0; }
-  .reader-band-range-pill { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 2px 8px; font-size: 8px; font-weight: 700; border: 1px solid transparent; white-space: nowrap; }
-  .reader-band-range-pill.reach { background: #fff2df; border-color: #f3ce73; color: #b45309; }
-  .reader-band-range-pill.target { background: #e0f2fe; border-color: #7dd3fc; color: #0c4a6e; }
-  .reader-band-range-pill.safety { background: #dcfce7; border-color: #86efac; color: #14532d; }
-  .reader-band-range-pill.empty { background: #fff; border-color: #d8dee9; color: #98a2b3; }
+  .reader-band-label-pill { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 2px 7px; font-size: 8px; font-weight: 700; line-height: 1.1; white-space: nowrap; }
+  .reader-band-label-pill.reach { background: #fff2df; color: #b45309; }
+  .reader-band-label-pill.target { background: #e0f2fe; color: #0c4a6e; }
+  .reader-band-label-pill.safety { background: #dcfce7; color: #14532d; }
+  .reader-band-values-pill { display: inline-flex; align-items: center; justify-content: flex-start; border-radius: 999px; padding: 2px 8px; font-size: 7px; font-weight: 700; border: 1px solid transparent; white-space: nowrap; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .reader-band-values-pill.reach { background: #fff2df; border-color: #f3ce73; color: #b45309; }
+  .reader-band-values-pill.target { background: #e0f2fe; border-color: #7dd3fc; color: #0c4a6e; }
+  .reader-band-values-pill.safety { background: #dcfce7; border-color: #86efac; color: #14532d; }
+  .reader-band-values-pill.empty { background: #fff; border-color: #d8dee9; color: #98a2b3; }
   .reader-notes { border: 0; border-radius: 0; padding: 0; font-size: 11px; line-height: 1.35; height: 100%; overflow: hidden; }
   .reader-notes .label { font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 2px; color: #475467; }
   .reader-notes-body { margin: 0; white-space: pre-wrap; }
@@ -1899,25 +1903,18 @@ function renderReaderBandRow(label, className, values) {
     .filter((index) => index >= 0)
     .sort((a, b) => a - b);
 
-  const rangeDisplay = (() => {
+  const valueText = (() => {
     if (!rankedValues.length) return "—";
-    const minValue = BAND_ORDER[rankedValues[0]];
-    const maxValue = BAND_ORDER[rankedValues[rankedValues.length - 1]];
-    return minValue === maxValue ? minValue : `${minValue}-${maxValue}`;
+    const minIndex = rankedValues[0];
+    const maxIndex = rankedValues[rankedValues.length - 1];
+    return BAND_ORDER.slice(minIndex, maxIndex + 1).join(" ");
   })();
 
-  const classes = [
-    "reader-band-value",
-    "reader-band-range-pill",
-    className,
-    rankedValues.length ? "" : "empty",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
   return `<div class="reader-band-row">
-    <span class="reader-band-label">${escapeHtml(label)}</span>
-    <span class="${classes}">${escapeHtml(rangeDisplay)}</span>
+    <span class="reader-band-label-pill ${className}">${escapeHtml(label)}</span>
+    <span class="reader-band-values-pill ${className}${
+      rankedValues.length ? "" : " empty"
+    }">${escapeHtml(valueText)}</span>
   </div>`;
 }
 

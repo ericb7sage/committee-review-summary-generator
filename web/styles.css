@@ -1537,7 +1537,7 @@ button:disabled {
   display: grid;
   grid-template-columns: auto 1fr;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   font-size: 9px;
 }
 
@@ -1556,37 +1556,67 @@ button:disabled {
   min-width: 0;
 }
 
-.reader-band-range-pill {
+.reader-band-label-pill {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  padding: 2px 8px;
+  padding: 2px 7px;
   font-size: 8px;
   font-weight: 700;
-  border: 1px solid transparent;
+  line-height: 1.1;
   white-space: nowrap;
 }
 
-.reader-band-range-pill.reach {
+.reader-band-label-pill.reach {
+  background: #fff2df;
+  color: #b45309;
+}
+
+.reader-band-label-pill.target {
+  background: #e0f2fe;
+  color: #0c4a6e;
+}
+
+.reader-band-label-pill.safety {
+  background: #dcfce7;
+  color: #14532d;
+}
+
+.reader-band-values-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 7px;
+  font-weight: 700;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.reader-band-values-pill.reach {
   background: #fff2df;
   border-color: #f3ce73;
   color: #b45309;
 }
 
-.reader-band-range-pill.target {
+.reader-band-values-pill.target {
   background: #e0f2fe;
   border-color: #7dd3fc;
   color: #0c4a6e;
 }
 
-.reader-band-range-pill.safety {
+.reader-band-values-pill.safety {
   background: #dcfce7;
   border-color: #86efac;
   color: #14532d;
 }
 
-.reader-band-range-pill.empty {
+.reader-band-values-pill.empty {
   background: #fff;
   border-color: #d8dee9;
   color: #98a2b3;
