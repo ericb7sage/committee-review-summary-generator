@@ -44,6 +44,28 @@ const BAND_LABELS = {
   "T100+": "Top 100+",
 };
 
+const BAND_ALIAS_MAP = {
+  "3": "T3",
+  "6": "T6",
+  "14": "T14",
+  "20": "T20",
+  "30": "T30",
+  "50": "T50",
+  "75": "T75",
+  "100": "T100",
+  "100+": "T100+",
+  T3: "T3",
+  T6: "T6",
+  T14: "T14",
+  T20: "T20",
+  T25: "T20",
+  T30: "T30",
+  T50: "T50",
+  T75: "T75",
+  T100: "T100",
+  "T100+": "T100+",
+};
+
 const LOGO_SRC_PATH = "./assets/7sage-logo.svg";
 
 function normalizeTagKey(value) {
@@ -620,7 +642,7 @@ const PRINT_CSS = `
   .band-chip { display: flex; align-items: center; justify-content: center; text-align: center; padding: 2px 0; min-height: 18px; font-weight: 700; color: #111827; position: relative; z-index: 2; }
   .design-tag-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); grid-template-rows: repeat(7, minmax(0, 1fr)); gap: 8px; height: 100%; align-content: stretch; flex: 1; min-height: 0; }
   .page.reader-detail-page { padding: 18px; display: flex; flex-direction: column; gap: 10px; background: #fffffe; position: relative; }
-  .reader-top-grid { display: grid; grid-template-columns: 1.35fr 0.6fr 1.05fr; gap: 10px; min-height: 0; }
+  .reader-top-grid { display: grid; grid-template-columns: 1.25fr 1fr 0.95fr; gap: 8px; min-height: 0; }
   .page.reader-summary-page { padding: 24px; background: #fffffe; }
   .reader-summary-grid { display: grid; grid-template-columns: 1fr; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 12px; height: 100%; }
   .reader-footer-box { border: 1px solid #d8dee9; border-radius: 8px; padding: 6px 8px; display: grid; grid-template-rows: auto 1fr; gap: 4px; overflow: hidden; font-size: 10px; line-height: 1.3; }
@@ -638,9 +660,23 @@ const PRINT_CSS = `
   .reader-rating-pill.is-positive, .reader-rating-pill.is-negative { opacity: 0.5; }
   .reader-rating-pill.empty { color: #94a3b8; background: #fff; }
   .reader-rating-empty { font-size: 8px; color: #98a2b3; }
-  .reader-band-row { display: grid; grid-template-columns: auto 1fr; gap: 4px; align-items: center; font-size: 9px; }
+  .reader-band-row { display: grid; grid-template-columns: 34px repeat(9, minmax(0, 1fr)); align-items: center; gap: 0; padding: 1px 0; font-size: 7px; position: relative; min-height: 14px; }
+  .reader-band-row-empty,
+  .reader-band-row-softs { grid-template-columns: auto 1fr; gap: 4px; min-height: 0; font-size: 9px; }
+  .reader-band-name { font-weight: 700; border-radius: 999px; text-align: center; padding: 1px 4px; margin-right: 4px; position: relative; z-index: 3; font-size: 7px; letter-spacing: 0.02em; }
+  .reader-band-name.reach { background: #fff2df; color: #b45309; }
+  .reader-band-name.target { background: #e0f2fe; color: #0c4a6e; }
+  .reader-band-name.safety { background: #dcfce7; color: #14532d; }
+  .reader-band-range { grid-row: 1; border-radius: 7px; min-height: 13px; align-self: stretch; z-index: 1; }
+  .reader-band-range.range-reach { background: #fff2df; border: 1px solid #f3ce73; }
+  .reader-band-range.range-target { background: #e0f2fe; border: 1px solid #7dd3fc; }
+  .reader-band-range.range-safety { background: #dcfce7; border: 1px solid #86efac; }
+  .row-reach .reader-band-chip.in-range { color: #b45309; }
+  .row-target .reader-band-chip.in-range { color: #0c4a6e; }
+  .row-safety .reader-band-chip.in-range { color: #14532d; }
+  .reader-band-chip { display: flex; align-items: center; justify-content: center; text-align: center; padding: 1px 0; min-height: 13px; font-weight: 700; color: #111827; position: relative; z-index: 2; font-size: 7px; }
   .reader-band-label { font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; font-size: 8px; color: #475467; }
-  .reader-band-value { font-weight: 600; }
+  .reader-band-value { font-weight: 600; text-align: right; }
   .reader-notes { border: 0; border-radius: 0; padding: 0; font-size: 11px; line-height: 1.35; height: 100%; overflow: hidden; }
   .reader-notes .label { font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 2px; color: #475467; }
   .reader-notes-body { margin: 0; white-space: pre-wrap; }
@@ -1491,31 +1527,33 @@ function mapBandValue(value, fileName, fieldLabel) {
   const trimmed = String(value || "").trim();
   if (!trimmed) return "";
   const normalized = trimmed.toUpperCase().replace(/\s+/g, "");
-  const aliasMap = {
-    "3": "T3",
-    "6": "T6",
-    "14": "T14",
-    "20": "T20",
-    "30": "T30",
-    "50": "T50",
-    "75": "T75",
-    "100": "T100",
-    "100+": "T100+",
-    T3: "T3",
-    T6: "T6",
-    T14: "T14",
-    T20: "T20",
-    T25: "T20",
-    T30: "T30",
-    T50: "T50",
-    T75: "T75",
-    T100: "T100",
-    "T100+": "T100+",
-  };
-  const canonical = aliasMap[normalized];
+  const canonical = BAND_ALIAS_MAP[normalized];
   if (canonical && BAND_LABELS[canonical]) return canonical;
   state.warnings.push(`${fileName}: unknown ${fieldLabel} value "${trimmed}"`);
-  return `Unknown band: ${trimmed}`;
+  return "";
+}
+
+function parseBandValues(value, fileName, fieldLabel) {
+  const rawTokens = String(value || "")
+    .split(",")
+    .map((token) => token.trim())
+    .filter(Boolean);
+  if (!rawTokens.length) return [];
+
+  const canonicalValues = rawTokens
+    .map((token) => mapBandValue(token, fileName, fieldLabel))
+    .filter(Boolean);
+  if (!canonicalValues.length) return [];
+
+  const deduped = [...new Set(canonicalValues)];
+  return deduped.sort(
+    (a, b) => BAND_ORDER.indexOf(a) - BAND_ORDER.indexOf(b)
+  );
+}
+
+function uniqueBandValues(values) {
+  const set = new Set(values.filter((value) => BAND_ORDER.includes(value)));
+  return BAND_ORDER.filter((value) => set.has(value));
 }
 
 function mapSoftsValue(value, fileName) {
@@ -1596,12 +1634,6 @@ function buildStudentReport(fileName, rows, manual) {
       ""
   ).trim();
 
-  const normalizeBandDisplay = (value) => {
-    const trimmed = String(value || "").trim();
-    if (!trimmed || trimmed.startsWith("Unknown band:")) return "—";
-    return trimmed;
-  };
-
   const readers = labeledReaders.map(({ row, label, badgeLabel, isChair, tags }) => {
     const ratingLabels = {
       whyLaw: normalizeRubricValue(row["Why Law?"], fileName, "Why Law?"),
@@ -1629,9 +1661,9 @@ function buildStudentReport(fileName, rows, manual) {
         know: computeStarsFromRatings([ratingLabels.know]),
       },
       bands: {
-        reach: normalizeBandDisplay(mapBandValue(row.Reach, fileName, "Reach")),
-        target: normalizeBandDisplay(mapBandValue(row.Target, fileName, "Target")),
-        safety: normalizeBandDisplay(mapBandValue(row.Safety, fileName, "Safety")),
+        reach: parseBandValues(row.Reach, fileName, "Reach"),
+        target: parseBandValues(row.Target, fileName, "Target"),
+        safety: parseBandValues(row.Safety, fileName, "Safety"),
       },
       softs: (() => {
         const softValue = mapSoftsValue(row.Softs, fileName);
@@ -1672,9 +1704,9 @@ function buildStudentReport(fileName, rows, manual) {
       know: computeStarsFromRatings(summaryRatings.know),
     },
     bands: {
-      reach: uniqueNonEmpty(rows.map((row) => mapBandValue(row.Reach, fileName, "Reach"))),
-      target: uniqueNonEmpty(rows.map((row) => mapBandValue(row.Target, fileName, "Target"))),
-      safety: uniqueNonEmpty(rows.map((row) => mapBandValue(row.Safety, fileName, "Safety"))),
+      reach: uniqueBandValues(readers.flatMap((reader) => reader.bands.reach)),
+      target: uniqueBandValues(readers.flatMap((reader) => reader.bands.target)),
+      safety: uniqueBandValues(readers.flatMap((reader) => reader.bands.safety)),
     },
     softsDisplay: computeSoftsDisplay(rows, fileName),
     chairSummary,
@@ -1870,10 +1902,38 @@ function renderReaderRatingRow(label, ratingValue) {
   </div>`;
 }
 
-function renderReaderBandRow(label, value) {
+function renderReaderBandRow(label, className, values) {
+  const rankedValues = (values || [])
+    .map((value) => BAND_ORDER.indexOf(value))
+    .filter((index) => index >= 0)
+    .sort((a, b) => a - b);
+
+  if (!rankedValues.length) {
+    return `<div class="reader-band-row reader-band-row-empty">
+      <span class="reader-band-label">${escapeHtml(label)}</span>
+      <span class="reader-band-value">—</span>
+    </div>`;
+  }
+
+  const minIndex = rankedValues[0];
+  const maxIndex = rankedValues[rankedValues.length - 1];
+
+  return `<div class="reader-band-row row-${className}">
+    <div class="reader-band-name ${className}" style="grid-column: 1; grid-row: 1;">${escapeHtml(label)}</div>
+    <div class="reader-band-range range-${className}" style="grid-column: ${minIndex + 2} / ${maxIndex + 3}; grid-row: 1;"></div>
+    ${BAND_ORDER.map((value, idx) => {
+      const inRange = idx >= minIndex && idx <= maxIndex;
+      return `<div class="reader-band-chip${inRange ? " in-range" : ""}" style="grid-column: ${
+        idx + 2
+      }; grid-row: 1;">${escapeHtml(value)}</div>`;
+    }).join("")}
+  </div>`;
+}
+
+function renderReaderSoftsRow(value) {
   const display = value && value !== "—" ? value : "—";
-  return `<div class="reader-band-row">
-    <span class="reader-band-label">${escapeHtml(label)}</span>
+  return `<div class="reader-band-row reader-band-row-softs">
+    <span class="reader-band-label">Softs</span>
     <span class="reader-band-value">${escapeHtml(display)}</span>
   </div>`;
 }
@@ -1958,10 +2018,10 @@ function renderReaderCard(reader) {
           )}
         </div>
         <div class="reader-col bands">
-          ${renderReaderBandRow("Reach", reader.bands.reach)}
-          ${renderReaderBandRow("Target", reader.bands.target)}
-          ${renderReaderBandRow("Safety", reader.bands.safety)}
-          ${renderReaderBandRow("Softs", reader.softs)}
+          ${renderReaderBandRow("Reach", "reach", reader.bands.reach)}
+          ${renderReaderBandRow("Target", "target", reader.bands.target)}
+          ${renderReaderBandRow("Safety", "safety", reader.bands.safety)}
+          ${renderReaderSoftsRow(reader.softs)}
         </div>
         <div class="reader-col tags">
           ${renderReaderTags(reader.tags)}

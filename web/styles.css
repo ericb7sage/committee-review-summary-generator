@@ -1340,8 +1340,8 @@ button:disabled {
 
 .reader-top-grid {
   display: grid;
-  grid-template-columns: 1.35fr 0.6fr 1.05fr;
-  gap: 10px;
+  grid-template-columns: 1.25fr 1fr 0.95fr;
+  gap: 8px;
   min-height: 0;
 }
 
@@ -1535,10 +1535,97 @@ button:disabled {
 
 .reader-band-row {
   display: grid;
+  grid-template-columns: 34px repeat(9, minmax(0, 1fr));
+  align-items: center;
+  gap: 0;
+  padding: 1px 0;
+  font-size: 7px;
+  position: relative;
+  min-height: 14px;
+}
+
+.reader-band-row-empty,
+.reader-band-row-softs {
   grid-template-columns: auto 1fr;
   gap: 4px;
-  align-items: center;
+  min-height: 0;
   font-size: 9px;
+}
+
+.reader-band-name {
+  font-weight: 700;
+  border-radius: 999px;
+  text-align: center;
+  padding: 1px 4px;
+  margin-right: 4px;
+  position: relative;
+  z-index: 3;
+  font-size: 7px;
+  letter-spacing: 0.02em;
+}
+
+.reader-band-name.reach {
+  background: #fff2df;
+  color: #b45309;
+}
+
+.reader-band-name.target {
+  background: #e0f2fe;
+  color: #0c4a6e;
+}
+
+.reader-band-name.safety {
+  background: #dcfce7;
+  color: #14532d;
+}
+
+.reader-band-range {
+  grid-row: 1;
+  border-radius: 7px;
+  min-height: 13px;
+  align-self: stretch;
+  z-index: 1;
+}
+
+.reader-band-range.range-reach {
+  background: #fff2df;
+  border: 1px solid #f3ce73;
+}
+
+.reader-band-range.range-target {
+  background: #e0f2fe;
+  border: 1px solid #7dd3fc;
+}
+
+.reader-band-range.range-safety {
+  background: #dcfce7;
+  border: 1px solid #86efac;
+}
+
+.row-reach .reader-band-chip.in-range {
+  color: #b45309;
+}
+
+.row-target .reader-band-chip.in-range {
+  color: #0c4a6e;
+}
+
+.row-safety .reader-band-chip.in-range {
+  color: #14532d;
+}
+
+.reader-band-chip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 1px 0;
+  min-height: 13px;
+  font-weight: 700;
+  color: #111827;
+  position: relative;
+  z-index: 2;
+  font-size: 7px;
 }
 
 .reader-band-label {
@@ -1551,6 +1638,7 @@ button:disabled {
 
 .reader-band-value {
   font-weight: 600;
+  text-align: right;
 }
 
 .reader-notes {
