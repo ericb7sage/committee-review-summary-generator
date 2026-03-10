@@ -464,6 +464,7 @@ const state = {
   fileName: "",
   parsedRows: [],
   groupedRows: new Map(),
+  studentCsvSummaryByFile: new Map(),
   availableStudents: [],
   studentInputByFile: {},
   reports: [],
@@ -1170,8 +1171,11 @@ function showValidationMessages() {
 }
 
 function syncGenerateButtonState() {
-  const hasSelectedStudent = Boolean(getSelectedFile());
-  const hasDocTitle = Boolean(getSelectedDocTitle());
+  const selectedFile = getSelectedFile();
+  const hasSelectedStudent = Boolean(selectedFile);
+  const hasDocTitle = hasSelectedStudent
+    ? Boolean(getSelectedDocTitle() || state.studentCsvSummaryByFile.get(selectedFile)?.docTitle)
+    : false;
   generateBtn.disabled =
     !state.tagCatalogLoaded ||
     state.errors.length > 0 ||
@@ -1355,6 +1359,49 @@ function groupRowsByFile(rows) {
   });
 
   return { groups, blankFileRows };
+}
+
+function mapKindOfReview(value, fileName) {
+  const trimmed = String(value || "").trim();
+  if (!trimmed) return "";
+  const normalized = trimmed.toLowerCase();
+  if (normalized === "application autopsy") return "Application Autopsy";
+  if (normalized === "committee review") return "Committee Review";
+  state.warnings.push(`${fileName}: unknown Kind of Review value "${trimmed}"`);
+  return trimmed;
+}
+
+function mapUrmSummary(value) {
+  const trimmed = String(value || "").trim();
+  if (!trimmed) return "";
+  const normalized = trimmed.toLowerCase();
+  if (["urm", "yes", "y", "true", "1"].includes(normalized)) return "URM";
+  if (["non-urm", "non urm", "no", "n", "false", "0"].includes(normalized)) {
+    return "Non-URM";
+  }
+  return trimmed;
+}
+
+function getGroupValue(rows, fieldName, { preferChair } = { preferChair: true }) {
+  if (preferChair) {
+    const chairRow = rows.find(
+      (row) => isChairReview(row["Is Chair Review"]) && String(row[fieldName] || "").trim()
+    );
+    if (chairRow) return String(chairRow[fieldName] || "").trim();
+  }
+
+  const populated = rows.find((row) => String(row[fieldName] || "").trim());
+  return populated ? String(populated[fieldName] || "").trim() : "";
+}
+
+function buildStudentCsvSummary(fileName, rows) {
+  return {
+    docTitle: mapKindOfReview(getGroupValue(rows, "Kind of Review"), fileName),
+    lsat: getGroupValue(rows, "LSAT Summary"),
+    gpa: getGroupValue(rows, "GPA Summary"),
+    situation: getGroupValue(rows, "Situation Summary"),
+    urm: mapUrmSummary(getGroupValue(rows, "URM Summary")),
+  };
 }
 
 function shuffleReaders(rows) {
@@ -1898,11 +1945,11 @@ function renderReaderCard(reader) {
             reader.ratingLabels.whyLaw
           )}
           ${renderReaderRatingRow(
-            "This candidate will thrive in law school.",
+            "This candidate is ready for law school.",
             reader.ratingLabels.thrive
           )}
           ${renderReaderRatingRow(
-            "This candidate would positively contribute to a law school community.",
+            "This candidate would add a valuable perspective to a law school class.",
             reader.ratingLabels.contribute
           )}
           ${renderReaderRatingRow(
@@ -2120,6 +2167,7 @@ function getDefaultStudentInput() {
   return {
     lsat: "",
     gpa: "",
+    situation: "",
     kjd: "Not KJD",
     urm: "Non-URM",
     nextSteps: "",
@@ -2145,7 +2193,14 @@ function getSelectedDocTitle() {
 
 function ensureStudentInput(fileName) {
   if (!state.studentInputByFile[fileName]) {
-    state.studentInputByFile[fileName] = getDefaultStudentInput();
+    const csvSummary = state.studentCsvSummaryByFile.get(fileName) || {};
+    state.studentInputByFile[fileName] = {
+      ...getDefaultStudentInput(),
+      lsat: csvSummary.lsat || "",
+      gpa: csvSummary.gpa || "",
+      situation: csvSummary.situation || "",
+      urm: csvSummary.urm || "Non-URM",
+    };
   }
   return state.studentInputByFile[fileName];
 }
@@ -2154,7 +2209,8 @@ function syncManualFormFromSelection() {
   const fileName = getSelectedFile();
   const hasSelection = Boolean(fileName);
   setManualControlsEnabled(hasSelection);
-  docTitleSelect.value = "";
+  const csvSummary = hasSelection ? state.studentCsvSummaryByFile.get(fileName) : null;
+  docTitleSelect.value = csvSummary?.docTitle || "";
   if (!hasSelection) {
     lsatInput.value = "";
     gpaInput.value = "";
@@ -2624,6 +2680,7 @@ async function onCsvSelected(event) {
   syncGenerateButtonState();
   state.parsedRows = [];
   state.groupedRows = new Map();
+  state.studentCsvSummaryByFile = new Map();
   state.availableStudents = [];
   state.studentInputByFile = {};
   state.fileName = "";
@@ -2647,6 +2704,12 @@ async function onCsvSelected(event) {
     state.fileName = file.name;
     state.parsedRows = rows;
     state.groupedRows = groups;
+    state.studentCsvSummaryByFile = new Map(
+      [...groups.entries()].map(([fileName, studentRows]) => [
+        fileName,
+        buildStudentCsvSummary(fileName, studentRows),
+      ])
+    );
     state.availableStudents = [...groups.keys()].sort((a, b) => a.localeCompare(b));
     state.errors = missingHeaders.length
       ? [`Missing required header(s): ${missingHeaders.join(", ")}`]
@@ -2716,9 +2779,12 @@ function onGenerateDocuments() {
     return;
   }
 
-  const docTitle = getSelectedDocTitle();
+  const csvSummary = state.studentCsvSummaryByFile.get(selectedFile) || {};
+  const docTitle = getSelectedDocTitle() || csvSummary.docTitle || "";
   if (!docTitle) {
-    state.errors = ["Select a document title before generating."];
+    state.errors = [
+      "Select a document title before generating, or provide Kind of Review in CSV.",
+    ];
     setStatus("Generation blocked.");
     showValidationMessages();
     return;
@@ -2728,12 +2794,15 @@ function onGenerateDocuments() {
   const manual = ensureStudentInput(selectedFile);
   const mergedManual = {
     docTitle,
-    lsat: manual.lsat,
-    gpa: manual.gpa,
+    lsat: csvSummary.lsat || manual.lsat,
+    gpa: csvSummary.gpa || manual.gpa,
     kjd: manual.kjd,
-    urm: manual.urm,
+    urm: csvSummary.urm || manual.urm,
     nextSteps: manual.nextSteps,
-    otherText: `${manual.kjd} • ${manual.urm}`,
+    otherText:
+      csvSummary.situation ||
+      manual.situation ||
+      `${manual.kjd} • ${csvSummary.urm || manual.urm}`,
   };
 
   const report = buildStudentReport(selectedFile, rows, mergedManual);
@@ -2741,7 +2810,7 @@ function onGenerateDocuments() {
   state.reports = [report];
   renderPreviewFromCurrent();
   downloadPdfBtn.disabled = false;
-  docTitleSelect.value = "";
+  docTitleSelect.value = csvSummary.docTitle || "";
   syncGenerateButtonState();
   setStatus(`Generated report for ${selectedFile}.`);
   showValidationMessages();
