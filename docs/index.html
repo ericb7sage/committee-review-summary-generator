@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Coda CSV PDF Generator</title>
-    <link rel="stylesheet" href="./styles.css?v=20260310f" />
+    <link rel="stylesheet" href="./styles.css?v=20260310g" />
   </head>
   <body>
     <main class="container">
@@ -56,19 +56,13 @@
           <p id="status" class="status">Waiting for CSV upload.</p>
           <div id="validation" class="validation"></div>
         </section>
-
-        <section class="panel preview-panel">
-          <h2>Document Preview</h2>
-          <div id="previewRoot" class="preview-root">
-            <p class="placeholder">Upload a CSV and generate documents to preview output.</p>
-          </div>
-        </section>
       </div>
+      <div id="previewRoot" class="preview-root preview-root-hidden" aria-hidden="true"></div>
     </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="./app.js?v=20260310f"></script>
+    <script src="./app.js?v=20260310g"></script>
   </body>
 </html>
