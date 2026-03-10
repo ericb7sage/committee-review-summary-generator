@@ -1534,8 +1534,7 @@ button:disabled {
 }
 
 .reader-band-row {
-  display: grid;
-  grid-template-columns: auto 1fr;
+  display: flex;
   align-items: center;
   gap: 6px;
   font-size: 9px;
@@ -1551,9 +1550,7 @@ button:disabled {
 
 .reader-band-value {
   font-weight: 600;
-  text-align: right;
-  justify-self: end;
-  min-width: 0;
+  margin-left: auto;
 }
 
 .reader-band-label-pill {
@@ -1566,6 +1563,7 @@ button:disabled {
   font-weight: 700;
   line-height: 1.1;
   white-space: nowrap;
+  flex: 0 0 auto;
 }
 
 .reader-band-label-pill.reach {
@@ -1593,9 +1591,9 @@ button:disabled {
   font-weight: 700;
   border: 1px solid transparent;
   white-space: nowrap;
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  flex: 0 0 auto;
+  margin-left: auto;
+  max-width: 100%;
 }
 
 .reader-band-values-pill.reach {

@@ -660,14 +660,14 @@ const PRINT_CSS = `
   .reader-rating-pill.is-positive, .reader-rating-pill.is-negative { opacity: 0.5; }
   .reader-rating-pill.empty { color: #94a3b8; background: #fff; }
   .reader-rating-empty { font-size: 8px; color: #98a2b3; }
-  .reader-band-row { display: grid; grid-template-columns: auto 1fr; gap: 6px; align-items: center; font-size: 9px; }
+  .reader-band-row { display: flex; gap: 6px; align-items: center; font-size: 9px; }
   .reader-band-label { font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; font-size: 8px; color: #475467; }
-  .reader-band-value { font-weight: 600; text-align: right; justify-self: end; min-width: 0; }
-  .reader-band-label-pill { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 2px 7px; font-size: 8px; font-weight: 700; line-height: 1.1; white-space: nowrap; }
+  .reader-band-value { font-weight: 600; margin-left: auto; }
+  .reader-band-label-pill { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 2px 7px; font-size: 8px; font-weight: 700; line-height: 1.1; white-space: nowrap; flex: 0 0 auto; }
   .reader-band-label-pill.reach { background: #fff2df; color: #b45309; }
   .reader-band-label-pill.target { background: #e0f2fe; color: #0c4a6e; }
   .reader-band-label-pill.safety { background: #dcfce7; color: #14532d; }
-  .reader-band-values-pill { display: inline-flex; align-items: center; justify-content: flex-start; border-radius: 999px; padding: 2px 8px; font-size: 7px; font-weight: 700; border: 1px solid transparent; white-space: nowrap; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .reader-band-values-pill { display: inline-flex; align-items: center; justify-content: flex-start; border-radius: 999px; padding: 2px 8px; font-size: 7px; font-weight: 700; border: 1px solid transparent; white-space: nowrap; flex: 0 0 auto; margin-left: auto; max-width: 100%; }
   .reader-band-values-pill.reach { background: #fff2df; border-color: #f3ce73; color: #b45309; }
   .reader-band-values-pill.target { background: #e0f2fe; border-color: #7dd3fc; color: #0c4a6e; }
   .reader-band-values-pill.safety { background: #dcfce7; border-color: #86efac; color: #14532d; }
