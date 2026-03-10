@@ -660,23 +660,14 @@ const PRINT_CSS = `
   .reader-rating-pill.is-positive, .reader-rating-pill.is-negative { opacity: 0.5; }
   .reader-rating-pill.empty { color: #94a3b8; background: #fff; }
   .reader-rating-empty { font-size: 8px; color: #98a2b3; }
-  .reader-band-row { display: grid; grid-template-columns: 34px repeat(9, minmax(0, 1fr)); align-items: center; gap: 0; padding: 1px 0; font-size: 7px; position: relative; min-height: 14px; }
-  .reader-band-row-empty,
-  .reader-band-row-softs { grid-template-columns: auto 1fr; gap: 4px; min-height: 0; font-size: 9px; }
-  .reader-band-name { font-weight: 700; border-radius: 999px; text-align: center; padding: 1px 4px; margin-right: 4px; position: relative; z-index: 3; font-size: 7px; letter-spacing: 0.02em; }
-  .reader-band-name.reach { background: #fff2df; color: #b45309; }
-  .reader-band-name.target { background: #e0f2fe; color: #0c4a6e; }
-  .reader-band-name.safety { background: #dcfce7; color: #14532d; }
-  .reader-band-range { grid-row: 1; border-radius: 7px; min-height: 13px; align-self: stretch; z-index: 1; }
-  .reader-band-range.range-reach { background: #fff2df; border: 1px solid #f3ce73; }
-  .reader-band-range.range-target { background: #e0f2fe; border: 1px solid #7dd3fc; }
-  .reader-band-range.range-safety { background: #dcfce7; border: 1px solid #86efac; }
-  .row-reach .reader-band-chip.in-range { color: #b45309; }
-  .row-target .reader-band-chip.in-range { color: #0c4a6e; }
-  .row-safety .reader-band-chip.in-range { color: #14532d; }
-  .reader-band-chip { display: flex; align-items: center; justify-content: center; text-align: center; padding: 1px 0; min-height: 13px; font-weight: 700; color: #111827; position: relative; z-index: 2; font-size: 7px; }
+  .reader-band-row { display: grid; grid-template-columns: auto 1fr; gap: 4px; align-items: center; font-size: 9px; }
   .reader-band-label { font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; font-size: 8px; color: #475467; }
-  .reader-band-value { font-weight: 600; text-align: right; }
+  .reader-band-value { font-weight: 600; text-align: right; justify-self: end; min-width: 0; }
+  .reader-band-range-pill { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 2px 8px; font-size: 8px; font-weight: 700; border: 1px solid transparent; white-space: nowrap; }
+  .reader-band-range-pill.reach { background: #fff2df; border-color: #f3ce73; color: #b45309; }
+  .reader-band-range-pill.target { background: #e0f2fe; border-color: #7dd3fc; color: #0c4a6e; }
+  .reader-band-range-pill.safety { background: #dcfce7; border-color: #86efac; color: #14532d; }
+  .reader-band-range-pill.empty { background: #fff; border-color: #d8dee9; color: #98a2b3; }
   .reader-notes { border: 0; border-radius: 0; padding: 0; font-size: 11px; line-height: 1.35; height: 100%; overflow: hidden; }
   .reader-notes .label { font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 2px; color: #475467; }
   .reader-notes-body { margin: 0; white-space: pre-wrap; }
@@ -1908,31 +1899,31 @@ function renderReaderBandRow(label, className, values) {
     .filter((index) => index >= 0)
     .sort((a, b) => a - b);
 
-  if (!rankedValues.length) {
-    return `<div class="reader-band-row reader-band-row-empty">
-      <span class="reader-band-label">${escapeHtml(label)}</span>
-      <span class="reader-band-value">—</span>
-    </div>`;
-  }
+  const rangeDisplay = (() => {
+    if (!rankedValues.length) return "—";
+    const minValue = BAND_ORDER[rankedValues[0]];
+    const maxValue = BAND_ORDER[rankedValues[rankedValues.length - 1]];
+    return minValue === maxValue ? minValue : `${minValue}-${maxValue}`;
+  })();
 
-  const minIndex = rankedValues[0];
-  const maxIndex = rankedValues[rankedValues.length - 1];
+  const classes = [
+    "reader-band-value",
+    "reader-band-range-pill",
+    className,
+    rankedValues.length ? "" : "empty",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
-  return `<div class="reader-band-row row-${className}">
-    <div class="reader-band-name ${className}" style="grid-column: 1; grid-row: 1;">${escapeHtml(label)}</div>
-    <div class="reader-band-range range-${className}" style="grid-column: ${minIndex + 2} / ${maxIndex + 3}; grid-row: 1;"></div>
-    ${BAND_ORDER.map((value, idx) => {
-      const inRange = idx >= minIndex && idx <= maxIndex;
-      return `<div class="reader-band-chip${inRange ? " in-range" : ""}" style="grid-column: ${
-        idx + 2
-      }; grid-row: 1;">${escapeHtml(value)}</div>`;
-    }).join("")}
+  return `<div class="reader-band-row">
+    <span class="reader-band-label">${escapeHtml(label)}</span>
+    <span class="${classes}">${escapeHtml(rangeDisplay)}</span>
   </div>`;
 }
 
 function renderReaderSoftsRow(value) {
   const display = value && value !== "—" ? value : "—";
-  return `<div class="reader-band-row reader-band-row-softs">
+  return `<div class="reader-band-row">
     <span class="reader-band-label">Softs</span>
     <span class="reader-band-value">${escapeHtml(display)}</span>
   </div>`;
