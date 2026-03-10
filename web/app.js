@@ -530,6 +530,7 @@ const PRINT_CSS = `
   .tag-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
   .tag-pill { --tag-font-size: 9px; border: 1px solid #e0e6f2; border-radius: 999px; padding: 2px 6px; font-size: var(--tag-font-size); line-height: 1.1; font-weight: 600; text-align: center; display: flex; align-items: center; justify-content: center; position: relative; overflow: visible; color: #4b5563; }
   .tag-text { display: -webkit-box; width: 100%; overflow: hidden; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .tag-text.force-break, .reader-tag-text.force-break { display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.05; }
   .tag-pill.active-positive { background: #ecfdf3; border-color: #86efac; color: #166534; }
   .tag-pill.active-negative { background: #fef2f2; border-color: #fecaca; color: #7f1d1d; }
   .tag-badges { display: inline-flex; gap: 4px; position: absolute; top: -12px; right: 8px; margin-left: 0; vertical-align: baseline; z-index: 2; }
@@ -542,9 +543,12 @@ const PRINT_CSS = `
   .reader-cards { display: flex; flex-direction: column; gap: 12px; height: 100%; flex: 1; }
   .reader-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 12px; display: grid; gap: 10px; }
   .reader-card.reader-slot-1 { border-color: #227f9c; }
+  .reader-card.reader-slot-1 .reader-top-card { background: rgba(34, 127, 156, 0.25); }
   .reader-card.reader-slot-2 { border-color: #15b79e; }
+  .reader-card.reader-slot-2 .reader-top-card { background: rgba(21, 183, 158, 0.25); }
   .reader-card.reader-slot-3 { border-color: #db2777; }
-  .page-continue-note { position: absolute; right: 18px; bottom: 12px; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; opacity: 0; }
+  .reader-card.reader-slot-3 .reader-top-card { background: rgba(219, 39, 119, 0.25); }
+  .page-continue-note { position: absolute; right: 8px; bottom: 12px; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; opacity: 0; }
   .page.has-continue .page-continue-note { opacity: 1; }
   .reader-title { margin: 0 0 8px; font-size: 14px; }
   .notes-box { border: 1px solid #333; min-height: 1.5in; padding: 10px; white-space: pre-wrap; margin-bottom: 8px; }
@@ -641,7 +645,7 @@ const PRINT_CSS = `
   .band-range.range-safety { background: #dcfce7; border: 1px solid #86efac; }
   .band-chip { display: flex; align-items: center; justify-content: center; text-align: center; padding: 2px 0; min-height: 18px; font-weight: 700; color: #111827; position: relative; z-index: 2; }
   .design-tag-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); grid-template-rows: repeat(7, minmax(0, 1fr)); gap: 8px; height: 100%; align-content: stretch; flex: 1; min-height: 0; }
-  .page.reader-detail-page { padding: 18px; display: flex; flex-direction: column; gap: 10px; background: #fffffe; position: relative; }
+  .page.reader-detail-page { padding: 18px 8px; display: flex; flex-direction: column; gap: 10px; background: #fffffe; position: relative; }
   .reader-top-grid { display: grid; grid-template-columns: 1.25fr 1fr 0.95fr; gap: 8px; min-height: 0; }
   .page.reader-summary-page { padding: 24px; background: #fffffe; }
   .reader-summary-grid { display: grid; grid-template-columns: 1fr; grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 12px; height: 100%; }
@@ -1776,6 +1780,17 @@ function renderTagBadges(readerLabels) {
     .join("")}</span>`;
 }
 
+function isForceBreakTag(tagName) {
+  return normalizeTagKey(tagName) === "show more openness";
+}
+
+function renderTagText(tagName, className = "tag-text") {
+  if (isForceBreakTag(tagName)) {
+    return `<span class="${className} force-break"><span>Show More</span><span>Openness</span></span>`;
+  }
+  return `<span class="${className}">${escapeHtml(tagName)}</span>`;
+}
+
 function renderTagGrid(activeTags, tagReaderMap) {
   return `<div class="tag-grid">
     ${DISPLAY_TAG_DEFINITIONS.map((tag) => {
@@ -1790,9 +1805,9 @@ function renderTagGrid(activeTags, tagReaderMap) {
           ? "tag-pill active-positive"
           : "tag-pill active-negative"
         : "tag-pill inactive";
-      return `<div class="${className}"><span class="tag-text">${escapeHtml(
+      return `<div class="${className}">${renderTagText(
         tag.name
-      )}</span>${renderTagBadges(readerLabels)}</div>`;
+      )}${renderTagBadges(readerLabels)}</div>`;
     }).join("")}
   </div>`;
 }
@@ -1846,9 +1861,9 @@ function renderTagGridFourColumns(activeTags, tagReaderMap) {
           ? "tag-pill active-positive"
           : "tag-pill active-negative"
         : "tag-pill inactive";
-      return `<div class="${className}"><span class="tag-text">${escapeHtml(
+      return `<div class="${className}">${renderTagText(
         tag.name
-      )}</span>${renderTagBadges(readerLabels)}</div>`;
+      )}${renderTagBadges(readerLabels)}</div>`;
     }).join("")}
   </div>`;
 }
@@ -1948,9 +1963,10 @@ function renderReaderTags(tags) {
           : polarity === "negative"
             ? "reader-tag-pill active-negative"
             : "reader-tag-pill inactive";
-      return `<div class="${className}"><span class="reader-tag-text">${escapeHtml(
-        tag
-      )}</span></div>`;
+      return `<div class="${className}">${renderTagText(
+        tag,
+        "reader-tag-text"
+      )}</div>`;
     })
     .join("");
 }
@@ -2056,7 +2072,7 @@ function renderTagExplanationItem(tag) {
   return `<article class="tag-explanation-item">
     <div class="tag-explanation-title">
       <span class="${className} tag-explanation-pill">
-        <span class="tag-text">${escapeHtml(tag)}</span>
+        ${renderTagText(tag)}
       </span>
     </div>
     <div class="tag-explanation-body">${escapeHtml(
