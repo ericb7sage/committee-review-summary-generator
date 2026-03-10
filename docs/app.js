@@ -2738,6 +2738,10 @@ async function onCsvSelected(event) {
   }
 
   showValidationMessages();
+
+  if (!state.errors.length && state.availableStudents.length) {
+    await autoGenerateAndDownloadReports();
+  }
 }
 
 function onGenerateDocuments() {
@@ -2780,15 +2784,7 @@ function onGenerateDocuments() {
   }
 
   const csvSummary = state.studentCsvSummaryByFile.get(selectedFile) || {};
-  const docTitle = getSelectedDocTitle() || csvSummary.docTitle || "";
-  if (!docTitle) {
-    state.errors = [
-      "Select a document title before generating, or provide Kind of Review in CSV.",
-    ];
-    setStatus("Generation blocked.");
-    showValidationMessages();
-    return;
-  }
+  const docTitle = getSelectedDocTitle() || csvSummary.docTitle || "Committee Review";
 
   onManualInputChange();
   const manual = ensureStudentInput(selectedFile);
@@ -2823,6 +2819,69 @@ function onStudentSelectionChange() {
   downloadPdfBtn.disabled = true;
   previewRoot.innerHTML =
     '<p class="placeholder">Update metadata as needed, then click Generate Report.</p>';
+}
+
+async function autoGenerateAndDownloadReports() {
+  if (!state.availableStudents.length) return;
+  if (!state.tagCatalogLoaded) {
+    await initializeTagCatalog();
+  }
+  if (!state.tagCatalogLoaded) return;
+
+  const candidates = state.availableStudents.filter((fileName) => {
+    const rows = state.groupedRows.get(fileName);
+    return Array.isArray(rows) && rows.length === 3;
+  });
+
+  if (!candidates.length) {
+    state.errors = ["No students with exactly 3 reviews were found in this CSV."];
+    setStatus("Generation blocked.");
+    showValidationMessages();
+    return;
+  }
+
+  const skipped = state.availableStudents.filter((fileName) => !candidates.includes(fileName));
+  const generated = [];
+  const failures = [];
+
+  for (const fileName of candidates) {
+    if (studentSelect) {
+      studentSelect.value = fileName;
+    }
+    syncManualFormFromSelection();
+    onGenerateDocuments();
+
+    if (!state.currentReport) {
+      failures.push(fileName);
+      continue;
+    }
+
+    generated.push(fileName);
+    await onDownloadCurrentStudentPdf();
+    await new Promise((resolve) => setTimeout(resolve, 120));
+  }
+
+  if (skipped.length) {
+    state.warnings.push(
+      `Skipped ${skipped.length} student(s) without exactly 3 reviews: ${skipped.join(", ")}.`
+    );
+  }
+  if (failures.length) {
+    state.warnings.push(
+      `Failed to generate for ${failures.length} student(s): ${failures.join(", ")}.`
+    );
+  }
+
+  if (generated.length) {
+    setStatus(
+      `Auto-generated ${generated.length} report(s). PDF download ${
+        generated.length === 1 ? "started" : "attempted for each student"
+      }.`
+    );
+  } else {
+    setStatus("No reports were generated.");
+  }
+  showValidationMessages();
 }
 
 function openPrintWindow(title, bodyHtml) {

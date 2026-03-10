@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Coda CSV PDF Generator</title>
-    <link rel="stylesheet" href="./styles.css?v=20260309c" />
+    <link rel="stylesheet" href="./styles.css?v=20260310b" />
   </head>
   <body>
     <main class="container">
@@ -22,103 +22,36 @@
             <input id="csvFile" type="file" accept=".csv,text/csv" />
           </label>
 
-          <label class="field">
-            <span class="field-head">
-              <span>Select student</span>
-              <span class="field-help" tabindex="0" aria-label="Student selector help">
-                <span class="field-help-icon">i</span>
-                <span class="field-help-panel">After upload, choose one student (`File` value) to generate a report.</span>
-              </span>
-            </span>
+          <p class="auto-run-note">
+            Upload once. The app auto-generates reports and downloads PDF(s) with no additional steps.
+          </p>
+          <div class="legacy-hidden" aria-hidden="true">
             <select id="studentSelect" disabled>
               <option>Upload CSV first</option>
             </select>
-          </label>
-          <label class="field">
-            <span class="field-head">
-              <span>Document Title</span>
-              <span class="field-help" tabindex="0" aria-label="Document title help">
-                <span class="field-help-icon">i</span>
-                <span class="field-help-panel">Pick the page-1 banner title for this generation only. You must choose this each time before generating.</span>
-              </span>
-            </span>
             <select id="docTitleSelect" disabled>
               <option value="">Select document title</option>
               <option value="Application Autopsy">Application Autopsy</option>
               <option value="Committee Review">Committee Review</option>
             </select>
-          </label>
-
-          <div class="meta-grid">
-            <label class="field">
-              <span class="field-head">
-                <span>LSAT</span>
-                <span class="field-help" tabindex="0" aria-label="LSAT help">
-                  <span class="field-help-icon">i</span>
-                  <span class="field-help-panel">Enter the student's LSAT score for page-1 Basics.</span>
-                </span>
-              </span>
-              <input id="lsatInput" type="text" inputmode="numeric" placeholder="e.g. 171" disabled />
-            </label>
-            <label class="field">
-              <span class="field-head">
-                <span>GPA</span>
-                <span class="field-help" tabindex="0" aria-label="GPA help">
-                  <span class="field-help-icon">i</span>
-                  <span class="field-help-panel">Enter cumulative GPA for page-1 Basics.</span>
-                </span>
-              </span>
-              <input id="gpaInput" type="text" inputmode="decimal" placeholder="e.g. 3.74" disabled />
-            </label>
-            <label class="field">
-              <span class="field-head">
-                <span>KJD Status</span>
-                <span class="field-help" tabindex="0" aria-label="KJD help">
-                  <span class="field-help-icon">i</span>
-                  <span class="field-help-panel">Set whether the student is KJD or Not KJD. This is used in the Other field.</span>
-                </span>
-              </span>
-              <select id="kjdSelect" disabled>
-                <option value="Not KJD">Not KJD</option>
-                <option value="KJD">KJD</option>
-              </select>
-            </label>
-            <label class="field">
-              <span class="field-head">
-                <span>URM Status</span>
-                <span class="field-help" tabindex="0" aria-label="URM help">
-                  <span class="field-help-icon">i</span>
-                  <span class="field-help-panel">Set URM or Non-URM. This is combined with KJD in the Other field.</span>
-                </span>
-              </span>
-              <select id="urmSelect" disabled>
-                <option value="Non-URM">Non-URM</option>
-                <option value="URM">URM</option>
-              </select>
-            </label>
+            <input id="lsatInput" type="text" inputmode="numeric" placeholder="e.g. 171" disabled />
+            <input id="gpaInput" type="text" inputmode="decimal" placeholder="e.g. 3.74" disabled />
+            <select id="kjdSelect" disabled>
+              <option value="Not KJD">Not KJD</option>
+              <option value="KJD">KJD</option>
+            </select>
+            <select id="urmSelect" disabled>
+              <option value="Non-URM">Non-URM</option>
+              <option value="URM">URM</option>
+            </select>
+            <textarea id="nextStepsInput" rows="3" placeholder="Add next steps" disabled></textarea>
+            <p id="inputHint" class="input-hint"></p>
+            <div class="actions">
+              <button id="generateBtn" disabled>Generate Report</button>
+              <button id="downloadPdfBtn" disabled>Download PDF</button>
+            </div>
           </div>
-          <label class="field">
-            <span class="field-head">
-              <span>Next Steps</span>
-              <span class="field-help" tabindex="0" aria-label="Next steps help">
-                <span class="field-help-icon">i</span>
-                <span class="field-help-panel">This text is appended as a separate Next Steps card after reader notes.</span>
-              </span>
-            </span>
-            <textarea
-              id="nextStepsInput"
-              rows="3"
-              placeholder="Add next steps"
-              disabled
-            ></textarea>
-          </label>
-          <p id="inputHint" class="input-hint"></p>
           <p id="tagSourceStatus" class="tag-source-status">Tag source: loading...</p>
-
-        <div class="actions">
-          <button id="generateBtn" disabled>Generate Report</button>
-          <button id="downloadPdfBtn" disabled>Download PDF</button>
-        </div>
 
           <p id="status" class="status">Waiting for CSV upload.</p>
           <div id="validation" class="validation"></div>
@@ -136,6 +69,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="./app.js?v=20260310a"></script>
+    <script src="./app.js?v=20260310b"></script>
   </body>
 </html>
