@@ -1390,30 +1390,22 @@ button:disabled {
   display: grid;
   gap: 10px;
   flex: 0 0 auto;
+  --reader-top-bg: #f7f5f3;
 }
 
 .reader-card.reader-slot-1 {
   border-color: #227f9c;
-}
-
-.reader-card.reader-slot-1 .reader-top-card {
-  background: rgba(34, 127, 156, 0.25);
+  --reader-top-bg: rgba(34, 127, 156, 0.25);
 }
 
 .reader-card.reader-slot-2 {
   border-color: #15b79e;
-}
-
-.reader-card.reader-slot-2 .reader-top-card {
-  background: rgba(21, 183, 158, 0.25);
+  --reader-top-bg: rgba(21, 183, 158, 0.25);
 }
 
 .reader-card.reader-slot-3 {
   border-color: #db2777;
-}
-
-.reader-card.reader-slot-3 .reader-top-card {
-  background: rgba(219, 39, 119, 0.25);
+  --reader-top-bg: rgba(219, 39, 119, 0.25);
 }
 
 .page-continue-note {
@@ -1483,7 +1475,7 @@ button:disabled {
 }
 
 .reader-detail-page .reader-col.reader-top-card {
-  background: #f7f5f3;
+  background: var(--reader-top-bg, #f7f5f3);
   border-radius: 12px;
   padding: 10px;
 }
