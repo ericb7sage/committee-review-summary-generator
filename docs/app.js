@@ -542,9 +542,9 @@ const PRINT_CSS = `
   .reader-cards-source { display: none; }
   .reader-cards { display: flex; flex-direction: column; gap: 12px; height: 100%; flex: 1; }
   .reader-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 12px; display: grid; gap: 10px; --reader-top-bg: #f7f5f3; }
-  .reader-card.reader-slot-1 { border-color: #227f9c; --reader-top-bg: rgba(34, 127, 156, 0.25); }
-  .reader-card.reader-slot-2 { border-color: #15b79e; --reader-top-bg: rgba(21, 183, 158, 0.25); }
-  .reader-card.reader-slot-3 { border-color: #db2777; --reader-top-bg: rgba(219, 39, 119, 0.25); }
+  .reader-card.reader-slot-1 { border-color: #227f9c; --reader-top-bg: rgba(34, 127, 156, 0.1); }
+  .reader-card.reader-slot-2 { border-color: #15b79e; --reader-top-bg: rgba(21, 183, 158, 0.1); }
+  .reader-card.reader-slot-3 { border-color: #db2777; --reader-top-bg: rgba(219, 39, 119, 0.1); }
   .page-continue-note { position: absolute; right: 8px; bottom: 12px; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; opacity: 0; }
   .page.has-continue .page-continue-note { opacity: 1; }
   .reader-title { margin: 0 0 8px; font-size: 14px; }
