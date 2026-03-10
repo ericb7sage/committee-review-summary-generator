@@ -650,6 +650,7 @@ const PRINT_CSS = `
   .reader-footer-body { white-space: pre-wrap; }
   .reader-section-title { font-family: "Fraunces", "Times New Roman", serif; font-weight: 700; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #344054; margin-bottom: 0; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 100%; }
   .reader-detail-page .reader-col { padding: 0; position: relative; display: grid; grid-template-columns: 1fr; align-items: start; border: 0; border-radius: 0; }
+  .reader-top-card { background: #f5f3ef; border-radius: 10px; padding: 8px; }
   .reader-col.ratings, .reader-col.bands { display: grid; grid-template-columns: 1fr; grid-auto-rows: minmax(0, 1fr); gap: 6px; min-height: 0; }
   .reader-col.tags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; align-content: start; min-height: 0; }
   .reader-rating-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
@@ -1562,6 +1563,10 @@ function mapSoftsValue(value, fileName) {
   return Number(match[1]);
 }
 
+function formatTierLabel(value) {
+  return `Tier ${value}`;
+}
+
 function computeSoftsDisplay(rows, fileName) {
   const values = rows
     .map((row) => mapSoftsValue(row.Softs, fileName))
@@ -1575,17 +1580,19 @@ function computeSoftsDisplay(rows, fileName) {
 
   if (counts.size === 1) {
     const [onlyValue] = counts.keys();
-    return `T${onlyValue}`;
+    return formatTierLabel(onlyValue);
   }
 
   if (counts.size === 2) {
     const sortedCounts = [...counts.entries()].sort((a, b) => b[1] - a[1]);
-    return `T${sortedCounts[0][0]}/T${sortedCounts[1][0]}`;
+    return `${formatTierLabel(sortedCounts[0][0])} / ${formatTierLabel(
+      sortedCounts[1][0]
+    )}`;
   }
 
   const average =
     values.reduce((sum, value) => sum + value, 0) / values.length;
-  return `T${average.toFixed(1)}`;
+  return formatTierLabel(average.toFixed(1));
 }
 
 function uniqueNonEmpty(values) {
@@ -1662,7 +1669,7 @@ function buildStudentReport(fileName, rows, manual) {
       },
       softs: (() => {
         const softValue = mapSoftsValue(row.Softs, fileName);
-        return softValue ? `T${softValue}` : "—";
+        return softValue ? formatTierLabel(softValue) : "—";
       })(),
       tags,
     };
@@ -1987,7 +1994,7 @@ function renderReaderCard(reader) {
         <span>${escapeHtml(reader.label)}</span>${chairChip}
       </div>
       <div class="reader-top-grid">
-        <div class="reader-col ratings">
+        <div class="reader-col ratings reader-top-card">
           ${renderReaderRatingRow(
             "I understand the candidate's reason for seeking a law degree.",
             reader.ratingLabels.whyLaw
@@ -2005,13 +2012,13 @@ function renderReaderCard(reader) {
             reader.ratingLabels.know
           )}
         </div>
-        <div class="reader-col bands">
+        <div class="reader-col bands reader-top-card">
           ${renderReaderBandRow("Reach", "reach", reader.bands.reach)}
           ${renderReaderBandRow("Target", "target", reader.bands.target)}
           ${renderReaderBandRow("Safety", "safety", reader.bands.safety)}
           ${renderReaderSoftsRow(reader.softs)}
         </div>
-        <div class="reader-col tags">
+        <div class="reader-col tags reader-top-card">
           ${renderReaderTags(reader.tags)}
         </div>
       </div>
