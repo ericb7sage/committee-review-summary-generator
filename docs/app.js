@@ -650,25 +650,25 @@ const PRINT_CSS = `
   .reader-footer-body { white-space: pre-wrap; }
   .reader-section-title { font-family: "Fraunces", "Times New Roman", serif; font-weight: 700; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #344054; margin-bottom: 0; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 100%; }
   .reader-detail-page .reader-col { padding: 0; position: relative; display: grid; grid-template-columns: 1fr; align-items: start; border: 0; border-radius: 0; }
-  .reader-top-card { background: #f5f3ef; border-radius: 10px; padding: 8px; }
-  .reader-col.ratings, .reader-col.bands { display: grid; grid-template-columns: 1fr; grid-auto-rows: minmax(0, 1fr); gap: 6px; min-height: 0; }
-  .reader-col.tags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; align-content: start; min-height: 0; }
+  .reader-top-card { background: #f7f5f3; border-radius: 12px; padding: 10px; }
+  .reader-col.ratings, .reader-col.bands { display: grid; grid-template-columns: 1fr; grid-auto-rows: minmax(0, 1fr); gap: 5px; min-height: 0; }
+  .reader-col.tags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; align-content: start; min-height: 0; }
   .reader-rating-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-  .reader-rating-label { font-size: 8px; font-weight: 600; text-transform: none; letter-spacing: 0; color: #475467; min-width: 0; flex: 1; line-height: 1.2; }
-  .reader-rating-pill { border: 1px solid #e2e8f0; border-radius: 999px; padding: 2px 6px; font-size: 8px; font-weight: 600; line-height: 1.1; background: #f8fafc; color: #334155; white-space: nowrap; }
+  .reader-rating-label { font-size: 7px; font-weight: 600; text-transform: none; letter-spacing: 0; color: #475467; min-width: 0; flex: 1; line-height: 1.2; }
+  .reader-rating-pill { border: 1px solid #e2e8f0; border-radius: 999px; padding: 1px 5px; font-size: 7px; font-weight: 600; line-height: 1.1; background: #f8fafc; color: #334155; white-space: nowrap; }
   .reader-rating-pill.is-positive, .reader-rating-pill.is-positive-strong { background: #ecfdf3; border-color: #34d399; color: #166534; }
   .reader-rating-pill.is-negative, .reader-rating-pill.is-negative-strong { background: #fef2f2; border-color: #f87171; color: #991b1b; }
   .reader-rating-pill.is-positive, .reader-rating-pill.is-negative { opacity: 0.5; }
   .reader-rating-pill.empty { color: #94a3b8; background: #fff; }
   .reader-rating-empty { font-size: 8px; color: #98a2b3; }
-  .reader-band-row { display: flex; gap: 6px; align-items: center; font-size: 9px; }
+  .reader-band-row { display: flex; gap: 5px; align-items: center; font-size: 9px; }
   .reader-band-label { font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; font-size: 8px; color: #475467; }
   .reader-band-value { font-weight: 600; margin-left: auto; }
-  .reader-band-label-pill { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 2px 7px; font-size: 8px; font-weight: 700; line-height: 1.1; white-space: nowrap; flex: 0 0 auto; }
+  .reader-band-label-pill { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 1px 6px; font-size: 7px; font-weight: 700; line-height: 1.1; white-space: nowrap; flex: 0 0 auto; }
   .reader-band-label-pill.reach { background: #fff2df; color: #b45309; }
   .reader-band-label-pill.target { background: #e0f2fe; color: #0c4a6e; }
   .reader-band-label-pill.safety { background: #dcfce7; color: #14532d; }
-  .reader-band-values-pill { display: inline-flex; align-items: center; justify-content: flex-start; border-radius: 999px; padding: 2px 8px; font-size: 7px; font-weight: 700; border: 1px solid transparent; white-space: nowrap; flex: 0 0 auto; margin-left: auto; max-width: 100%; }
+  .reader-band-values-pill { display: inline-flex; align-items: center; justify-content: flex-start; border-radius: 999px; padding: 1px 6px; font-size: 6px; font-weight: 700; border: 1px solid transparent; white-space: nowrap; flex: 0 0 auto; margin-left: auto; max-width: 100%; }
   .reader-band-values-pill.reach { background: #fff2df; border-color: #f3ce73; color: #b45309; }
   .reader-band-values-pill.target { background: #e0f2fe; border-color: #7dd3fc; color: #0c4a6e; }
   .reader-band-values-pill.safety { background: #dcfce7; border-color: #86efac; color: #14532d; }
@@ -676,7 +676,7 @@ const PRINT_CSS = `
   .reader-notes { border: 0; border-radius: 0; padding: 0; font-size: 11px; line-height: 1.35; height: 100%; overflow: hidden; }
   .reader-notes .label { font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 2px; color: #475467; }
   .reader-notes-body { margin: 0; white-space: pre-wrap; }
-  .reader-tag-pill { border: 1px solid #e0e6f2; border-radius: 999px; padding: 1px 3px; font-size: 7px; line-height: 1.1; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 16px; }
+  .reader-tag-pill { border: 1px solid #e0e6f2; border-radius: 999px; padding: 1px 2px; font-size: 6px; line-height: 1.1; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 14px; }
   .reader-tag-pill.active-positive { background: #ecfdf3; border-color: #86efac; color: #166534; }
   .reader-tag-pill.active-negative { background: #fef2f2; border-color: #fecaca; color: #7f1d1d; }
   .reader-tag-pill.inactive { color: #5e6778; background: #fff; }
