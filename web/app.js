@@ -650,7 +650,7 @@ const PRINT_CSS = `
   .reader-footer-body { white-space: pre-wrap; }
   .reader-section-title { font-family: "Fraunces", "Times New Roman", serif; font-weight: 700; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #344054; margin-bottom: 0; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 100%; }
   .reader-detail-page .reader-col { padding: 0; position: relative; display: grid; grid-template-columns: 1fr; align-items: start; border: 0; border-radius: 0; }
-  .reader-top-card { background: #f7f5f3; border-radius: 12px; padding: 10px; }
+  .reader-detail-page .reader-col.reader-top-card { background: #f7f5f3; border-radius: 12px; padding: 10px; }
   .reader-col.ratings, .reader-col.bands { display: grid; grid-template-columns: 1fr; grid-auto-rows: minmax(0, 1fr); gap: 5px; min-height: 0; }
   .reader-col.tags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; align-content: start; min-height: 0; }
   .reader-rating-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
@@ -677,6 +677,7 @@ const PRINT_CSS = `
   .reader-notes .label { font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 2px; color: #475467; }
   .reader-notes-body { margin: 0; white-space: pre-wrap; }
   .reader-tag-pill { border: 1px solid #e0e6f2; border-radius: 999px; padding: 1px 2px; font-size: 6px; line-height: 1.1; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 14px; }
+  .reader-tag-text { display: block; width: 100%; white-space: normal; overflow-wrap: break-word; word-break: normal; text-align: center; line-height: 1.1; }
   .reader-tag-pill.active-positive { background: #ecfdf3; border-color: #86efac; color: #166534; }
   .reader-tag-pill.active-negative { background: #fef2f2; border-color: #fecaca; color: #7f1d1d; }
   .reader-tag-pill.inactive { color: #5e6778; background: #fff; }
