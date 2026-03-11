@@ -535,16 +535,16 @@ const PRINT_CSS = `
   .tag-pill.active-negative { background: #fef2f2; border-color: #fecaca; color: #7f1d1d; }
   .tag-badges { display: inline-flex; gap: 4px; position: absolute; top: -12px; right: 8px; margin-left: 0; vertical-align: baseline; z-index: 2; }
   .tag-badge { min-width: 14px; height: 14px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; background: #111827; color: #fff; border: 1px solid #fff; }
-  .tag-badge.reader-slot-1 { background: #227f9c; }
-  .tag-badge.reader-slot-2 { background: #15b79e; }
-  .tag-badge.reader-slot-3 { background: #db2777; }
+  .tag-badge.reader-slot-1 { background: #d8dee9; color: #475467; }
+  .tag-badge.reader-slot-2 { background: #d8dee9; color: #475467; }
+  .tag-badge.reader-slot-3 { background: #d8dee9; color: #475467; }
   .tag-pill.inactive { color: #5e6778; background: #fff; }
   .reader-cards-source { display: none; }
   .reader-cards { display: flex; flex-direction: column; gap: 12px; height: 100%; flex: 1; }
   .reader-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 12px; display: grid; gap: 10px; --reader-top-bg: #f7f5f3; }
-  .reader-card.reader-slot-1 { border-color: #227f9c; --reader-top-bg: rgba(34, 127, 156, 0.1); }
-  .reader-card.reader-slot-2 { border-color: #15b79e; --reader-top-bg: rgba(21, 183, 158, 0.1); }
-  .reader-card.reader-slot-3 { border-color: #db2777; --reader-top-bg: rgba(219, 39, 119, 0.1); }
+  .reader-card.reader-slot-1 { border-color: #d8dee9; --reader-top-bg: #f7f5f3; }
+  .reader-card.reader-slot-2 { border-color: #d8dee9; --reader-top-bg: #f7f5f3; }
+  .reader-card.reader-slot-3 { border-color: #d8dee9; --reader-top-bg: #f7f5f3; }
   .page-continue-note { position: absolute; right: 8px; bottom: 12px; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; opacity: 0; }
   .page.has-continue .page-continue-note { opacity: 1; }
   .reader-title { margin: 0 0 8px; font-size: 14px; }
@@ -599,14 +599,14 @@ const PRINT_CSS = `
   .fit-content { transform-origin: top left; width: 100%; }
   .reader-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: 1fr; gap: 8px; height: 100%; align-content: stretch; }
   .reader-col { padding: 4px 6px; position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 0; border: 1.5px solid #d8dee9; border-radius: 10px; }
-  .reader-col.reader-slot-1 { border-color: #227f9c; }
-  .reader-col.reader-slot-2 { border-color: #15b79e; }
-  .reader-col.reader-slot-3 { border-color: #db2777; }
+  .reader-col.reader-slot-1 { border-color: #d8dee9; }
+  .reader-col.reader-slot-2 { border-color: #d8dee9; }
+  .reader-col.reader-slot-3 { border-color: #d8dee9; }
   .avatar { width: 52px; height: 52px; border-radius: 12px; margin: 0; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #2b7abf, #14b8a6); color: #fff; font-weight: 800; font-size: 14px; border: 1px solid transparent; overflow: hidden; }
   .avatar.has-photo { background: transparent; padding: 0; }
-  .avatar.reader-slot-1 { border-color: #227f9c; }
-  .avatar.reader-slot-2 { border-color: #15b79e; }
-  .avatar.reader-slot-3 { border-color: #db2777; }
+  .avatar.reader-slot-1 { border-color: #d8dee9; }
+  .avatar.reader-slot-2 { border-color: #d8dee9; }
+  .avatar.reader-slot-3 { border-color: #d8dee9; }
   .avatar img { width: 100%; height: 100%; border-radius: 0; object-fit: cover; display: block; }
   .reader-name { text-align: center; margin: 0 0 1px; font-size: 16px; font-family: "Fraunces", "Times New Roman", serif; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
   .reader-name-line { display: inline-flex; align-items: center; gap: 6px; justify-content: center; width: 100%; }
