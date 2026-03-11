@@ -573,7 +573,7 @@ button:disabled {
   border-radius: 999px;
   padding: 2px 6px;
   font-size: var(--tag-font-size);
-  line-height: 1.1;
+  line-height: 1.18;
   font-weight: 600;
   text-align: center;
   display: flex;
@@ -588,6 +588,8 @@ button:disabled {
   display: -webkit-box;
   width: 100%;
   overflow: hidden;
+  line-height: 1.18;
+  padding-bottom: 0.08em;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
@@ -598,7 +600,7 @@ button:disabled {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  line-height: 1.05;
+  line-height: 1.18;
 }
 
 .tag-badges {
@@ -925,7 +927,7 @@ button:disabled {
   top: 20%;
   bottom: 20%;
   right: -3px;
-  width: 1.5px;
+  width: var(--assessment-divider-width, 2px);
   background: var(--line);
 }
 
@@ -939,8 +941,8 @@ button:disabled {
 }
 
 .takeaway-softs-value {
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .takeaways-bands .band-row {
@@ -951,6 +953,7 @@ button:disabled {
 }
 
 .takeaways-card {
+  --assessment-divider-width: 2px;
   border: 2px solid var(--line);
   border-radius: 12px;
   padding: 8px 10px;
@@ -963,7 +966,7 @@ button:disabled {
 
 .takeaways-card .takeaways-bands {
   width: 100%;
-  border-top: 1.5px solid var(--line);
+  border-top: var(--assessment-divider-width, 2px) solid var(--line);
   padding-top: 6px;
 }
 
@@ -1035,7 +1038,7 @@ button:disabled {
   align-items: center;
   gap: 4px;
   min-height: 0;
-  border: 1.5px solid var(--line);
+  border: 2px solid var(--line);
   border-radius: 10px;
 }
 
@@ -1393,22 +1396,22 @@ button:disabled {
   display: grid;
   gap: 10px;
   flex: 0 0 auto;
-  --reader-top-bg: #f7f5f3;
+  --reader-top-bg: #f9f9f9;
 }
 
 .reader-card.reader-slot-1 {
   border-color: var(--line);
-  --reader-top-bg: #f7f5f3;
+  --reader-top-bg: #f9f9f9;
 }
 
 .reader-card.reader-slot-2 {
   border-color: var(--line);
-  --reader-top-bg: #f7f5f3;
+  --reader-top-bg: #f9f9f9;
 }
 
 .reader-card.reader-slot-3 {
   border-color: var(--line);
-  --reader-top-bg: #f7f5f3;
+  --reader-top-bg: #f9f9f9;
 }
 
 .page-continue-note {
@@ -1478,7 +1481,7 @@ button:disabled {
 }
 
 .reader-detail-page .reader-col.reader-top-card {
-  background: var(--reader-top-bg, #f7f5f3);
+  background: var(--reader-top-bg, #f9f9f9);
   border-radius: 12px;
   padding: 10px;
 }
@@ -1524,7 +1527,7 @@ button:disabled {
   padding: 1px 5px;
   font-size: 7px;
   font-weight: 600;
-  line-height: 1.1;
+  line-height: 1.18;
   background: #f8fafc;
   color: #334155;
   white-space: nowrap;
@@ -1542,11 +1545,6 @@ button:disabled {
   background: #fef2f2;
   border-color: #f87171;
   color: #991b1b;
-}
-
-.reader-rating-pill.is-positive,
-.reader-rating-pill.is-negative {
-  opacity: 0.5;
 }
 
 .reader-rating-pill.empty {
@@ -1675,7 +1673,7 @@ button:disabled {
   border-radius: 999px;
   padding: 1px 2px;
   font-size: 6px;
-  line-height: 1.1;
+  line-height: 1.18;
   text-align: center;
   display: flex;
   align-items: center;
@@ -1690,7 +1688,8 @@ button:disabled {
   overflow-wrap: break-word;
   word-break: normal;
   text-align: center;
-  line-height: 1.1;
+  line-height: 1.18;
+  padding-bottom: 0.08em;
 }
 
 .reader-tag-pill.active-positive {
@@ -1727,6 +1726,16 @@ button:disabled {
   flex-direction: column;
   height: 792px;
   position: relative;
+}
+
+.tag-explanation-header {
+  margin: 0 0 10px;
+  font-family: "Fraunces", "Times New Roman", serif;
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.1;
+  text-align: center;
+  color: #344054;
 }
 
 .tag-explanation-cards {

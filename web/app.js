@@ -66,7 +66,7 @@ const BAND_ALIAS_MAP = {
   "T100+": "T100+",
 };
 
-const LOGO_SRC_PATH = "./assets/7sage-logo.svg";
+const LOGO_SRC_PATH = new URL("./assets/7sage-logo.png", window.location.href).href;
 
 function normalizeTagKey(value) {
   return String(value || "")
@@ -528,9 +528,9 @@ const PRINT_CSS = `
   .band-list { margin: 0; padding-left: 18px; }
   .band-list li { margin-bottom: 6px; }
   .tag-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
-  .tag-pill { --tag-font-size: 9px; border: 1px solid #e0e6f2; border-radius: 999px; padding: 2px 6px; font-size: var(--tag-font-size); line-height: 1.1; font-weight: 600; text-align: center; display: flex; align-items: center; justify-content: center; position: relative; overflow: visible; color: #4b5563; }
-  .tag-text { display: -webkit-box; width: 100%; overflow: hidden; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
-  .tag-text.force-break, .reader-tag-text.force-break { display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.05; }
+  .tag-pill { --tag-font-size: 9px; border: 1px solid #e0e6f2; border-radius: 999px; padding: 2px 6px; font-size: var(--tag-font-size); line-height: 1.18; font-weight: 600; text-align: center; display: flex; align-items: center; justify-content: center; position: relative; overflow: visible; color: #4b5563; }
+  .tag-text { display: -webkit-box; width: 100%; overflow: hidden; line-height: 1.18; padding-bottom: 0.08em; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .tag-text.force-break, .reader-tag-text.force-break { display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.18; }
   .tag-pill.active-positive { background: #ecfdf3; border-color: #86efac; color: #166534; }
   .tag-pill.active-negative { background: #fef2f2; border-color: #fecaca; color: #7f1d1d; }
   .tag-badges { display: inline-flex; gap: 4px; position: absolute; top: -12px; right: 8px; margin-left: 0; vertical-align: baseline; z-index: 2; }
@@ -541,10 +541,10 @@ const PRINT_CSS = `
   .tag-pill.inactive { color: #5e6778; background: #fff; }
   .reader-cards-source { display: none; }
   .reader-cards { display: flex; flex-direction: column; gap: 12px; height: 100%; flex: 1; }
-  .reader-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 12px; display: grid; gap: 10px; --reader-top-bg: #f7f5f3; }
-  .reader-card.reader-slot-1 { border-color: #d8dee9; --reader-top-bg: #f7f5f3; }
-  .reader-card.reader-slot-2 { border-color: #d8dee9; --reader-top-bg: #f7f5f3; }
-  .reader-card.reader-slot-3 { border-color: #d8dee9; --reader-top-bg: #f7f5f3; }
+  .reader-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 12px; display: grid; gap: 10px; --reader-top-bg: #f9f9f9; }
+  .reader-card.reader-slot-1 { border-color: #d8dee9; --reader-top-bg: #f9f9f9; }
+  .reader-card.reader-slot-2 { border-color: #d8dee9; --reader-top-bg: #f9f9f9; }
+  .reader-card.reader-slot-3 { border-color: #d8dee9; --reader-top-bg: #f9f9f9; }
   .page-continue-note { position: absolute; right: 8px; bottom: 12px; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; opacity: 0; }
   .page.has-continue .page-continue-note { opacity: 1; }
   .reader-title { margin: 0 0 8px; font-size: 14px; }
@@ -585,12 +585,12 @@ const PRINT_CSS = `
   .takeaways-row-single { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px; }
   .takeaways-row .compact-stars .star { width: 10.5px; height: 10.5px; }
   .takeaway-item { text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 4px; min-height: 0; position: relative; }
-  .takeaway-item:not(:last-child)::after { content: ""; position: absolute; top: 20%; bottom: 20%; right: -3px; width: 1.5px; background: #d8dee9; }
+  .takeaway-item:not(:last-child)::after { content: ""; position: absolute; top: 20%; bottom: 20%; right: -3px; width: var(--assessment-divider-width, 2px); background: #d8dee9; }
   .takeaway-title { font-family: "Fraunces", "Times New Roman", serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #475467; }
-  .takeaway-softs-value { font-size: 14px; font-weight: 700; }
+  .takeaway-softs-value { font-size: 12px; font-weight: 500; }
   .takeaways-bands .band-row { font-size: 9px; gap: 0; padding: 3px 6px; grid-template-columns: 52px repeat(9, minmax(0, 1fr)); }
-  .takeaways-card { border: 2px solid #d8dee9; border-radius: 12px; padding: 8px 10px; display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 8px; flex: 1; min-height: 0; }
-  .takeaways-card .takeaways-bands { width: 100%; border-top: 1.5px solid #d8dee9; padding-top: 6px; }
+  .takeaways-card { --assessment-divider-width: 2px; border: 2px solid #d8dee9; border-radius: 12px; padding: 8px 10px; display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 8px; flex: 1; min-height: 0; }
+  .takeaways-card .takeaways-bands { width: 100%; border-top: var(--assessment-divider-width, 2px) solid #d8dee9; padding-top: 6px; }
   .fit-takeaways { display: flex; flex-direction: column; height: 100%; }
   .section-title { font-family: "Fraunces", "Times New Roman", serif; text-transform: uppercase; letter-spacing: 0.22em; font-size: 10px; font-weight: 700; color: #94a3b8; text-align: center; margin: 0 0 4px; }
   .section-block.readers-section .section-title { margin-bottom: 1px; }
@@ -598,7 +598,7 @@ const PRINT_CSS = `
   .section-body { border: 0; border-radius: 0; padding: 14px 16px; background: transparent; width: 100%; min-width: 0; overflow: hidden; }
   .fit-content { transform-origin: top left; width: 100%; }
   .reader-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: 1fr; gap: 8px; height: 100%; align-content: stretch; }
-  .reader-col { padding: 4px 6px; position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 0; border: 1.5px solid #d8dee9; border-radius: 10px; }
+  .reader-col { padding: 4px 6px; position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 0; border: 2px solid #d8dee9; border-radius: 10px; }
   .reader-col.reader-slot-1 { border-color: #d8dee9; }
   .reader-col.reader-slot-2 { border-color: #d8dee9; }
   .reader-col.reader-slot-3 { border-color: #d8dee9; }
@@ -651,15 +651,14 @@ const PRINT_CSS = `
   .reader-footer-body { white-space: pre-wrap; }
   .reader-section-title { font-family: "Fraunces", "Times New Roman", serif; font-weight: 700; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: #344054; margin-bottom: 0; text-align: center; display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 100%; }
   .reader-detail-page .reader-col { padding: 0; position: relative; display: grid; grid-template-columns: 1fr; align-items: start; border: 0; border-radius: 0; }
-  .reader-detail-page .reader-col.reader-top-card { background: var(--reader-top-bg, #f7f5f3); border-radius: 12px; padding: 10px; }
+  .reader-detail-page .reader-col.reader-top-card { background: var(--reader-top-bg, #f9f9f9); border-radius: 12px; padding: 10px; }
   .reader-col.ratings, .reader-col.bands { display: grid; grid-template-columns: 1fr; grid-auto-rows: minmax(0, 1fr); gap: 5px; min-height: 0; }
   .reader-col.tags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; align-content: start; min-height: 0; }
   .reader-rating-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   .reader-rating-label { font-size: 7px; font-weight: 600; text-transform: none; letter-spacing: 0; color: #475467; min-width: 0; flex: 1; line-height: 1.2; }
-  .reader-rating-pill { border: 1px solid #e2e8f0; border-radius: 999px; padding: 1px 5px; font-size: 7px; font-weight: 600; line-height: 1.1; background: #f8fafc; color: #334155; white-space: nowrap; }
+  .reader-rating-pill { border: 1px solid #e2e8f0; border-radius: 999px; padding: 1px 5px; font-size: 7px; font-weight: 600; line-height: 1.18; background: #f8fafc; color: #334155; white-space: nowrap; }
   .reader-rating-pill.is-positive, .reader-rating-pill.is-positive-strong { background: #ecfdf3; border-color: #34d399; color: #166534; }
   .reader-rating-pill.is-negative, .reader-rating-pill.is-negative-strong { background: #fef2f2; border-color: #f87171; color: #991b1b; }
-  .reader-rating-pill.is-positive, .reader-rating-pill.is-negative { opacity: 0.5; }
   .reader-rating-pill.empty { color: #94a3b8; background: #fff; }
   .reader-rating-empty { font-size: 8px; color: #98a2b3; }
   .reader-band-row { display: flex; gap: 5px; align-items: center; font-size: 9px; }
@@ -677,14 +676,15 @@ const PRINT_CSS = `
   .reader-notes { border: 0; border-radius: 0; padding: 0; font-size: 11px; line-height: 1.35; height: 100%; overflow: hidden; }
   .reader-notes .label { font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 2px; color: #475467; }
   .reader-notes-body { margin: 0; white-space: pre-wrap; }
-  .reader-tag-pill { border: 1px solid #e0e6f2; border-radius: 999px; padding: 1px 2px; font-size: 6px; line-height: 1.1; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 14px; }
-  .reader-tag-text { display: block; width: 100%; white-space: normal; overflow-wrap: break-word; word-break: normal; text-align: center; line-height: 1.1; }
+  .reader-tag-pill { border: 1px solid #e0e6f2; border-radius: 999px; padding: 1px 2px; font-size: 6px; line-height: 1.18; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 14px; }
+  .reader-tag-text { display: block; width: 100%; white-space: normal; overflow-wrap: break-word; word-break: normal; text-align: center; line-height: 1.18; padding-bottom: 0.08em; }
   .reader-tag-pill.active-positive { background: #ecfdf3; border-color: #86efac; color: #166534; }
   .reader-tag-pill.active-negative { background: #fef2f2; border-color: #fecaca; color: #7f1d1d; }
   .reader-tag-pill.inactive { color: #5e6778; background: #fff; }
   .reader-tag-empty { font-size: 10px; color: #98a2b3; align-self: center; }
   .tag-explanation-source { display: none; }
   .tag-explanation-page { padding: 24px; background: #fffffe; display: flex; flex-direction: column; height: 792px; position: relative; }
+  .tag-explanation-header { margin: 0 0 10px; font-family: "Fraunces", "Times New Roman", serif; font-size: 20px; font-weight: 700; line-height: 1.1; text-align: center; color: #344054; }
   .tag-explanation-cards { display: flex; flex-direction: column; gap: 12px; flex: 1; min-height: 0; padding-bottom: 22px; }
   .tag-explanation-item { border: 1px solid #d8dee9; border-radius: 8px; padding: 10px 12px; background: transparent; display: grid; gap: 6px; min-height: 0; flex: 0 0 auto; }
   .tag-explanation-title { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -896,7 +896,7 @@ const PRINT_FIT_SCRIPT = `
     const page = document.createElement("section");
     page.className = "page tag-explanation-page";
     page.innerHTML =
-      '<div class="tag-explanation-cards"></div><div class="page-continue-note">Section continues on next page.</div>';
+      '<h2 class="tag-explanation-header">Explanations for Your Tags</h2><div class="tag-explanation-cards"></div><div class="page-continue-note">Section continues on next page.</div>';
     return page;
   };
 
@@ -1566,7 +1566,7 @@ function mapSoftsValue(value, fileName) {
 }
 
 function formatTierLabel(value) {
-  return `Tier ${value}`;
+  return `T${value}`;
 }
 
 function computeSoftsDisplay(rows, fileName) {
@@ -1777,13 +1777,13 @@ function renderTagBadges(readerLabels) {
     .join("")}</span>`;
 }
 
-function isForceBreakTag(tagName) {
-  return normalizeTagKey(tagName) === "show more openness";
-}
-
 function renderTagText(tagName, className = "tag-text") {
-  if (isForceBreakTag(tagName)) {
+  const normalized = normalizeTagKey(tagName);
+  if (normalized === "show more openness") {
     return `<span class="${className} force-break"><span>Show More</span><span>Openness</span></span>`;
+  }
+  if (normalized === "resume needs polish") {
+    return `<span class="${className} force-break"><span>Resume Needs</span><span>Polish</span></span>`;
   }
   return `<span class="${className}">${escapeHtml(tagName)}</span>`;
 }
@@ -1976,9 +1976,12 @@ function getReaderNotesText(reader) {
     : notes || anythingElse || "—";
 }
 
-function renderReaderNotesBlock(text, label = "Notes") {
+function renderReaderNotesBlock(text, label = "Notes", { showLabel = true } = {}) {
+  const labelHtml = showLabel
+    ? `<div class="label">${escapeHtml(label)}</div>`
+    : "";
   return `<div class="reader-notes">
-    <div class="label">${escapeHtml(label)}</div>
+    ${labelHtml}
     <div class="reader-notes-body">${escapeHtml(text)}</div>
   </div>`;
 }
@@ -1986,12 +1989,12 @@ function renderReaderNotesBlock(text, label = "Notes") {
 function renderNextStepsCard(report) {
   const chairSummaryText = String(report.chairSummary || "").trim();
   const nextStepsText = String(report.manual.nextSteps || "").trim();
-  const cardTitle = chairSummaryText ? "Chair Summary" : "Next Steps";
+  const cardTitle = chairSummaryText ? "Summary" : "Next Steps";
   const bodyText = chairSummaryText || nextStepsText || "—";
   return `
     <article class="reader-card next-steps-card">
       <div class="reader-section-title">${escapeHtml(cardTitle)}</div>
-      ${renderReaderNotesBlock(bodyText, cardTitle)}
+      ${renderReaderNotesBlock(bodyText, cardTitle, { showLabel: false })}
     </article>
   `;
 }
@@ -1999,13 +2002,10 @@ function renderNextStepsCard(report) {
 function renderReaderCard(reader) {
   const notesText = getReaderNotesText(reader);
   const slotClass = getReaderSlotClass(reader.badgeLabel);
-  const chairChip = reader.isChair
-    ? '<span class="reader-chair-pill">Chair</span>'
-    : "";
   return `
     <article class="reader-card${slotClass ? ` ${slotClass}` : ""}">
       <div class="reader-section-title">
-        <span>${escapeHtml(reader.label)}</span>${chairChip}
+        <span>${escapeHtml(reader.label)}</span>
       </div>
       <div class="reader-top-grid">
         <div class="reader-col ratings reader-top-card">
@@ -2085,6 +2085,7 @@ function renderTagExplanationPages(report) {
   if (!tags.length) {
     return `
       <section class="page tag-explanation-page">
+        <h2 class="tag-explanation-header">Explanations for Your Tags</h2>
         <div class="tag-explanation-empty">No tags selected.</div>
       </section>
     `;
@@ -2157,15 +2158,11 @@ function renderStudentDocument(report) {
                   const bio =
                     profile?.bio ||
                     "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.";
-                  const chairChip = reader.isChair
-                    ? '<span class="reader-chair-pill">Chair</span>'
-                    : "";
                   return `<div class="reader-col${slotClass ? ` ${slotClass}` : ""}">
                     <div class="avatar${profile?.headshotUrl ? " has-photo" : ""}${slotClass ? ` ${slotClass}` : ""}">${avatarContent}</div>
                     <div>
                       <div class="reader-name-line">
                         <h3 class="reader-name">${escapeHtml(name)}</h3>
-                        ${chairChip}
                       </div>
                       ${renderReaderSummaryBio(bio)}
                     </div>
@@ -2576,7 +2573,7 @@ function paginateTagExplanationCards(root = document) {
     const page = document.createElement("section");
     page.className = "page tag-explanation-page";
     page.innerHTML =
-      '<div class="tag-explanation-cards"></div><div class="page-continue-note">Section continues on next page.</div>';
+      '<h2 class="tag-explanation-header">Explanations for Your Tags</h2><div class="tag-explanation-cards"></div><div class="page-continue-note">Section continues on next page.</div>';
     return page;
   };
 
