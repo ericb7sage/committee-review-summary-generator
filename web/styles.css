@@ -88,16 +88,16 @@ h1 {
   margin-bottom: 0;
 }
 
-.control-panel h2,
+.control-panel .panel-heading h2,
 .preview-panel h2 {
-  margin: 0 0 12px;
+  margin: 0;
   font-size: 18px;
   font-weight: 700;
   letter-spacing: 0.2px;
   color: #0f4a44;
 }
 
-.control-panel h2::after,
+.control-panel .panel-heading h2::after,
 .preview-panel h2::after {
   content: "";
   display: block;
@@ -106,6 +106,23 @@ h1 {
   margin-top: 8px;
   border-radius: 999px;
   background: linear-gradient(90deg, var(--accent), var(--accent-2));
+}
+
+.control-panel .panel-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.control-panel .app-version {
+  margin-top: 3px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #98a2b3;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
 }
 
 .field {

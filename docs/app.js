@@ -1082,6 +1082,7 @@ const urmSelect = document.getElementById("urmSelect");
 const nextStepsInput = document.getElementById("nextStepsInput");
 const inputHintEl = document.getElementById("inputHint");
 const tagSourceStatusEl = document.getElementById("tagSourceStatus");
+const appVersionEl = document.getElementById("appVersion");
 const downloadPdfBtn = document.getElementById("downloadPdfBtn");
 const statusEl = document.getElementById("status");
 const validationEl = document.getElementById("validation");
@@ -1099,6 +1100,7 @@ nextStepsInput.addEventListener("input", onManualInputChange);
 downloadPdfBtn.addEventListener("click", onDownloadCurrentStudentPdf);
 window.addEventListener("resize", onWindowResize);
 
+initializeAppVersion();
 void initializeTagCatalog();
 
 function setStatus(message) {
@@ -1108,6 +1110,12 @@ function setStatus(message) {
 function setTagSourceStatus(label) {
   if (!tagSourceStatusEl) return;
   tagSourceStatusEl.textContent = `Tag source: ${label}`;
+}
+
+function initializeAppVersion() {
+  if (!appVersionEl) return;
+  const rawVersion = String(window.APP_VERSION || "").trim();
+  appVersionEl.textContent = rawVersion ? `v${rawVersion}` : "v—";
 }
 
 function escapeHtml(value) {
