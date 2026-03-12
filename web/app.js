@@ -66,7 +66,7 @@ const BAND_ALIAS_MAP = {
   "T100+": "T100+",
 };
 
-const LOGO_SRC_PATH = new URL("./assets/7sage-logo.png", window.location.href).href;
+const LOGO_SRC_PATH = new URL("./assets/7sage-logo.svg", window.location.href).href;
 
 function normalizeTagKey(value) {
   return String(value || "")
@@ -1989,7 +1989,7 @@ function renderReaderNotesBlock(text, label = "Notes", { showLabel = true } = {}
 function renderNextStepsCard(report) {
   const chairSummaryText = String(report.chairSummary || "").trim();
   const nextStepsText = String(report.manual.nextSteps || "").trim();
-  const cardTitle = chairSummaryText ? "Summary" : "Next Steps";
+  const cardTitle = chairSummaryText ? "7Sage Summary" : "Next Steps";
   const bodyText = chairSummaryText || nextStepsText || "—";
   return `
     <article class="reader-card next-steps-card">
@@ -2022,7 +2022,7 @@ function renderReaderCard(reader) {
             reader.ratingLabels.contribute
           )}
           ${renderReaderRatingRow(
-            "i feel like I know this candidate.",
+            "I feel like I know this candidate.",
             reader.ratingLabels.know
           )}
         </div>
@@ -2197,7 +2197,7 @@ function renderStudentDocument(report) {
                   ${renderCompactStars(report.summaryStars.contribute)}
                 </div>
                 <div class="takeaway-item">
-                  <div class="takeaway-title">Personality</div>
+                  <div class="takeaway-title">Connection</div>
                   ${renderCompactStars(report.summaryStars.know)}
                 </div>
               </div>
