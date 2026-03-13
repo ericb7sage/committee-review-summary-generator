@@ -28,6 +28,15 @@
           <p class="auto-run-note">
             Upload once. The app auto-generates reports and downloads PDF(s) with no additional steps.
           </p>
+          <div id="progressWrap" class="progress-wrap" hidden>
+            <div class="progress-meta">
+              <span id="progressLabel">Preparing...</span>
+              <span id="progressPercent">0%</span>
+            </div>
+            <div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div id="progressFill" class="progress-fill"></div>
+            </div>
+          </div>
           <div class="legacy-hidden" aria-hidden="true">
             <select id="studentSelect" disabled>
               <option>Upload CSV first</option>

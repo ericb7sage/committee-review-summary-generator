@@ -1087,6 +1087,10 @@ const downloadPdfBtn = document.getElementById("downloadPdfBtn");
 const statusEl = document.getElementById("status");
 const validationEl = document.getElementById("validation");
 const previewRoot = document.getElementById("previewRoot");
+const progressWrapEl = document.getElementById("progressWrap");
+const progressLabelEl = document.getElementById("progressLabel");
+const progressPercentEl = document.getElementById("progressPercent");
+const progressFillEl = document.getElementById("progressFill");
 
 csvFileInput.addEventListener("change", onCsvSelected);
 generateBtn.addEventListener("click", onGenerateDocuments);
@@ -1110,6 +1114,33 @@ function setStatus(message) {
 function setTagSourceStatus(label) {
   if (!tagSourceStatusEl) return;
   tagSourceStatusEl.textContent = `Tag source: ${label}`;
+}
+
+function setProgress(label, percent) {
+  if (!progressWrapEl || !progressLabelEl || !progressPercentEl || !progressFillEl) return;
+  const safePercent = Number.isFinite(percent) ? percent : 0;
+  const clamped = Math.max(0, Math.min(100, safePercent));
+  const rounded = Math.round(clamped);
+  progressWrapEl.hidden = false;
+  progressLabelEl.textContent = String(label || "Working...");
+  progressPercentEl.textContent = `${rounded}%`;
+  progressFillEl.style.width = `${clamped}%`;
+  const progressTrackEl = progressWrapEl.querySelector(".progress-track");
+  if (progressTrackEl) {
+    progressTrackEl.setAttribute("aria-valuenow", String(rounded));
+  }
+}
+
+function hideProgress() {
+  if (!progressWrapEl || !progressLabelEl || !progressPercentEl || !progressFillEl) return;
+  progressWrapEl.hidden = true;
+  progressLabelEl.textContent = "Preparing...";
+  progressPercentEl.textContent = "0%";
+  progressFillEl.style.width = "0%";
+  const progressTrackEl = progressWrapEl.querySelector(".progress-track");
+  if (progressTrackEl) {
+    progressTrackEl.setAttribute("aria-valuenow", "0");
+  }
 }
 
 function initializeAppVersion() {
@@ -2764,14 +2795,18 @@ async function onCsvSelected(event) {
 
   const file = event.target.files[0];
   if (!file) {
+    hideProgress();
     setStatus("Waiting for CSV upload.");
     showValidationMessages();
     return;
   }
 
   try {
+    setProgress("Reading CSV...", 8);
     const csvText = await file.text();
+    setProgress("Parsing CSV...", 24);
     const { headers, rows } = readCsvRows(csvText);
+    setProgress("Grouping students...", 40);
     const missingHeaders = validateHeaders(headers);
     const { groups, blankFileRows } = groupRowsByFile(rows);
 
@@ -2798,6 +2833,7 @@ async function onCsvSelected(event) {
       );
     }
 
+    setProgress("Preparing report queue...", 55);
     syncGenerateButtonState();
     setStudentSelectorOptions();
     setStatus(
@@ -2809,13 +2845,18 @@ async function onCsvSelected(event) {
     state.errors = [`Could not parse CSV: ${error.message}`];
     syncGenerateButtonState();
     setStatus("CSV load failed.");
+    hideProgress();
   }
 
   showValidationMessages();
 
   if (!state.errors.length && state.availableStudents.length) {
+    setProgress("Generating reports...", 60);
     await autoGenerateAndDownloadReports();
+    return;
   }
+
+  hideProgress();
 }
 
 function onGenerateDocuments() {
@@ -2896,11 +2937,17 @@ function onStudentSelectionChange() {
 }
 
 async function autoGenerateAndDownloadReports() {
-  if (!state.availableStudents.length) return;
+  if (!state.availableStudents.length) {
+    hideProgress();
+    return;
+  }
   if (!state.tagCatalogLoaded) {
     await initializeTagCatalog();
   }
-  if (!state.tagCatalogLoaded) return;
+  if (!state.tagCatalogLoaded) {
+    hideProgress();
+    return;
+  }
 
   const candidates = state.availableStudents.filter((fileName) => {
     const rows = state.groupedRows.get(fileName);
@@ -2911,6 +2958,7 @@ async function autoGenerateAndDownloadReports() {
     state.errors = ["No students with exactly 3 reviews were found in this CSV."];
     setStatus("Generation blocked.");
     showValidationMessages();
+    hideProgress();
     return;
   }
 
@@ -2918,7 +2966,10 @@ async function autoGenerateAndDownloadReports() {
   const generated = [];
   const failures = [];
 
-  for (const fileName of candidates) {
+  for (let i = 0; i < candidates.length; i += 1) {
+    const fileName = candidates[i];
+    const startPercent = 60 + Math.round((i / candidates.length) * 35);
+    setProgress(`Generating ${i + 1} of ${candidates.length}: ${fileName}`, startPercent);
     if (studentSelect) {
       studentSelect.value = fileName;
     }
@@ -2932,6 +2983,8 @@ async function autoGenerateAndDownloadReports() {
 
     generated.push(fileName);
     await onDownloadCurrentStudentPdf();
+    const donePercent = 60 + Math.round(((i + 1) / candidates.length) * 35);
+    setProgress(`Downloaded ${i + 1} of ${candidates.length}`, donePercent);
     await new Promise((resolve) => setTimeout(resolve, 120));
   }
 
@@ -2956,6 +3009,10 @@ async function autoGenerateAndDownloadReports() {
     setStatus("No reports were generated.");
   }
   showValidationMessages();
+  setProgress(generated.length ? "Done." : "Finished with warnings.", 100);
+  setTimeout(() => {
+    hideProgress();
+  }, 450);
 }
 
 function openPrintWindow(title, bodyHtml) {
