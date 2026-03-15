@@ -67,6 +67,33 @@ const BAND_ALIAS_MAP = {
 };
 
 const LOGO_SRC_PATH = new URL("./assets/7sage-logo.svg", window.location.href).href;
+let LOGO_DATA_URI = "";
+let logoDataUriPromise = null;
+
+function ensureLogoDataUri() {
+  if (LOGO_DATA_URI) return Promise.resolve(LOGO_DATA_URI);
+  if (logoDataUriPromise) return logoDataUriPromise;
+
+  logoDataUriPromise = fetch(LOGO_SRC_PATH, { cache: "force-cache" })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      return response.text();
+    })
+    .then((svgText) => {
+      const compactSvg = String(svgText || "").trim();
+      if (!compactSvg) return "";
+      LOGO_DATA_URI = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(compactSvg)}`;
+      return LOGO_DATA_URI;
+    })
+    .catch((error) => {
+      console.warn("Could not inline 7Sage logo for export:", error?.message || error);
+      return "";
+    });
+
+  return logoDataUriPromise;
+}
 
 function normalizeTagKey(value) {
   return String(value || "")
@@ -1105,6 +1132,7 @@ downloadPdfBtn.addEventListener("click", onDownloadCurrentStudentPdf);
 window.addEventListener("resize", onWindowResize);
 
 initializeAppVersion();
+void ensureLogoDataUri();
 void initializeTagCatalog();
 
 function setStatus(message) {
@@ -1156,6 +1184,34 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
+}
+
+async function waitForImages(root) {
+  if (!root) return;
+  const images = [...root.querySelectorAll("img")];
+  if (!images.length) return;
+
+  await Promise.all(
+    images.map((image) => {
+      if (image.complete && image.naturalWidth > 0) {
+        return Promise.resolve();
+      }
+      return new Promise((resolve) => {
+        let done = false;
+        const finish = () => {
+          if (done) return;
+          done = true;
+          resolve();
+        };
+        image.addEventListener("load", finish, { once: true });
+        image.addEventListener("error", finish, { once: true });
+        if (typeof image.decode === "function") {
+          image.decode().then(finish).catch(() => {});
+        }
+        setTimeout(finish, 1200);
+      });
+    })
+  );
 }
 
 function normalizeProfileKey(value) {
@@ -3127,10 +3183,18 @@ async function onDownloadCurrentStudentPdf() {
   staging.appendChild(clone);
   document.body.appendChild(staging);
 
+  const inlineLogoSrc = await ensureLogoDataUri();
+  if (inlineLogoSrc) {
+    clone.querySelectorAll(".summary-banner-logo").forEach((image) => {
+      image.src = inlineLogoSrc;
+    });
+  }
+
   try {
     if (document.fonts?.ready) {
       await document.fonts.ready;
     }
+    await waitForImages(clone);
     fitAllSummarySections(staging);
     paginateReaderCards(staging);
     paginateTagExplanationCards(staging);
