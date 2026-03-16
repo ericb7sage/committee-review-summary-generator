@@ -507,7 +507,6 @@ const READER_PROFILES = [
 ];
 
 const TAG_FONT_BASE_PX = 9;
-const TAG_FONT_MIN_PX = 7;
 
 const state = {
   fileName: "",
@@ -724,66 +723,11 @@ const PRINT_CSS = `
 const PRINT_FIT_SCRIPT = `
   (() => {
     const TAG_FONT_BASE_PX = 9;
-    const TAG_FONT_MIN_PX = 7;
 
     function fitTagFonts(root = document) {
       const pills = root.querySelectorAll(".tag-pill");
       pills.forEach((pill) => {
-        const textEl = pill.querySelector(".tag-text");
-        if (!textEl) return;
-
-        const prevDisplay = textEl.style.display;
-        const prevClamp = textEl.style.webkitLineClamp;
-        const prevOrient = textEl.style.webkitBoxOrient;
-
-        textEl.style.display = "block";
-        textEl.style.webkitLineClamp = "unset";
-        textEl.style.webkitBoxOrient = "initial";
-
-        const setFont = (sizePx) => {
-          pill.style.setProperty("--tag-font-size", sizePx + "px");
-        };
-
-        const getLineHeight = () => {
-          const computed = window.getComputedStyle(textEl);
-          const fontSize = parseFloat(computed.fontSize) || TAG_FONT_BASE_PX;
-          let lineHeight = parseFloat(computed.lineHeight);
-          if (!lineHeight || Number.isNaN(lineHeight)) {
-            lineHeight = fontSize * 1.1;
-          }
-          return { lineHeight, fontSize };
-        };
-
-        setFont(TAG_FONT_BASE_PX);
-        let { lineHeight } = getLineHeight();
-        let maxHeight = lineHeight * 2 + 0.5;
-        let fullHeight = textEl.scrollHeight;
-
-        if (fullHeight > maxHeight) {
-          let low = TAG_FONT_MIN_PX;
-          let high = TAG_FONT_BASE_PX;
-          let best = TAG_FONT_MIN_PX;
-
-          while (low <= high) {
-            const mid = Math.floor((low + high) / 2);
-            setFont(mid);
-            ({ lineHeight } = getLineHeight());
-            maxHeight = lineHeight * 2 + 0.5;
-            fullHeight = textEl.scrollHeight;
-
-            if (fullHeight <= maxHeight) {
-              best = mid;
-              low = mid + 1;
-            } else {
-              high = mid - 1;
-            }
-          }
-          setFont(best);
-        }
-
-        textEl.style.display = prevDisplay;
-        textEl.style.webkitLineClamp = prevClamp;
-        textEl.style.webkitBoxOrient = prevOrient;
+        pill.style.setProperty("--tag-font-size", TAG_FONT_BASE_PX + "px");
       });
     }
 
@@ -2473,61 +2417,7 @@ function onDocTitleChange() {
 function fitTagFonts(root = document) {
   const pills = root.querySelectorAll(".tag-pill");
   pills.forEach((pill) => {
-    const textEl = pill.querySelector(".tag-text");
-    if (!textEl) return;
-
-    const prevDisplay = textEl.style.display;
-    const prevClamp = textEl.style.webkitLineClamp;
-    const prevOrient = textEl.style.webkitBoxOrient;
-
-    textEl.style.display = "block";
-    textEl.style.webkitLineClamp = "unset";
-    textEl.style.webkitBoxOrient = "initial";
-
-    const setFont = (sizePx) => {
-      pill.style.setProperty("--tag-font-size", `${sizePx}px`);
-    };
-
-    const getLineHeight = () => {
-      const computed = window.getComputedStyle(textEl);
-      const fontSize = parseFloat(computed.fontSize) || TAG_FONT_BASE_PX;
-      let lineHeight = parseFloat(computed.lineHeight);
-      if (!lineHeight || Number.isNaN(lineHeight)) {
-        lineHeight = fontSize * 1.1;
-      }
-      return { lineHeight, fontSize };
-    };
-
-    setFont(TAG_FONT_BASE_PX);
-    let { lineHeight } = getLineHeight();
-    let maxHeight = lineHeight * 2 + 0.5;
-    let fullHeight = textEl.scrollHeight;
-
-    if (fullHeight > maxHeight) {
-      let low = TAG_FONT_MIN_PX;
-      let high = TAG_FONT_BASE_PX;
-      let best = TAG_FONT_MIN_PX;
-
-      while (low <= high) {
-        const mid = Math.floor((low + high) / 2);
-        setFont(mid);
-        ({ lineHeight } = getLineHeight());
-        maxHeight = lineHeight * 2 + 0.5;
-        fullHeight = textEl.scrollHeight;
-
-        if (fullHeight <= maxHeight) {
-          best = mid;
-          low = mid + 1;
-        } else {
-          high = mid - 1;
-        }
-      }
-      setFont(best);
-    }
-
-    textEl.style.display = prevDisplay;
-    textEl.style.webkitLineClamp = prevClamp;
-    textEl.style.webkitBoxOrient = prevOrient;
+    pill.style.setProperty("--tag-font-size", `${TAG_FONT_BASE_PX}px`);
   });
 }
 
