@@ -504,6 +504,14 @@ const READER_PROFILES = [
       "https://www.gravatar.com/avatar/cd528c47bc4c30f6418a7f422a9407b1?size=320&default=robohash",
     bio: "Assistant Dean at Seattle University School of Law.",
   },
+  {
+    fullName: "Peyton Pixley",
+    firstName: "Peyton",
+    aliases: ["Peyton Pixley", "Peyton"],
+    headshotUrl:
+      "https://ik.imagekit.io/7sage/Newsletter%20Files/IMG_0739.JPG?updatedAt=1780600557175&tr=c-maintain_ratio,w-1600,h-1600,dpr-1,fo-face,z-1",
+    bio: "Former WashU AO. 7Sage interview expert.",
+  },
 ];
 
 const TAG_FONT_BASE_PX = 9;
