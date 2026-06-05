@@ -512,6 +512,15 @@ const READER_PROFILES = [
       "https://ik.imagekit.io/7sage/Newsletter%20Files/IMG_0739.JPG?updatedAt=1780600557175&tr=c-maintain_ratio,w-1600,h-1600,dpr-1,fo-face,z-1",
     bio: "Former WashU AO. 7Sage interview expert.",
   },
+  {
+    fullName: "Andrea Noto",
+    firstName: "Andrea",
+    aliases: ["Andrea Noto", "Andrea"],
+    headshotUrl:
+      "https://ik.imagekit.io/7sage/Newsletter%20Files/Andrea%20Noto.jpeg",
+    bio:
+      "Former Assistant Director of Admissions & Diversity Initiatives at UCLA School of Law.",
+  },
 ];
 
 const TAG_FONT_BASE_PX = 9;
