@@ -641,6 +641,15 @@ button:disabled {
   -webkit-box-orient: vertical;
 }
 
+.tag-explanation-text {
+  display: inline;
+  width: auto;
+  overflow: visible;
+  white-space: nowrap;
+  line-height: 1.1;
+  padding-bottom: 0;
+}
+
 .tag-text.force-break,
 .reader-tag-text.force-break {
   display: flex;

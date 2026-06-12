@@ -582,6 +582,7 @@ const PRINT_CSS = `
   .tag-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
   .tag-pill { --tag-font-size: 9px; border: 1px solid #e0e6f2; border-radius: 999px; padding: 2px 6px; font-size: var(--tag-font-size); line-height: 1.18; font-weight: 600; text-align: center; display: flex; align-items: center; justify-content: center; position: relative; overflow: visible; color: #4b5563; }
   .tag-text { display: -webkit-box; width: 100%; overflow: hidden; line-height: 1.18; padding-bottom: 0.08em; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .tag-explanation-text { display: inline; width: auto; overflow: visible; white-space: nowrap; line-height: 1.1; padding-bottom: 0; }
   .tag-text.force-break, .reader-tag-text.force-break { display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.18; }
   .tag-pill.active-positive { background: #ecfdf3; border-color: #86efac; color: #166534; }
   .tag-pill.active-negative { background: #fef2f2; border-color: #fecaca; color: #7f1d1d; }
@@ -2134,7 +2135,7 @@ function renderTagExplanationItem(tag) {
   return `<article class="tag-explanation-item">
     <div class="tag-explanation-title">
       <span class="${className} tag-explanation-pill">
-        ${renderTagText(tag)}
+        ${renderTagText(tag, "tag-explanation-text")}
       </span>
     </div>
     <div class="tag-explanation-body">${escapeHtml(
