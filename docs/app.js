@@ -2055,8 +2055,11 @@ function renderReaderNotesBlock(text, label = "Notes", { showLabel = true } = {}
 function renderNextStepsCard(report) {
   const chairSummaryText = String(report.chairSummary || "").trim();
   const nextStepsText = String(report.manual.nextSteps || "").trim();
+  if (!chairSummaryText && !nextStepsText) {
+    return "";
+  }
   const cardTitle = chairSummaryText ? "7Sage Summary" : "Next Steps";
-  const bodyText = chairSummaryText || nextStepsText || "—";
+  const bodyText = chairSummaryText || nextStepsText;
   return `
     <article class="reader-card next-steps-card">
       <div class="reader-section-title">${escapeHtml(cardTitle)}</div>
