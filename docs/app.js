@@ -528,7 +528,7 @@ const READER_PROFILES = [
     headshotUrl:
       "https://ik.imagekit.io/7sage/Newsletter%20Files/image0.jpeg?tr=c-maintain_ratio,w-792,h-792,fo-face,z-1",
     bio:
-      "Former Assistant Dean for Admissions & Scholarships for University of Arkansas | Little Rock. Former Idaho College of Law AO.",
+      "Former Assistant Dean for Admissions & Scholarships for University of Arkansas | Little Rock.",
   },
 ];
 
