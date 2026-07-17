@@ -530,6 +530,15 @@ const READER_PROFILES = [
     bio:
       "Former Assistant Dean for Admissions & Scholarships for University of Arkansas | Little Rock.",
   },
+  {
+    fullName: "Selene Steelman",
+    firstName: "Selene",
+    aliases: ["Selene Steelman", "Selene"],
+    headshotUrl:
+      "https://ik.imagekit.io/7sage/Newsletter%20Files/ChatGPT%20Image%20Jul%2017,%202026,%2011_22_37%20AM.png",
+    bio:
+      "Former Cardozo AO. 7Sage Expert on NYC schools.",
+  },
 ];
 
 const TAG_FONT_BASE_PX = 9;
