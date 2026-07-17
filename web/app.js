@@ -650,7 +650,7 @@ const PRINT_CSS = `
   .takeaway-item:not(:last-child)::after { content: ""; position: absolute; top: 20%; bottom: 20%; right: -3px; width: var(--assessment-divider-width, 2px); background: #d8dee9; }
   .takeaway-title { font-family: "Fraunces", "Times New Roman", serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #475467; }
   .takeaway-softs-value { font-size: 12px; font-weight: 500; }
-  .takeaways-bands .band-row { font-size: 9px; gap: 0; padding: 3px 6px; grid-template-columns: 52px repeat(9, minmax(0, 1fr)); }
+  .takeaways-bands .band-name { font-size: 8px; }
   .takeaways-card { --assessment-divider-width: 2px; border: 2px solid #d8dee9; border-radius: 12px; padding: 8px 10px; display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 8px; flex: 1; min-height: 0; }
   .takeaways-card .takeaways-bands { width: 100%; border-top: var(--assessment-divider-width, 2px) solid #d8dee9; padding-top: 6px; }
   .fit-takeaways { display: flex; flex-direction: column; height: 100%; }
@@ -690,7 +690,18 @@ const PRINT_CSS = `
   .metric-title { margin: 0 0 6px; font-size: 20px; font-weight: 700; }
   .compact-stars { display: inline-flex; gap: 3px; justify-content: center; }
   .compact-stars .star { width: 14px; height: 14px; }
-  .band-row { display: grid; grid-template-columns: 72px repeat(9, minmax(0, 1fr)); align-items: center; gap: 0; padding: 5px 8px; font-size: 11px; position: relative; flex: 1 0 0; }
+  .band-plot { display: grid; gap: 3px; }
+  .band-plot-legend { font-size: 7px; color: #94a3b8; letter-spacing: 0.08em; text-transform: uppercase; text-align: right; }
+  .band-plot-row, .band-plot-axis { display: grid; grid-template-columns: 52px minmax(0, 1fr); align-items: center; gap: 6px; }
+  .band-plot-track { position: relative; height: 25px; display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); align-items: stretch; border-bottom: 1px solid #98a2b3; }
+  .band-plot-gridline { grid-row: 1; border-left: 1px solid #e2e8f0; }
+  .band-plot-gridline:last-of-type { border-right: 1px solid #e2e8f0; }
+  .band-plot-dot { grid-column: var(--band-column); grid-row: 1; align-self: start; justify-self: center; transform: translateY(calc(var(--reader-lane) * 7px)); width: 9px; height: 9px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #fff; font-size: 5px; line-height: 1; font-weight: 800; box-shadow: 0 0 0 1.5px #fff; z-index: 2; }
+  .band-plot-dot.reach { background: #db8a2c; }
+  .band-plot-dot.target { background: #3b7fc0; }
+  .band-plot-dot.safety { background: #3aa968; }
+  .band-plot-empty { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #98a2b3; font-size: 7px; }
+  .band-plot-axis > div { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); text-align: center; color: #667085; font-size: 6px; font-weight: 600; }
   .band-name { font-weight: 700; border-radius: 999px; text-align: center; padding: 2px 6px; margin-right: 6px; position: relative; z-index: 3; }
   .band-name.reach { background: #fff2df; color: #b45309; }
   .band-name.target { background: #e0f2fe; color: #0c4a6e; }
@@ -1896,26 +1907,37 @@ function renderCompactStars(starCount) {
   return `<span class="compact-stars">${stars}</span>`;
 }
 
-function renderBandRow(label, className, values) {
-  const rankedValues = values
-    .map((value) => BAND_ORDER.indexOf(value))
-    .filter((index) => index >= 0)
-    .sort((a, b) => a - b);
-  const minIndex = rankedValues.length ? rankedValues[0] : null;
-  const maxIndex = rankedValues.length ? rankedValues[rankedValues.length - 1] : null;
+function renderBandPlotRow(label, className, readers) {
+  const dots = readers.flatMap((reader, readerIndex) =>
+    (reader.bands[className] || []).map((value) => ({
+      value,
+      index: BAND_ORDER.indexOf(value),
+      readerIndex,
+      badgeLabel: reader.badgeLabel,
+      readerLabel: reader.label,
+    }))
+  ).filter((dot) => dot.index >= 0);
 
-  return `<div class="band-row row-${className}">
-    <div class="band-name ${className}" style="grid-column: 1; grid-row: 1;">${escapeHtml(label)}</div>
-    ${
-      minIndex !== null && maxIndex !== null
-        ? `<div class="band-range range-${className}" style="grid-column: ${minIndex + 2} / ${maxIndex + 3}; grid-row: 1;"></div>`
-        : ""
-    }
-    ${BAND_ORDER.map((value, idx) => {
-      const inRange =
-        minIndex !== null && maxIndex !== null && idx >= minIndex && idx <= maxIndex;
-      return `<div class="band-chip${inRange ? " in-range" : ""}" style="grid-column: ${idx + 2}; grid-row: 1;">${escapeHtml(value)}</div>`;
-    }).join("")}
+  return `<div class="band-plot-row row-${className}">
+    <div class="band-name ${className}">${escapeHtml(label)}</div>
+    <div class="band-plot-track">
+      ${BAND_ORDER.map((_, index) => `<span class="band-plot-gridline" style="grid-column:${index + 1}"></span>`).join("")}
+      ${dots.map((dot) => `<span class="band-plot-dot ${className}" style="--band-column:${dot.index + 1};--reader-lane:${dot.readerIndex}" title="${escapeHtml(dot.readerLabel)}: ${escapeHtml(BAND_LABELS[dot.value] || dot.value)}">${escapeHtml(dot.badgeLabel)}</span>`).join("")}
+      ${dots.length ? "" : '<span class="band-plot-empty">No submissions</span>'}
+    </div>
+  </div>`;
+}
+
+function renderBandPlot(readers) {
+  return `<div class="band-plot">
+    <div class="band-plot-legend">Reader recommendations</div>
+    ${renderBandPlotRow("Reach", "reach", readers)}
+    ${renderBandPlotRow("Target", "target", readers)}
+    ${renderBandPlotRow("Safety", "safety", readers)}
+    <div class="band-plot-axis" aria-hidden="true">
+      <span></span>
+      <div>${BAND_ORDER.map((value) => `<span>${escapeHtml(value)}</span>`).join("")}</div>
+    </div>
   </div>`;
 }
 
@@ -2280,9 +2302,7 @@ function renderStudentDocument(report) {
                 </div>
               </div>
               <div class="takeaways-bands">
-                ${renderBandRow("Reach", "reach", report.bands.reach)}
-                ${renderBandRow("Target", "target", report.bands.target)}
-                ${renderBandRow("Safety", "safety", report.bands.safety)}
+                ${renderBandPlot(report.readers)}
               </div>
             </div>
           </div>
