@@ -4,29 +4,40 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Committee Review PDF Generator</title>
-    <link rel="stylesheet" href="./styles.css?v=20260310h" />
+    <link rel="stylesheet" href="./styles.css?v=20260803l" />
   </head>
   <body>
     <main class="container">
       <div class="app-shell">
         <section class="panel control-panel">
           <div class="panel-heading">
-            <h2>Committee Review PDF Generator</h2>
+            <div class="brand-lockup">
+              <div class="brand-mark" aria-hidden="true">
+                <span></span><span></span><span></span>
+              </div>
+              <div>
+                <p class="panel-eyebrow">7Sage Review Studio</p>
+                <h2>Committee Review<br />PDF Generator</h2>
+                <p class="panel-subtitle">Turn committee ballots into polished, student-ready reports.</p>
+              </div>
+            </div>
             <span id="appVersion" class="app-version">v—</span>
           </div>
           <label class="field">
             <span class="field-head">
-              <span>CSV file</span>
+              <span>Upload committee export</span>
               <span class="field-help" tabindex="0" aria-label="CSV help">
                 <span class="field-help-icon">i</span>
                 <span class="field-help-panel">Upload the CSV exported from Coda with the required headers.</span>
               </span>
             </span>
+            <span class="upload-kicker">CSV only · one row per reader</span>
             <input id="csvFile" type="file" accept=".csv,text/csv" />
           </label>
 
           <p class="auto-run-note">
-            Upload once. The app auto-generates reports and downloads PDF(s) with no additional steps.
+            <span aria-hidden="true">✦</span>
+            Upload once and the app will validate and prepare every report for preview automatically.
           </p>
           <div id="progressWrap" class="progress-wrap" hidden>
             <div class="progress-meta">
@@ -38,9 +49,6 @@
             </div>
           </div>
           <div class="legacy-hidden" aria-hidden="true">
-            <select id="studentSelect" disabled>
-              <option>Upload CSV first</option>
-            </select>
             <select id="docTitleSelect" disabled>
               <option value="">Select document title</option>
               <option value="Application Autopsy">Application Autopsy</option>
@@ -60,22 +68,40 @@
             <p id="inputHint" class="input-hint"></p>
             <div class="actions">
               <button id="generateBtn" disabled>Generate Report</button>
-              <button id="downloadPdfBtn" disabled>Download PDF</button>
             </div>
           </div>
-          <p id="tagSourceStatus" class="tag-source-status">Tag source: loading...</p>
-
-          <p id="status" class="status">Waiting for CSV upload.</p>
+          <div class="system-status-row">
+            <p id="tagSourceStatus" class="tag-source-status">Tag source: loading...</p>
+            <p id="status" class="status">Waiting for CSV upload.</p>
+          </div>
           <div id="validation" class="validation"></div>
+          <p class="privacy-note">Processed locally in your browser. No application data is uploaded.</p>
         </section>
       </div>
-      <div id="previewRoot" class="preview-root preview-root-hidden" aria-hidden="true"></div>
+      <section id="previewPanel" class="preview-stage" hidden>
+        <div class="preview-stage-heading">
+          <div>
+            <p class="preview-eyebrow">Report preview</p>
+            <h2>Review before download</h2>
+          </div>
+          <div class="preview-actions">
+            <label class="preview-student-field">
+              <span>Student</span>
+              <select id="studentSelect" disabled>
+                <option>Upload CSV first</option>
+              </select>
+            </label>
+            <button id="downloadPdfBtn" class="download-preview-btn" disabled>Download PDF</button>
+          </div>
+        </div>
+        <div id="previewRoot" class="preview-root preview-root-hidden" aria-hidden="true"></div>
+      </section>
     </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="./version.js"></script>
-    <script src="./app.js?v=20260310i"></script>
+    <script src="./version.js?v=20260803l"></script>
+    <script src="./app.js?v=20260803l"></script>
   </body>
 </html>

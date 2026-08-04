@@ -1,0 +1,56 @@
+{
+  "cycle": "2025–2026 ranking snapshot",
+  "maxRank": 175,
+  "schools": [
+    {
+      "name": "UCLA",
+      "rank": 12,
+      "aliases": ["University of California—Los Angeles", "University of California-Los Angeles", "UCLA School of Law"]
+    },
+    {
+      "name": "Wake Forest",
+      "rank": 26,
+      "aliases": ["Wake Forest University", "Wake Forest University School of Law"]
+    },
+    {
+      "name": "Arizona State",
+      "rank": 45,
+      "aliases": ["Arizona State University", "Sandra Day O'Connor College of Law"]
+    },
+    {
+      "name": "Missouri",
+      "rank": 57,
+      "aliases": ["University of Missouri", "University of Missouri School of Law", "Mizzou"]
+    },
+    {
+      "name": "Arizona",
+      "rank": 59,
+      "aliases": ["University of Arizona", "James E. Rogers College of Law"]
+    },
+    {
+      "name": "Loyola Chicago",
+      "rank": 79,
+      "aliases": ["Loyola University—Chicago", "Loyola University-Chicago", "Loyola University Chicago"]
+    },
+    {
+      "name": "Oregon",
+      "rank": 94,
+      "aliases": ["University of Oregon", "University of Oregon School of Law"]
+    },
+    {
+      "name": "Stetson",
+      "rank": 99,
+      "aliases": ["Stetson University", "Stetson University College of Law"]
+    },
+    {
+      "name": "Campbell",
+      "rank": 134,
+      "aliases": ["Campbell University", "Campbell University School of Law"]
+    },
+    {
+      "name": "Vermont",
+      "rank": 163,
+      "aliases": ["Vermont Law School", "Vermont Law and Graduate School"]
+    }
+  ]
+}

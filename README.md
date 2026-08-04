@@ -11,8 +11,10 @@ This is a browser-only JavaScript app for your Coda CSV to printable PDF workflo
 - Converts rubric text to 1-5 scores and averages each category
 - Renders rounded SVG stars for the averaged categories
 - Displays all 40 tags with conditional activation styling
+- Places each selected tag's explanation immediately after the reader ballot that selected it
 - Lets users enter per-student metadata (LSAT, GPA, KJD, URM)
-- Supports one-click PDF download for the currently generated student
+- Generates an on-screen report preview before enabling PDF download
+- Lets users switch between students in a multi-student CSV and review each report before downloading
 - Keeps Print Current Student as a fallback
 
 ## Quick start
@@ -85,6 +87,20 @@ Optional:
 - `Safety`
 - `Notes`
 - `Anything Else?`
+
+## School recommendation plot
+
+Exports that include all three of these columns use the school-rank number line:
+
+- `Recommend a Reach`
+- `Recommend a Target`
+- `Recommend a Safety`
+
+Each of the three review rows must name one school in every recommendation column. School names are matched against the versioned `school-rankings.json` catalog; exported rank columns are intentionally ignored. If the recommendation columns are absent, the report continues to use the legacy `Reach`, `Target`, and `Safety` tier plot.
+
+When nearby school ranks are staggered above or below the number line, a category-colored connector marks the bubble's exact position on the shared baseline.
+
+Update both `web/school-rankings.json` and the published `docs/school-rankings.json` together when adding aliases or starting a new ranking cycle.
 
 ## Template key fields
 

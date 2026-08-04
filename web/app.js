@@ -66,6 +66,22 @@ const BAND_ALIAS_MAP = {
   "T100+": "T100+",
 };
 
+const SCHOOL_RECOMMENDATION_FIELDS = {
+  reach: "Recommend a Reach",
+  target: "Recommend a Target",
+  safety: "Recommend a Safety",
+};
+const SCHOOL_RANK_BREAKPOINTS = [3, 6, 14, 20, 30, 50, 75, 100];
+const SCHOOL_CATEGORY_LABELS = {
+  reach: "Reach",
+  target: "Target",
+  safety: "Safety",
+};
+let SCHOOL_RANKING_CYCLE = "";
+let SCHOOL_RANKING_MAX = 175;
+let SCHOOL_CATALOG = [];
+let SCHOOL_CATALOG_LOOKUP = new Map();
+
 const LOGO_SRC_PATH = new URL("./assets/7sage-logo.svg", window.location.href).href;
 let LOGO_DATA_URI = "";
 let logoDataUriPromise = null;
@@ -388,6 +404,66 @@ function validateTagDefinitions(definitions) {
 }
 
 setTagDefinitions(DEFAULT_TAG_DEFINITIONS);
+
+function normalizeSchoolKey(value) {
+  return String(value || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[’‘]/g, "'")
+    .replace(/[‐‑‒–—]/g, "-")
+    .replace(/&/g, " and ")
+    .replace(/[^a-zA-Z0-9]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+}
+
+function setSchoolCatalog(catalog) {
+  SCHOOL_RANKING_CYCLE = String(catalog.cycle || "").trim();
+  SCHOOL_RANKING_MAX = Math.max(
+    101,
+    Number(catalog.maxRank) || 175,
+    ...catalog.schools.map((school) => Number(school.rank) || 0)
+  );
+  SCHOOL_CATALOG = catalog.schools.map((school) => ({
+    name: String(school.name || "").trim(),
+    rank: Number(school.rank),
+    aliases: Array.isArray(school.aliases) ? school.aliases : [],
+  }));
+  SCHOOL_CATALOG_LOOKUP = new Map();
+  SCHOOL_CATALOG.forEach((school) => {
+    [school.name, ...school.aliases].forEach((name) => {
+      SCHOOL_CATALOG_LOOKUP.set(normalizeSchoolKey(name), school);
+    });
+  });
+}
+
+function validateSchoolCatalog(catalog) {
+  if (!catalog || typeof catalog !== "object" || !Array.isArray(catalog.schools)) {
+    return ["School ranking catalog must contain a schools array."];
+  }
+  const errors = [];
+  const aliasOwners = new Map();
+  catalog.schools.forEach((school, index) => {
+    const name = String(school?.name || "").trim();
+    const rank = Number(school?.rank);
+    if (!name) errors.push(`School row ${index + 1} is missing a name.`);
+    if (!Number.isFinite(rank) || rank < 1) {
+      errors.push(`${name || `School row ${index + 1}`} has an invalid rank.`);
+    }
+    [name, ...(Array.isArray(school?.aliases) ? school.aliases : [])].forEach((alias) => {
+      const key = normalizeSchoolKey(alias);
+      if (!key) return;
+      const existingOwner = aliasOwners.get(key);
+      if (existingOwner !== undefined && existingOwner !== index) {
+        errors.push(`Duplicate school alias "${alias}".`);
+      }
+      aliasOwners.set(key, index);
+    });
+  });
+  if (!String(catalog.cycle || "").trim()) errors.push("School catalog is missing its cycle.");
+  return errors;
+}
 const READER_PROFILES = [
   {
     fullName: "Tajira McCoy",
@@ -542,6 +618,7 @@ const READER_PROFILES = [
 ];
 
 const TAG_FONT_BASE_PX = 9;
+const PDF_RENDER_SCALE = 4;
 
 const state = {
   fileName: "",
@@ -556,6 +633,8 @@ const state = {
   errors: [],
   tagCatalogLoaded: false,
   tagCatalogWarning: "",
+  schoolCatalogLoaded: false,
+  schoolCatalogWarning: "",
 };
 
 let fitResizeScheduled = false;
@@ -607,6 +686,8 @@ const PRINT_CSS = `
   .reader-card.reader-slot-1 { border-color: #d8dee9; --reader-top-bg: #f9f9f9; }
   .reader-card.reader-slot-2 { border-color: #d8dee9; --reader-top-bg: #f9f9f9; }
   .reader-card.reader-slot-3 { border-color: #d8dee9; --reader-top-bg: #f9f9f9; }
+  .reader-tag-explanation-card { gap: 7px; border-width: 1px; background: #fff; }
+  .reader-tag-explanation-title { display: flex; justify-content: flex-start; }
   .page-continue-note { position: absolute; right: 8px; bottom: 12px; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; opacity: 0; }
   .page.has-continue .page-continue-note { opacity: 1; }
   .reader-title { margin: 0 0 8px; font-size: 14px; }
@@ -650,7 +731,7 @@ const PRINT_CSS = `
   .takeaway-item:not(:last-child)::after { content: ""; position: absolute; top: 20%; bottom: 20%; right: -3px; width: var(--assessment-divider-width, 2px); background: #d8dee9; }
   .takeaway-title { font-family: "Fraunces", "Times New Roman", serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #475467; }
   .takeaway-softs-value { font-size: 12px; font-weight: 500; }
-  .takeaways-bands .band-row { font-size: 9px; gap: 0; padding: 3px 6px; grid-template-columns: 52px repeat(9, minmax(0, 1fr)); }
+  .takeaways-bands .band-name { font-size: 8px; }
   .takeaways-card { --assessment-divider-width: 2px; border: 2px solid #d8dee9; border-radius: 12px; padding: 8px 10px; display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 8px; flex: 1; min-height: 0; }
   .takeaways-card .takeaways-bands { width: 100%; border-top: var(--assessment-divider-width, 2px) solid #d8dee9; padding-top: 6px; }
   .fit-takeaways { display: flex; flex-direction: column; height: 100%; }
@@ -690,7 +771,51 @@ const PRINT_CSS = `
   .metric-title { margin: 0 0 6px; font-size: 20px; font-weight: 700; }
   .compact-stars { display: inline-flex; gap: 3px; justify-content: center; }
   .compact-stars .star { width: 14px; height: 14px; }
-  .band-row { display: grid; grid-template-columns: 72px repeat(9, minmax(0, 1fr)); align-items: center; gap: 0; padding: 5px 8px; font-size: 11px; position: relative; flex: 1 0 0; }
+  .band-plot { display: grid; gap: 3px; }
+  .band-plot-legend { font-size: 7px; color: #94a3b8; letter-spacing: 0.08em; text-transform: uppercase; text-align: right; }
+  .band-plot-row, .band-plot-axis { display: grid; grid-template-columns: 52px minmax(0, 1fr); align-items: center; gap: 6px; }
+  .band-plot-track { position: relative; height: 25px; display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); align-items: stretch; border-bottom: 1px solid #98a2b3; }
+  .band-plot-gridline { grid-row: 1; border-left: 1px solid #e2e8f0; }
+  .band-plot-gridline:last-of-type { border-right: 1px solid #e2e8f0; }
+  .band-plot-dot { grid-column: var(--band-column); grid-row: 1; align-self: start; justify-self: center; transform: translateY(calc(var(--reader-lane) * 7px)); width: 9px; height: 9px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: #fff; font-size: 5px; line-height: 1; font-weight: 800; box-shadow: 0 0 0 1.5px #fff; z-index: 2; }
+  .band-plot-dot.reach { background: #db8a2c; }
+  .band-plot-dot.target { background: #3b7fc0; }
+  .band-plot-dot.safety { background: #3aa968; }
+  .band-plot-empty { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #98a2b3; font-size: 7px; }
+  .band-plot-axis > div { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); text-align: center; color: #667085; font-size: 6px; font-weight: 600; }
+  .school-rank-plot { display: grid; gap: 2px; }
+  .school-rank-lists { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; padding-bottom: 3px; border-bottom: 1px solid #e2e8f0; }
+  .school-rank-list-title { display: flex; align-items: center; justify-content: center; gap: 3px; margin-bottom: 2px; font-size: 6px; font-weight: 700; text-transform: uppercase; color: #475467; }
+  .school-rank-list-title i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .school-rank-list.reach .school-rank-list-title { color: #b45309; }
+  .school-rank-list.target .school-rank-list-title { color: #0c4a6e; }
+  .school-rank-list.safety .school-rank-list-title { color: #14532d; }
+  .school-rank-list-items { display: grid; gap: 1px; }
+  .school-rank-list-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 2px; min-width: 0; font-size: 5.5px; line-height: 1.05; }
+  .school-rank-list-item strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .school-rank-list-item small { color: #667085; font-size: 5px; }
+  .school-rank-track { height: 58px; margin: 0 17px; position: relative; }
+  .school-rank-gridline { position: absolute; top: 4px; bottom: 4px; width: 1px; background: #e2e8f0; }
+  .school-rank-baseline { position: absolute; left: 0; right: 0; top: 29px; height: 1px; background: #667085; }
+  .school-range-span { position: absolute; top: 28px; height: 3px; border-radius: 999px; opacity: 0.65; }
+  .school-range-span.reach { background: #db8a2c; }
+  .school-range-span.target { background: #3b7fc0; }
+  .school-range-span.safety { background: #3aa968; }
+  .school-range-span.point-range { min-width: 4px; transform: translateX(-2px); opacity: 0.85; }
+  .school-rank-connector { position: absolute; width: 3px; transform: translateX(-1.5px); border-radius: 999px; opacity: 0.75; z-index: 3; }
+  .school-rank-connector.reach { background: #db8a2c; }
+  .school-rank-connector.target { background: #3b7fc0; }
+  .school-rank-connector.safety { background: #3aa968; }
+  .school-rank-dot { position: absolute; top: calc(22px + var(--dot-offset, 0px)); transform: translateX(-50%); min-width: 13px; height: 13px; padding: 0 2px; border: 0; border-radius: 999px; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 5px; line-height: 1; font-weight: 800; z-index: 4; }
+  .school-rank-dot.digits-3 { min-width: 17px; }
+  .school-rank-dot.reach { background: #db8a2c; }
+  .school-rank-dot.target { background: #3b7fc0; }
+  .school-rank-dot.safety { background: #3aa968; }
+  .school-rank-axis { height: 8px; margin: 0 17px; position: relative; color: #667085; font-size: 5.5px; font-weight: 600; }
+  .school-rank-axis span { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+  .school-rank-axis span:first-child { transform: none; }
+  .school-rank-axis span:last-child { transform: translateX(-100%); }
+  .school-rank-note { text-align: center; color: #98a2b3; font-size: 5.5px; letter-spacing: 0.02em; }
   .band-name { font-weight: 700; border-radius: 999px; text-align: center; padding: 2px 6px; margin-right: 6px; position: relative; z-index: 3; }
   .band-name.reach { background: #fff2df; color: #b45309; }
   .band-name.target { background: #e0f2fe; color: #0c4a6e; }
@@ -715,7 +840,12 @@ const PRINT_CSS = `
   .reader-detail-page .reader-col { padding: 0; position: relative; display: grid; grid-template-columns: 1fr; align-items: start; border: 0; border-radius: 0; }
   .reader-detail-page .reader-col.reader-top-card { background: var(--reader-top-bg, #f9f9f9); border-radius: 12px; padding: 10px; }
   .reader-col.ratings, .reader-col.bands { display: grid; grid-template-columns: 1fr; grid-auto-rows: minmax(0, 1fr); gap: 5px; min-height: 0; }
-  .reader-col.tags { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 5px; align-content: start; min-height: 0; }
+  .reader-col.tags { display: grid; gap: 6px; align-content: start; min-height: 0; }
+  .reader-tag-group { display: grid; gap: 3px; }
+  .reader-tag-group-label, .reader-tag-explanation-group-label { font-size: 6px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #667085; }
+  .reader-tag-group-label.positive, .reader-tag-explanation-group-label.positive { color: #166534; }
+  .reader-tag-group-label.negative, .reader-tag-explanation-group-label.negative { color: #991b1b; }
+  .reader-tag-items { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; }
   .reader-rating-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   .reader-rating-label { font-size: 7px; font-weight: 600; text-transform: none; letter-spacing: 0; color: #475467; min-width: 0; flex: 1; line-height: 1.2; }
   .reader-rating-pill { border: 1px solid #e2e8f0; border-radius: 999px; padding: 1px 5px; font-size: 7px; font-weight: 600; line-height: 1.18; background: #f8fafc; color: #334155; white-space: nowrap; }
@@ -735,6 +865,9 @@ const PRINT_CSS = `
   .reader-band-values-pill.target { background: #e0f2fe; border-color: #7dd3fc; color: #0c4a6e; }
   .reader-band-values-pill.safety { background: #dcfce7; border-color: #86efac; color: #14532d; }
   .reader-band-values-pill.empty { background: #fff; border-color: #d8dee9; color: #98a2b3; }
+  .reader-school-value { display: flex; align-items: baseline; justify-content: flex-end; gap: 3px; min-width: 0; margin-left: auto; font-size: 6.5px; white-space: nowrap; }
+  .reader-school-value strong { overflow: hidden; text-overflow: ellipsis; }
+  .reader-school-value small { color: #667085; font-size: 6px; flex: 0 0 auto; }
   .reader-notes { border: 0; border-radius: 0; padding: 0; font-size: 11px; line-height: 1.35; height: 100%; overflow: hidden; }
   .reader-notes .label { font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 2px; color: #475467; }
   .reader-notes-body { margin: 0; white-space: pre-wrap; }
@@ -863,6 +996,9 @@ const PRINT_FIT_SCRIPT = `
     }
   };
   cardTemplates.forEach((template) => {
+    if (template.classList.contains("reader-ballot-card") && container.children.length) {
+      addPage();
+    }
     const card = template.cloneNode(true);
     const notesBody = card.querySelector(".reader-notes-body");
     if (notesBody && !notesBody.dataset.fullText) {
@@ -1093,6 +1229,7 @@ const appVersionEl = document.getElementById("appVersion");
 const downloadPdfBtn = document.getElementById("downloadPdfBtn");
 const statusEl = document.getElementById("status");
 const validationEl = document.getElementById("validation");
+const previewPanel = document.getElementById("previewPanel");
 const previewRoot = document.getElementById("previewRoot");
 const progressWrapEl = document.getElementById("progressWrap");
 const progressLabelEl = document.getElementById("progressLabel");
@@ -1113,7 +1250,7 @@ window.addEventListener("resize", onWindowResize);
 
 initializeAppVersion();
 void ensureLogoDataUri();
-void initializeTagCatalog();
+void Promise.all([initializeTagCatalog(), initializeSchoolCatalog()]);
 
 function setStatus(message) {
   statusEl.textContent = message;
@@ -1262,6 +1399,9 @@ function showValidationMessages() {
   if (state.tagCatalogWarning) {
     combinedWarnings.unshift(state.tagCatalogWarning);
   }
+  if (state.schoolCatalogWarning) {
+    combinedWarnings.unshift(state.schoolCatalogWarning);
+  }
   if (state.errors.length) {
     blocks.push(
       `<div class="error"><strong>Errors:</strong> ${escapeHtml(
@@ -1287,6 +1427,7 @@ function syncGenerateButtonState() {
     : false;
   generateBtn.disabled =
     !state.tagCatalogLoaded ||
+    !state.schoolCatalogLoaded ||
     state.errors.length > 0 ||
     state.availableStudents.length === 0 ||
     !hasSelectedStudent ||
@@ -1347,6 +1488,29 @@ async function initializeTagCatalog() {
   showValidationMessages();
 }
 
+async function initializeSchoolCatalog() {
+  state.schoolCatalogLoaded = false;
+  state.schoolCatalogWarning = "";
+  syncGenerateButtonState();
+  try {
+    const response = await fetch(`./school-rankings.json?ts=${Date.now()}`, {
+      cache: "no-store",
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const catalog = await response.json();
+    const errors = validateSchoolCatalog(catalog);
+    if (errors.length) throw new Error(errors.join(" | "));
+    setSchoolCatalog(catalog);
+    state.schoolCatalogLoaded = true;
+  } catch (error) {
+    state.schoolCatalogWarning = `Could not load school ranking catalog: ${
+      error?.message || String(error)
+    }`;
+  }
+  syncGenerateButtonState();
+  showValidationMessages();
+}
+
 function clearGeneratedResults({ resetSelector } = { resetSelector: false }) {
   state.reports = [];
   state.currentReport = null;
@@ -1354,6 +1518,9 @@ function clearGeneratedResults({ resetSelector } = { resetSelector: false }) {
   state.errors = [];
   previewRoot.innerHTML =
     '<p class="placeholder">Upload a CSV and generate documents to preview output.</p>';
+  previewRoot.classList.add("preview-root-hidden");
+  previewRoot.setAttribute("aria-hidden", "true");
+  if (previewPanel) previewPanel.hidden = true;
   if (resetSelector) {
     studentSelect.disabled = true;
     studentSelect.innerHTML = "<option>Upload CSV first</option>";
@@ -1672,6 +1839,59 @@ function computeSoftsDisplay(rows, fileName) {
   return formatTierLabel(average.toFixed(1));
 }
 
+function getSchoolRecommendationMode(rows) {
+  const fields = Object.values(SCHOOL_RECOMMENDATION_FIELDS);
+  const hasAllColumns =
+    rows.length > 0 &&
+    fields.every((field) =>
+      Object.prototype.hasOwnProperty.call(rows[0], field)
+    );
+  return hasAllColumns ? "schools" : "legacy";
+}
+
+function findSchoolInCatalog(value) {
+  return SCHOOL_CATALOG_LOOKUP.get(normalizeSchoolKey(value)) || null;
+}
+
+function validateStudentSchoolRecommendations(fileName, rows) {
+  if (getSchoolRecommendationMode(rows) !== "schools") return [];
+  const errors = [];
+  rows.forEach((row) => {
+    const reader = String(row.Reviewer || "Unknown reader").trim();
+    Object.entries(SCHOOL_RECOMMENDATION_FIELDS).forEach(([category, field]) => {
+      const supplied = String(row[field] || "").trim();
+      if (!supplied) {
+        errors.push(`${fileName}: ${reader} is missing ${SCHOOL_CATEGORY_LABELS[category]}.`);
+        return;
+      }
+      const school = findSchoolInCatalog(supplied);
+      if (!school) {
+        errors.push(
+          `${fileName}: ${reader} has unknown ${SCHOOL_CATEGORY_LABELS[category]} school "${supplied}".`
+        );
+      } else if (!Number.isFinite(school.rank)) {
+        errors.push(
+          `${fileName}: ${reader}'s ${SCHOOL_CATEGORY_LABELS[category]} school "${supplied}" has no plottable rank.`
+        );
+      }
+    });
+  });
+  return errors;
+}
+
+function resolveReaderSchoolRecommendations(row) {
+  return Object.fromEntries(
+    Object.entries(SCHOOL_RECOMMENDATION_FIELDS).map(([category, field]) => {
+      const supplied = String(row[field] || "").trim();
+      const school = findSchoolInCatalog(supplied);
+      return [
+        category,
+        school ? { name: school.name, rank: school.rank, supplied } : null,
+      ];
+    })
+  );
+}
+
 function uniqueNonEmpty(values) {
   return [...new Set(values.map((v) => String(v || "").trim()).filter(Boolean))];
 }
@@ -1684,6 +1904,7 @@ function buildStudentReport(fileName, rows, manual) {
     contribute: [],
     know: [],
   };
+  const recommendationMode = getSchoolRecommendationMode(rows);
   const slottedRows = assignReaderSlots(rows, fileName);
   const labeledReaders = slottedRows.map(({ row, badgeLabel, isChair }) => {
     const rawTags = parseTags(row.Tags);
@@ -1744,6 +1965,10 @@ function buildStudentReport(fileName, rows, manual) {
         target: parseBandValues(row.Target, fileName, "Target"),
         safety: parseBandValues(row.Safety, fileName, "Safety"),
       },
+      schoolRecommendations:
+        recommendationMode === "schools"
+          ? resolveReaderSchoolRecommendations(row)
+          : null,
       softs: (() => {
         const softValue = mapSoftsValue(row.Softs, fileName);
         return softValue ? formatTierLabel(softValue) : "—";
@@ -1776,6 +2001,9 @@ function buildStudentReport(fileName, rows, manual) {
     fileName,
     manual,
     readers,
+    recommendationMode,
+    schoolRankingCycle:
+      recommendationMode === "schools" ? SCHOOL_RANKING_CYCLE : "",
     summaryStars: {
       whyLaw: computeStarsFromRatings(summaryRatings.whyLaw),
       thrive: computeStarsFromRatings(summaryRatings.thrive),
@@ -1855,10 +2083,10 @@ function renderTagBadges(readerLabels) {
 function renderTagText(tagName, className = "tag-text") {
   const normalized = normalizeTagKey(tagName);
   if (normalized === "show more openness") {
-    return `<span class="${className} force-break"><span>Show More</span><span>Openness</span></span>`;
+    return `<span class="${className} force-break"><span>Show More</span> <span>Openness</span></span>`;
   }
   if (normalized === "resume needs polish") {
-    return `<span class="${className} force-break"><span>Resume Needs</span><span>Polish</span></span>`;
+    return `<span class="${className} force-break"><span>Resume Needs</span> <span>Polish</span></span>`;
   }
   return `<span class="${className}">${escapeHtml(tagName)}</span>`;
 }
@@ -1927,6 +2155,146 @@ function renderBandPlot(readers) {
       <span></span>
       <div>${BAND_ORDER.map((value) => `<span>${escapeHtml(value)}</span>`).join("")}</div>
     </div>
+  </div>`;
+}
+
+function rankToSchoolPlotPercent(
+  rank,
+  scalePoints = [...SCHOOL_RANK_BREAKPOINTS, SCHOOL_RANKING_MAX],
+  segmentWeights = scalePoints.slice(1).map(() => 1)
+) {
+  const numericRank = Math.max(1, Math.min(Number(rank), SCHOOL_RANKING_MAX));
+  const points = scalePoints;
+  const totalWeight = segmentWeights.reduce((sum, weight) => sum + weight, 0) || 1;
+  if (numericRank <= points[0]) return 0;
+  for (let index = 0; index < points.length - 1; index += 1) {
+    const start = points[index];
+    const end = points[index + 1];
+    if (numericRank <= end) {
+      const within = (numericRank - start) / (end - start);
+      const priorWeight = segmentWeights
+        .slice(0, index)
+        .reduce((sum, weight) => sum + weight, 0);
+      return ((priorWeight + within * segmentWeights[index]) / totalWeight) * 100;
+    }
+  }
+  return 100;
+}
+
+function getSchoolPlotScale(ranks) {
+  const points = [...SCHOOL_RANK_BREAKPOINTS, SCHOOL_RANKING_MAX];
+  const lowestRank = Math.min(...ranks);
+  const highestRank = Math.max(...ranks);
+  let firstIndex = Math.max(
+    0,
+    points.findLastIndex((point) => point <= lowestRank)
+  );
+  let lastIndex = points.findIndex((point) => point >= highestRank);
+  if (lastIndex < 0) lastIndex = points.length - 1;
+  if (firstIndex === lastIndex) {
+    if (lastIndex < points.length - 1) lastIndex += 1;
+    else firstIndex = Math.max(0, firstIndex - 1);
+  }
+  return points.slice(firstIndex, lastIndex + 1);
+}
+
+function getSchoolPlotSegmentWeights(scalePoints, ranks) {
+  return scalePoints.slice(0, -1).map((start, index) => {
+    const end = scalePoints[index + 1];
+    const count = ranks.filter((rank) => {
+      const numericRank = Number(rank);
+      return index === 0
+        ? numericRank >= start && numericRank <= end
+        : numericRank > start && numericRank <= end;
+    }).length;
+    return Math.max(1, count);
+  });
+}
+
+function assignSchoolDotOffsets(items) {
+  const sorted = [...items].sort((a, b) => a.pct - b.pct);
+  let cluster = [];
+  const flushCluster = () => {
+    const offsets = cluster.length === 1
+      ? [0]
+      : [-10, 10, -20, 20, 0, -15, 15, -5, 5];
+    cluster.forEach((item, index) => {
+      item.dotOffset = offsets[index] ?? offsets[index % offsets.length];
+    });
+    cluster = [];
+  };
+  sorted.forEach((item) => {
+    const previous = cluster[cluster.length - 1];
+    if (previous && item.pct - previous.pct > 5) flushCluster();
+    cluster.push(item);
+  });
+  flushCluster();
+  return sorted;
+}
+
+function renderSchoolRecommendationPlot(readers, cycle) {
+  const categories = ["reach", "target", "safety"];
+  const recommendations = readers.flatMap((reader) =>
+    categories.map((category) => ({
+      ...reader.schoolRecommendations?.[category],
+      category,
+      badgeLabel: reader.badgeLabel,
+      readerLabel: reader.label,
+    }))
+  );
+  const scalePoints = getSchoolPlotScale(recommendations.map((item) => item.rank));
+  const segmentWeights = getSchoolPlotSegmentWeights(
+    scalePoints,
+    recommendations.map((item) => item.rank)
+  );
+  const items = assignSchoolDotOffsets(recommendations.map((item) => ({
+    ...item,
+    pct: rankToSchoolPlotPercent(item.rank, scalePoints, segmentWeights),
+  })));
+  const spans = categories.map((category) => {
+    const categoryItems = items.filter((item) => item.category === category);
+    const positions = categoryItems.map((item) => item.pct);
+    const min = Math.min(...positions);
+    const max = Math.max(...positions);
+    return {
+      category,
+      left: min,
+      width: Math.max(0.8, max - min),
+      isPoint: Math.abs(max - min) < 0.01,
+    };
+  });
+  const ticks = scalePoints.map((rank) => ({
+    label: rank === SCHOOL_RANKING_MAX ? "T100+" : `T${rank}`,
+    pct: rankToSchoolPlotPercent(rank, scalePoints, segmentWeights),
+  }));
+
+  return `<div class="school-rank-plot">
+    <div class="school-rank-lists">
+      ${categories.map((category) => {
+        const categoryItems = items
+          .filter((item) => item.category === category)
+          .sort((a, b) => a.rank - b.rank);
+        return `<div class="school-rank-list ${category}">
+          <div class="school-rank-list-title"><i></i>${SCHOOL_CATEGORY_LABELS[category]}</div>
+          <div class="school-rank-list-items">
+            ${categoryItems.map((item) => `<span class="school-rank-list-item">
+              <strong>${escapeHtml(item.name)}</strong><small>#${item.rank}</small>
+            </span>`).join("")}
+          </div>
+        </div>`;
+      }).join("")}
+    </div>
+    <div class="school-rank-track">
+      ${ticks.map((tick) => `<span class="school-rank-gridline" style="left:${tick.pct}%"></span>`).join("")}
+      <span class="school-rank-baseline"></span>
+      ${spans.map((span, index) => `<span class="school-range-span ${span.category}${span.isPoint ? " point-range" : ""}" style="left:${span.left}%;width:${span.width}%;--range-lane:${index}"></span>`).join("")}
+      ${items.filter((item) => item.dotOffset).map((item) => `<span class="school-rank-connector ${item.category}" style="left:${item.pct}%;top:${29 + Math.min(0, item.dotOffset)}px;height:${Math.abs(item.dotOffset)}px"></span>`).join("")}
+      ${items.map((item) => `<span class="school-rank-dot ${item.category} digits-${String(item.rank).length}" style="left:${item.pct}%;--dot-offset:${item.dotOffset}px" title="${SCHOOL_CATEGORY_LABELS[item.category]} · ${escapeHtml(item.name)} #${item.rank}">${item.rank}</span>`).join("")}
+    </div>
+    <div class="school-rank-axis">
+      ${ticks.map((tick) => `<span style="left:${tick.pct}%">${tick.label}</span>`).join("")}
+    </div>
+    <div class="school-rank-note">Actual school rank on tier-compressed axis · ${escapeHtml(cycle)}</div>
   </div>`;
 }
 
@@ -2024,6 +2392,16 @@ function renderReaderBandRow(label, className, values) {
   </div>`;
 }
 
+function renderReaderSchoolRow(label, className, school) {
+  return `<div class="reader-band-row reader-school-row">
+    <span class="reader-band-label-pill ${className}">${escapeHtml(label)}</span>
+    <span class="reader-school-value ${className}">
+      <strong>${escapeHtml(school?.name || "—")}</strong>
+      ${school ? `<small>#${school.rank}</small>` : ""}
+    </span>
+  </div>`;
+}
+
 function renderReaderSoftsRow(value) {
   const display = value && value !== "—" ? value : "—";
   return `<div class="reader-band-row">
@@ -2037,19 +2415,40 @@ function renderReaderTags(tags) {
   if (!visibleTags.length) {
     return `<div class="reader-tag-empty">—</div>`;
   }
-  return visibleTags
-    .map((tag) => {
-      const polarity = TAG_POLARITY_MAP.get(tag);
-      const className =
-        polarity === "positive"
-          ? "reader-tag-pill active-positive"
-          : polarity === "negative"
-            ? "reader-tag-pill active-negative"
-            : "reader-tag-pill inactive";
-      return `<div class="${className}">${renderTagText(
-        tag,
-        "reader-tag-text"
-      )}</div>`;
+  return [
+    { polarity: "positive", label: "Positive" },
+    { polarity: "negative", label: "Negative" },
+  ]
+    .map(({ polarity, label }) => {
+      const groupTags = visibleTags.filter((tag) => TAG_POLARITY_MAP.get(tag) === polarity);
+      if (!groupTags.length) return "";
+      return `<div class="reader-tag-group ${polarity}">
+        <div class="reader-tag-group-label ${polarity}">${label}</div>
+        <div class="reader-tag-items">
+          ${groupTags.map((tag) => `<div class="reader-tag-pill active-${polarity}">${renderTagText(tag, "reader-tag-text")}</div>`).join("")}
+        </div>
+      </div>`;
+    })
+    .join("");
+}
+
+function renderReaderTagExplanationCards(reader) {
+  const visibleTags = reader.tags.filter((tag) => !HIDDEN_TAG_NAMES.has(tag));
+  return [
+    { polarity: "positive", label: "Positive" },
+    { polarity: "negative", label: "Negative" },
+  ]
+    .flatMap(({ polarity, label }) => {
+      const groupTags = visibleTags.filter((tag) => TAG_POLARITY_MAP.get(tag) === polarity);
+      return groupTags.map((tag, index) => `<article class="reader-card reader-tag-explanation-card ${polarity}">
+          ${index === 0 ? `<div class="reader-tag-explanation-group-label ${polarity}">${label} tag explanations</div>` : ""}
+          <div class="reader-tag-explanation-title">
+            <span class="tag-pill active-${polarity} tag-explanation-pill">${renderTagText(tag, "tag-explanation-text")}</span>
+          </div>
+          <div class="reader-notes">
+            <div class="reader-notes-body">${escapeHtml(TAG_DESCRIPTION_MAP.get(tag) || "Description coming soon.")}</div>
+          </div>
+        </article>`);
     })
     .join("");
 }
@@ -2088,11 +2487,11 @@ function renderNextStepsCard(report) {
   `;
 }
 
-function renderReaderCard(reader) {
+function renderReaderCard(reader, recommendationMode = "legacy") {
   const notesText = getReaderNotesText(reader);
   const slotClass = getReaderSlotClass(reader.badgeLabel);
   return `
-    <article class="reader-card${slotClass ? ` ${slotClass}` : ""}">
+    <article class="reader-card reader-ballot-card${slotClass ? ` ${slotClass}` : ""}">
       <div class="reader-section-title">
         <span>${escapeHtml(reader.label)}</span>
       </div>
@@ -2116,9 +2515,15 @@ function renderReaderCard(reader) {
           )}
         </div>
         <div class="reader-col bands reader-top-card">
-          ${renderReaderBandRow("Reach", "reach", reader.bands.reach)}
-          ${renderReaderBandRow("Target", "target", reader.bands.target)}
-          ${renderReaderBandRow("Safety", "safety", reader.bands.safety)}
+          ${
+            recommendationMode === "schools"
+              ? `${renderReaderSchoolRow("Reach", "reach", reader.schoolRecommendations.reach)}
+                 ${renderReaderSchoolRow("Target", "target", reader.schoolRecommendations.target)}
+                 ${renderReaderSchoolRow("Safety", "safety", reader.schoolRecommendations.safety)}`
+              : `${renderReaderBandRow("Reach", "reach", reader.bands.reach)}
+                 ${renderReaderBandRow("Target", "target", reader.bands.target)}
+                 ${renderReaderBandRow("Safety", "safety", reader.bands.safety)}`
+          }
           ${renderReaderSoftsRow(reader.softs)}
         </div>
         <div class="reader-col tags reader-top-card">
@@ -2133,7 +2538,7 @@ function renderReaderCard(reader) {
 function renderReaderPages(report) {
   return `
     <div class="reader-cards-source" data-reader-source>
-      ${report.readers.map((reader) => renderReaderCard(reader)).join("")}
+      ${report.readers.map((reader) => `${renderReaderCard(reader, report.recommendationMode)}${renderReaderTagExplanationCards(reader)}`).join("")}
       ${renderNextStepsCard(report)}
     </div>
   `;
@@ -2291,7 +2696,14 @@ function renderStudentDocument(report) {
                 </div>
               </div>
               <div class="takeaways-bands">
-                ${renderBandPlot(report.readers)}
+                ${
+                  report.recommendationMode === "schools"
+                    ? renderSchoolRecommendationPlot(
+                        report.readers,
+                        report.schoolRankingCycle
+                      )
+                    : renderBandPlot(report.readers)
+                }
               </div>
             </div>
           </div>
@@ -2312,7 +2724,6 @@ function renderStudentDocument(report) {
     </section>
 
     ${renderReaderPages(report)}
-    ${renderTagExplanationPages(report)}
   `;
 }
 
@@ -2413,6 +2824,9 @@ function renderPreviewFromCurrent() {
       '<p class="placeholder">No document available. Generate documents first.</p>';
     return;
   }
+  if (previewPanel) previewPanel.hidden = false;
+  previewRoot.classList.remove("preview-root-hidden");
+  previewRoot.setAttribute("aria-hidden", "false");
   previewRoot.innerHTML = `<div class="doc-shell">${renderStudentDocument(report)}</div>`;
   fitAllSummarySections(previewRoot);
   paginateReaderCards(previewRoot);
@@ -2566,6 +2980,9 @@ function paginateReaderCards(root = document) {
   };
 
   cardTemplates.forEach((template) => {
+    if (template.classList.contains("reader-ballot-card") && container.children.length) {
+      addPage();
+    }
     const card = template.cloneNode(true);
     const notesBody = card.querySelector(".reader-notes-body");
     if (notesBody && !notesBody.dataset.fullText) {
@@ -2846,7 +3263,7 @@ async function onCsvSelected(event) {
 
   if (!state.errors.length && state.availableStudents.length) {
     setProgress("Generating reports...", 60);
-    await autoGenerateAndDownloadReports();
+    await autoGenerateReportPreviews();
     return;
   }
 
@@ -2857,6 +3274,12 @@ function onGenerateDocuments() {
   clearGeneratedResults();
   if (!state.tagCatalogLoaded) {
     state.errors = ["Tag catalog is still loading. Try again in a moment."];
+    setStatus("Generation blocked.");
+    showValidationMessages();
+    return;
+  }
+  if (!state.schoolCatalogLoaded) {
+    state.errors = ["School ranking catalog is still loading or unavailable."];
     setStatus("Generation blocked.");
     showValidationMessages();
     return;
@@ -2888,6 +3311,16 @@ function onGenerateDocuments() {
   if (rows.length !== 3) {
     state.errors = [`${selectedFile} has ${rows.length} review(s); requires exactly 3.`];
     setStatus("Generation blocked.");
+    showValidationMessages();
+    return;
+  }
+  const recommendationErrors = validateStudentSchoolRecommendations(
+    selectedFile,
+    rows
+  );
+  if (recommendationErrors.length) {
+    state.errors = recommendationErrors;
+    setStatus(`Generation blocked for ${selectedFile}.`);
     showValidationMessages();
     return;
   }
@@ -2923,14 +3356,12 @@ function onGenerateDocuments() {
 
 function onStudentSelectionChange() {
   syncManualFormFromSelection();
-  state.currentReport = null;
-  state.reports = [];
-  downloadPdfBtn.disabled = true;
-  previewRoot.innerHTML =
-    '<p class="placeholder">Update metadata as needed, then click Generate Report.</p>';
+  if (getSelectedFile()) {
+    onGenerateDocuments();
+  }
 }
 
-async function autoGenerateAndDownloadReports() {
+async function autoGenerateReportPreviews() {
   if (!state.availableStudents.length) {
     hideProgress();
     return;
@@ -2939,6 +3370,16 @@ async function autoGenerateAndDownloadReports() {
     await initializeTagCatalog();
   }
   if (!state.tagCatalogLoaded) {
+    hideProgress();
+    return;
+  }
+  if (!state.schoolCatalogLoaded) {
+    await initializeSchoolCatalog();
+  }
+  if (!state.schoolCatalogLoaded) {
+    state.errors = ["School ranking catalog could not be loaded."];
+    setStatus("Generation blocked.");
+    showValidationMessages();
     hideProgress();
     return;
   }
@@ -2958,12 +3399,14 @@ async function autoGenerateAndDownloadReports() {
 
   const skipped = state.availableStudents.filter((fileName) => !candidates.includes(fileName));
   const generated = [];
+  const generatedReports = [];
   const failures = [];
+  const failureMessages = [];
 
   for (let i = 0; i < candidates.length; i += 1) {
     const fileName = candidates[i];
     const startPercent = 60 + Math.round((i / candidates.length) * 35);
-    setProgress(`Generating ${i + 1} of ${candidates.length}: ${fileName}`, startPercent);
+    setProgress(`Preparing ${i + 1} of ${candidates.length}: ${fileName}`, startPercent);
     if (studentSelect) {
       studentSelect.value = fileName;
     }
@@ -2972,14 +3415,14 @@ async function autoGenerateAndDownloadReports() {
 
     if (!state.currentReport) {
       failures.push(fileName);
+      failureMessages.push(...state.errors);
       continue;
     }
 
     generated.push(fileName);
-    await onDownloadCurrentStudentPdf();
+    generatedReports.push(state.currentReport);
     const donePercent = 60 + Math.round(((i + 1) / candidates.length) * 35);
-    setProgress(`Downloaded ${i + 1} of ${candidates.length}`, donePercent);
-    await new Promise((resolve) => setTimeout(resolve, 120));
+    setProgress(`Prepared ${i + 1} of ${candidates.length}`, donePercent);
   }
 
   if (skipped.length) {
@@ -2991,19 +3434,25 @@ async function autoGenerateAndDownloadReports() {
     state.warnings.push(
       `Failed to generate for ${failures.length} student(s): ${failures.join(", ")}.`
     );
+    state.warnings.push(...failureMessages);
+    state.errors = [];
   }
 
   if (generated.length) {
+    state.reports = generatedReports;
+    state.currentReport = generatedReports[0];
+    studentSelect.value = generated[0];
+    syncManualFormFromSelection();
+    renderPreviewFromCurrent();
+    downloadPdfBtn.disabled = false;
     setStatus(
-      `Auto-generated ${generated.length} report(s). PDF download ${
-        generated.length === 1 ? "started" : "attempted for each student"
-      }.`
+      `Prepared ${generated.length} report${generated.length === 1 ? "" : "s"}. Review the preview, then download when ready.`
     );
   } else {
     setStatus("No reports were generated.");
   }
   showValidationMessages();
-  setProgress(generated.length ? "Done." : "Finished with warnings.", 100);
+  setProgress(generated.length ? "Preview ready." : "Finished with warnings.", 100);
   setTimeout(() => {
     hideProgress();
   }, 450);
@@ -3071,6 +3520,15 @@ function sanitizeFileName(value) {
     .replace(/\s+/g, " ")
     .trim()
     .slice(0, 120);
+}
+
+function measureDataUrlImage(dataUrl) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve({ width: image.naturalWidth, height: image.naturalHeight });
+    image.onerror = () => reject(new Error("Could not inspect rendered PDF page."));
+    image.src = dataUrl;
+  });
 }
 
 async function onDownloadCurrentStudentPdf() {
@@ -3157,17 +3615,17 @@ async function onDownloadCurrentStudentPdf() {
       let imageData = "";
       if (hasHtmlToImage) {
         imageData = await window.htmlToImage.toPng(pageNodes[i], {
-          pixelRatio: 2,
+          pixelRatio: 1,
           cacheBust: true,
           backgroundColor: "#ffffff",
-          canvasWidth: 612,
-          canvasHeight: 792,
+          canvasWidth: 612 * PDF_RENDER_SCALE,
+          canvasHeight: 792 * PDF_RENDER_SCALE,
           width: 612,
           height: 792,
         });
       } else {
         const canvas = await window.html2canvas(pageNodes[i], {
-          scale: 2,
+          scale: PDF_RENDER_SCALE,
           useCORS: true,
           backgroundColor: "#ffffff",
           width: 612,
@@ -3181,6 +3639,16 @@ async function onDownloadCurrentStudentPdf() {
         });
         imageData = canvas.toDataURL("image/jpeg", 0.98);
       }
+
+      const renderedSize = await measureDataUrlImage(imageData);
+      const expectedWidth = 612 * PDF_RENDER_SCALE;
+      const expectedHeight = 792 * PDF_RENDER_SCALE;
+      if (renderedSize.width !== expectedWidth || renderedSize.height !== expectedHeight) {
+        throw new Error(
+          `PDF page rendered at ${renderedSize.width}x${renderedSize.height}; expected ${expectedWidth}x${expectedHeight}.`
+        );
+      }
+      downloadPdfBtn.dataset.renderResolution = `${renderedSize.width}x${renderedSize.height}`;
 
       if (i > 0) {
         pdf.addPage([612, 792], "portrait");
