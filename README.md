@@ -11,7 +11,9 @@ This is a browser-only JavaScript app for your Coda CSV to printable PDF workflo
 - Converts rubric text to 1-5 scores and averages each category
 - Renders rounded SVG stars for the averaged categories
 - Displays all 40 tags with conditional activation styling
-- Places each selected tag's explanation immediately after the reader ballot that selected it
+- Places each selected tag's explanation after the first reader ballot that selected it, without repeating shared explanations
+- Displays readers from fewest to most selected visible tags, with reader number as the tie-breaker
+- Starts every new reader ballot on a fresh report page
 - Lets users enter per-student metadata (LSAT, GPA, KJD, URM)
 - Generates an on-screen report preview before enabling PDF download
 - Lets users switch between students in a multi-student CSV and review each report before downloading
@@ -90,13 +92,24 @@ Optional:
 
 ## School recommendation plot
 
-Exports that include all three of these columns use the school-rank number line:
+Exports can use two school recommendations per category with these six columns:
+
+- `Recommend a Reach 1`
+- `Recommend a Reach 2`
+- `Recommend a Target 1`
+- `Recommend a Target 2`
+- `Recommend a Safety 1`
+- `Recommend a Safety 2`
+
+The first recommendation in each category is required for every reader; the second is optional. The summary reserves six compact positions per category (two for each of three readers), leaving an intentional blank when an optional school is omitted. Reader ballots use the same two-position layout. Repeated recommendations across readers remain in the lists and collapse to a counted consensus marker on the number line.
+
+The existing one-school format remains supported:
 
 - `Recommend a Reach`
 - `Recommend a Target`
 - `Recommend a Safety`
 
-Each of the three review rows must name one school in every recommendation column. School names are matched against the versioned `school-rankings.json` catalog; exported rank columns are intentionally ignored. If the recommendation columns are absent, the report continues to use the legacy `Reach`, `Target`, and `Safety` tier plot.
+Each of the three review rows must name one school in every required recommendation column. School names are matched against the versioned `school-rankings.json` catalog; exported rank columns are intentionally ignored. Unknown schools and duplicate choices within the same reader/category block that student's report. If the recommendation columns are absent, the report continues to use the legacy `Reach`, `Target`, and `Safety` tier plot.
 
 When nearby school ranks are staggered above or below the number line, a category-colored connector marks the bubble's exact position on the shared baseline.
 

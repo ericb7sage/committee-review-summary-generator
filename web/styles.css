@@ -1575,10 +1575,11 @@ button:disabled {
 .school-rank-list.reach .school-rank-list-title { color: #b45309; }
 .school-rank-list.target .school-rank-list-title { color: #0c4a6e; }
 .school-rank-list.safety .school-rank-list-title { color: #14532d; }
-.school-rank-list-items { display: grid; gap: 2px; }
-.school-rank-list-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 3px; min-width: 0; font-size: 7px; line-height: 1.08; }
+.school-rank-list-items { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(3, 1fr); gap: 2px 5px; }
+.school-rank-list-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 3px; min-width: 0; min-height: 8px; font-size: 6px; line-height: 1.08; }
 .school-rank-list-item strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .school-rank-list-item small { color: #667085; font-size: 6px; }
+.school-rank-list-item.empty { visibility: hidden; }
 .school-rank-track { height: 58px; margin: 0 22px; position: relative; }
 .school-rank-gridline { position: absolute; top: 5px; bottom: 5px; width: 1px; background: #e2e8f0; }
 .school-rank-baseline { position: absolute; left: 0; right: 0; top: 29px; height: 1px; background: #667085; }
@@ -1593,6 +1594,9 @@ button:disabled {
 .school-rank-connector.safety { background: #3aa968; }
 .school-rank-dot { position: absolute; top: calc(20px + var(--dot-offset, 0px)); transform: translateX(-50%); min-width: 17px; height: 17px; padding: 0 3px; border: 0; border-radius: 999px; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 7px; line-height: 1; font-weight: 800; z-index: 4; }
 .school-rank-dot.digits-3 { min-width: 23px; }
+.school-rank-dot.consensus { min-width: 25px; gap: 2px; }
+.school-rank-dot.consensus.digits-3 { min-width: 30px; }
+.school-rank-dot small { font-size: 5px; line-height: 1; }
 .school-rank-dot.reach { background: #db8a2c; }
 .school-rank-dot.target { background: #3b7fc0; }
 .school-rank-dot.safety { background: #3aa968; }
@@ -2002,14 +2006,23 @@ button:disabled {
   color: #98a2b3;
 }
 
+.reader-school-values {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+  margin-left: auto;
+}
+
 .reader-school-value {
   display: flex;
   align-items: baseline;
   justify-content: flex-end;
-  gap: 4px;
+  gap: 2px;
   min-width: 0;
-  margin-left: auto;
-  font-size: 8px;
+  min-height: 10px;
+  font-size: 6.5px;
   white-space: nowrap;
 }
 
@@ -2023,6 +2036,8 @@ button:disabled {
   font-size: 7px;
   flex: 0 0 auto;
 }
+
+.reader-school-value.empty { visibility: hidden; }
 
 .reader-notes {
   border: 0;

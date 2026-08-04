@@ -71,6 +71,11 @@ const SCHOOL_RECOMMENDATION_FIELDS = {
   target: "Recommend a Target",
   safety: "Recommend a Safety",
 };
+const SCHOOL_RECOMMENDATION_FIELDS_TWO = {
+  reach: ["Recommend a Reach 1", "Recommend a Reach 2"],
+  target: ["Recommend a Target 1", "Recommend a Target 2"],
+  safety: ["Recommend a Safety 1", "Recommend a Safety 2"],
+};
 const SCHOOL_RANK_BREAKPOINTS = [3, 6, 14, 20, 30, 50, 75, 100];
 const SCHOOL_CATEGORY_LABELS = {
   reach: "Reach",
@@ -790,10 +795,11 @@ const PRINT_CSS = `
   .school-rank-list.reach .school-rank-list-title { color: #b45309; }
   .school-rank-list.target .school-rank-list-title { color: #0c4a6e; }
   .school-rank-list.safety .school-rank-list-title { color: #14532d; }
-  .school-rank-list-items { display: grid; gap: 1px; }
-  .school-rank-list-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 2px; min-width: 0; font-size: 5.5px; line-height: 1.05; }
+  .school-rank-list-items { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(3, 1fr); gap: 1px 3px; }
+  .school-rank-list-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 2px; min-width: 0; min-height: 6px; font-size: 5px; line-height: 1.05; }
   .school-rank-list-item strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .school-rank-list-item small { color: #667085; font-size: 5px; }
+  .school-rank-list-item.empty { visibility: hidden; }
   .school-rank-track { height: 58px; margin: 0 17px; position: relative; }
   .school-rank-gridline { position: absolute; top: 4px; bottom: 4px; width: 1px; background: #e2e8f0; }
   .school-rank-baseline { position: absolute; left: 0; right: 0; top: 29px; height: 1px; background: #667085; }
@@ -808,6 +814,9 @@ const PRINT_CSS = `
   .school-rank-connector.safety { background: #3aa968; }
   .school-rank-dot { position: absolute; top: calc(22px + var(--dot-offset, 0px)); transform: translateX(-50%); min-width: 13px; height: 13px; padding: 0 2px; border: 0; border-radius: 999px; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 5px; line-height: 1; font-weight: 800; z-index: 4; }
   .school-rank-dot.digits-3 { min-width: 17px; }
+  .school-rank-dot.consensus { min-width: 19px; gap: 1px; }
+  .school-rank-dot.consensus.digits-3 { min-width: 23px; }
+  .school-rank-dot small { font-size: 4px; line-height: 1; }
   .school-rank-dot.reach { background: #db8a2c; }
   .school-rank-dot.target { background: #3b7fc0; }
   .school-rank-dot.safety { background: #3aa968; }
@@ -865,9 +874,11 @@ const PRINT_CSS = `
   .reader-band-values-pill.target { background: #e0f2fe; border-color: #7dd3fc; color: #0c4a6e; }
   .reader-band-values-pill.safety { background: #dcfce7; border-color: #86efac; color: #14532d; }
   .reader-band-values-pill.empty { background: #fff; border-color: #d8dee9; color: #98a2b3; }
-  .reader-school-value { display: flex; align-items: baseline; justify-content: flex-end; gap: 3px; min-width: 0; margin-left: auto; font-size: 6.5px; white-space: nowrap; }
+  .reader-school-values { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3px; min-width: 0; flex: 1; margin-left: auto; }
+  .reader-school-value { display: flex; align-items: baseline; justify-content: flex-end; gap: 2px; min-width: 0; min-height: 8px; font-size: 5.5px; white-space: nowrap; }
   .reader-school-value strong { overflow: hidden; text-overflow: ellipsis; }
   .reader-school-value small { color: #667085; font-size: 6px; flex: 0 0 auto; }
+  .reader-school-value.empty { visibility: hidden; }
   .reader-notes { border: 0; border-radius: 0; padding: 0; font-size: 11px; line-height: 1.35; height: 100%; overflow: hidden; }
   .reader-notes .label { font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 2px; color: #475467; }
   .reader-notes-body { margin: 0; white-space: pre-wrap; }
@@ -921,6 +932,7 @@ const PRINT_FIT_SCRIPT = `
   };
 
   const pages = [];
+  let hasStartedReader = false;
   let currentPage = createPage();
   parent.insertBefore(currentPage, anchor);
   pages.push(currentPage);
@@ -996,8 +1008,9 @@ const PRINT_FIT_SCRIPT = `
     }
   };
   cardTemplates.forEach((template) => {
-    if (template.classList.contains("reader-ballot-card") && container.children.length) {
-      addPage();
+    if (template.classList.contains("reader-ballot-card")) {
+      if (hasStartedReader && container.children.length) addPage();
+      hasStartedReader = true;
     }
     const card = template.cloneNode(true);
     const notesBody = card.querySelector(".reader-notes-body");
@@ -1840,6 +1853,11 @@ function computeSoftsDisplay(rows, fileName) {
 }
 
 function getSchoolRecommendationMode(rows) {
+  const twoSchoolFields = Object.values(SCHOOL_RECOMMENDATION_FIELDS_TWO).flat();
+  const hasAnyTwoSchoolColumn =
+    rows.length > 0 &&
+    twoSchoolFields.some((field) => Object.prototype.hasOwnProperty.call(rows[0], field));
+  if (hasAnyTwoSchoolColumn) return "schools-two";
   const fields = Object.values(SCHOOL_RECOMMENDATION_FIELDS);
   const hasAllColumns =
     rows.length > 0 &&
@@ -1854,40 +1872,71 @@ function findSchoolInCatalog(value) {
 }
 
 function validateStudentSchoolRecommendations(fileName, rows) {
-  if (getSchoolRecommendationMode(rows) !== "schools") return [];
+  const mode = getSchoolRecommendationMode(rows);
+  if (mode === "legacy") return [];
   const errors = [];
+  if (mode === "schools-two") {
+    const missingColumns = Object.values(SCHOOL_RECOMMENDATION_FIELDS_TWO)
+      .flat()
+      .filter((field) => !Object.prototype.hasOwnProperty.call(rows[0] || {}, field));
+    if (missingColumns.length) {
+      errors.push(`${fileName}: missing recommendation column(s): ${missingColumns.join(", ")}.`);
+      return errors;
+    }
+  }
   rows.forEach((row) => {
     const reader = String(row.Reviewer || "Unknown reader").trim();
-    Object.entries(SCHOOL_RECOMMENDATION_FIELDS).forEach(([category, field]) => {
-      const supplied = String(row[field] || "").trim();
-      if (!supplied) {
-        errors.push(`${fileName}: ${reader} is missing ${SCHOOL_CATEGORY_LABELS[category]}.`);
-        return;
-      }
-      const school = findSchoolInCatalog(supplied);
-      if (!school) {
-        errors.push(
-          `${fileName}: ${reader} has unknown ${SCHOOL_CATEGORY_LABELS[category]} school "${supplied}".`
+    const fieldContract = mode === "schools-two"
+      ? SCHOOL_RECOMMENDATION_FIELDS_TWO
+      : Object.fromEntries(
+          Object.entries(SCHOOL_RECOMMENDATION_FIELDS).map(([category, field]) => [category, [field]])
         );
-      } else if (!Number.isFinite(school.rank)) {
-        errors.push(
-          `${fileName}: ${reader}'s ${SCHOOL_CATEGORY_LABELS[category]} school "${supplied}" has no plottable rank.`
-        );
+    Object.entries(fieldContract).forEach(([category, fields]) => {
+      const resolved = [];
+      fields.forEach((field, index) => {
+        const supplied = String(row[field] || "").trim();
+        if (!supplied) {
+          if (index === 0) {
+            errors.push(`${fileName}: ${reader} is missing required ${SCHOOL_CATEGORY_LABELS[category]} school 1.`);
+          }
+          return;
+        }
+        const school = findSchoolInCatalog(supplied);
+        if (!school) {
+          errors.push(
+            `${fileName}: ${reader} has unknown ${SCHOOL_CATEGORY_LABELS[category]} school ${index + 1} "${supplied}".`
+          );
+        } else if (!Number.isFinite(school.rank)) {
+          errors.push(
+            `${fileName}: ${reader}'s ${SCHOOL_CATEGORY_LABELS[category]} school ${index + 1} "${supplied}" has no plottable rank.`
+          );
+        } else {
+          resolved.push(school);
+        }
+      });
+      if (resolved.length === 2 && resolved[0].name === resolved[1].name) {
+        errors.push(`${fileName}: ${reader} selected ${resolved[0].name} twice for ${SCHOOL_CATEGORY_LABELS[category]}.`);
       }
     });
   });
   return errors;
 }
 
-function resolveReaderSchoolRecommendations(row) {
+function resolveReaderSchoolRecommendations(row, mode) {
+  const fieldContract = mode === "schools-two"
+    ? SCHOOL_RECOMMENDATION_FIELDS_TWO
+    : Object.fromEntries(
+        Object.entries(SCHOOL_RECOMMENDATION_FIELDS).map(([category, field]) => [category, [field]])
+      );
   return Object.fromEntries(
-    Object.entries(SCHOOL_RECOMMENDATION_FIELDS).map(([category, field]) => {
-      const supplied = String(row[field] || "").trim();
-      const school = findSchoolInCatalog(supplied);
-      return [
-        category,
-        school ? { name: school.name, rank: school.rank, supplied } : null,
-      ];
+    Object.entries(fieldContract).map(([category, fields]) => {
+      const schools = fields.flatMap((field) => {
+        const supplied = String(row[field] || "").trim();
+        if (!supplied) return [];
+        const school = findSchoolInCatalog(supplied);
+        return school ? [{ name: school.name, rank: school.rank, supplied }] : [];
+      });
+      return [category, schools];
     })
   );
 }
@@ -1966,8 +2015,8 @@ function buildStudentReport(fileName, rows, manual) {
         safety: parseBandValues(row.Safety, fileName, "Safety"),
       },
       schoolRecommendations:
-        recommendationMode === "schools"
-          ? resolveReaderSchoolRecommendations(row)
+        recommendationMode !== "legacy"
+          ? resolveReaderSchoolRecommendations(row, recommendationMode)
           : null,
       softs: (() => {
         const softValue = mapSoftsValue(row.Softs, fileName);
@@ -2001,9 +2050,9 @@ function buildStudentReport(fileName, rows, manual) {
     fileName,
     manual,
     readers,
-    recommendationMode,
+    recommendationMode: recommendationMode === "legacy" ? "legacy" : "schools",
     schoolRankingCycle:
-      recommendationMode === "schools" ? SCHOOL_RANKING_CYCLE : "",
+      recommendationMode !== "legacy" ? SCHOOL_RANKING_CYCLE : "",
     summaryStars: {
       whyLaw: computeStarsFromRatings(summaryRatings.whyLaw),
       thrive: computeStarsFromRatings(summaryRatings.thrive),
@@ -2235,19 +2284,32 @@ function assignSchoolDotOffsets(items) {
 function renderSchoolRecommendationPlot(readers, cycle) {
   const categories = ["reach", "target", "safety"];
   const recommendations = readers.flatMap((reader) =>
-    categories.map((category) => ({
-      ...reader.schoolRecommendations?.[category],
-      category,
-      badgeLabel: reader.badgeLabel,
-      readerLabel: reader.label,
-    }))
+    categories.flatMap((category) =>
+      (reader.schoolRecommendations?.[category] || []).map((school, schoolIndex) => ({
+        ...school,
+        category,
+        schoolIndex,
+        badgeLabel: reader.badgeLabel,
+        readerLabel: reader.label,
+      }))
+    )
   );
   const scalePoints = getSchoolPlotScale(recommendations.map((item) => item.rank));
   const segmentWeights = getSchoolPlotSegmentWeights(
     scalePoints,
     recommendations.map((item) => item.rank)
   );
-  const items = assignSchoolDotOffsets(recommendations.map((item) => ({
+  const consensusItems = [...recommendations.reduce((groups, item) => {
+    const key = `${item.category}:${normalizeSchoolKey(item.name)}`;
+    if (!groups.has(key)) {
+      groups.set(key, { ...item, count: 0, readerLabels: [] });
+    }
+    const group = groups.get(key);
+    group.count += 1;
+    group.readerLabels.push(item.readerLabel);
+    return groups;
+  }, new Map()).values()];
+  const items = assignSchoolDotOffsets(consensusItems.map((item) => ({
     ...item,
     pct: rankToSchoolPlotPercent(item.rank, scalePoints, segmentWeights),
   })));
@@ -2271,15 +2333,18 @@ function renderSchoolRecommendationPlot(readers, cycle) {
   return `<div class="school-rank-plot">
     <div class="school-rank-lists">
       ${categories.map((category) => {
-        const categoryItems = items
-          .filter((item) => item.category === category)
-          .sort((a, b) => a.rank - b.rank);
         return `<div class="school-rank-list ${category}">
           <div class="school-rank-list-title"><i></i>${SCHOOL_CATEGORY_LABELS[category]}</div>
           <div class="school-rank-list-items">
-            ${categoryItems.map((item) => `<span class="school-rank-list-item">
-              <strong>${escapeHtml(item.name)}</strong><small>#${item.rank}</small>
-            </span>`).join("")}
+            ${readers.flatMap((reader) => {
+              const schools = reader.schoolRecommendations?.[category] || [];
+              return [0, 1].map((index) => {
+                const school = schools[index];
+                return school
+                  ? `<span class="school-rank-list-item"><strong>${escapeHtml(school.name)}</strong><small>#${school.rank}</small></span>`
+                  : '<span class="school-rank-list-item empty" aria-hidden="true"></span>';
+              });
+            }).join("")}
           </div>
         </div>`;
       }).join("")}
@@ -2289,7 +2354,7 @@ function renderSchoolRecommendationPlot(readers, cycle) {
       <span class="school-rank-baseline"></span>
       ${spans.map((span, index) => `<span class="school-range-span ${span.category}${span.isPoint ? " point-range" : ""}" style="left:${span.left}%;width:${span.width}%;--range-lane:${index}"></span>`).join("")}
       ${items.filter((item) => item.dotOffset).map((item) => `<span class="school-rank-connector ${item.category}" style="left:${item.pct}%;top:${29 + Math.min(0, item.dotOffset)}px;height:${Math.abs(item.dotOffset)}px"></span>`).join("")}
-      ${items.map((item) => `<span class="school-rank-dot ${item.category} digits-${String(item.rank).length}" style="left:${item.pct}%;--dot-offset:${item.dotOffset}px" title="${SCHOOL_CATEGORY_LABELS[item.category]} · ${escapeHtml(item.name)} #${item.rank}">${item.rank}</span>`).join("")}
+      ${items.map((item) => `<span class="school-rank-dot ${item.category} digits-${String(item.rank).length}${item.count > 1 ? " consensus" : ""}" style="left:${item.pct}%;--dot-offset:${item.dotOffset}px" title="${SCHOOL_CATEGORY_LABELS[item.category]} · ${escapeHtml(item.name)} #${item.rank}${item.count > 1 ? ` · selected ${item.count} times` : ""}">${item.rank}${item.count > 1 ? `<small>×${item.count}</small>` : ""}</span>`).join("")}
     </div>
     <div class="school-rank-axis">
       ${ticks.map((tick) => `<span style="left:${tick.pct}%">${tick.label}</span>`).join("")}
@@ -2392,12 +2457,17 @@ function renderReaderBandRow(label, className, values) {
   </div>`;
 }
 
-function renderReaderSchoolRow(label, className, school) {
+function renderReaderSchoolRow(label, className, schools) {
+  const values = Array.isArray(schools) ? schools : schools ? [schools] : [];
   return `<div class="reader-band-row reader-school-row">
     <span class="reader-band-label-pill ${className}">${escapeHtml(label)}</span>
-    <span class="reader-school-value ${className}">
-      <strong>${escapeHtml(school?.name || "—")}</strong>
-      ${school ? `<small>#${school.rank}</small>` : ""}
+    <span class="reader-school-values ${className}">
+      ${[0, 1].map((index) => {
+        const school = values[index];
+        return school
+          ? `<span class="reader-school-value"><strong>${escapeHtml(school.name)}</strong><small>#${school.rank}</small></span>`
+          : '<span class="reader-school-value empty" aria-hidden="true"></span>';
+      }).join("")}
     </span>
   </div>`;
 }
@@ -2432,8 +2502,12 @@ function renderReaderTags(tags) {
     .join("");
 }
 
-function renderReaderTagExplanationCards(reader) {
-  const visibleTags = reader.tags.filter((tag) => !HIDDEN_TAG_NAMES.has(tag));
+function renderReaderTagExplanationCards(reader, explainedTags = new Set()) {
+  const visibleTags = reader.tags.filter((tag) => {
+    if (HIDDEN_TAG_NAMES.has(tag) || explainedTags.has(tag)) return false;
+    explainedTags.add(tag);
+    return true;
+  });
   return [
     { polarity: "positive", label: "Positive" },
     { polarity: "negative", label: "Negative" },
@@ -2535,10 +2609,20 @@ function renderReaderCard(reader, recommendationMode = "legacy") {
   `;
 }
 
-function renderReaderPages(report) {
+function getReadersInDisplayOrder(readers) {
+  return [...readers].sort((a, b) => {
+    const aTagCount = a.tags.filter((tag) => !HIDDEN_TAG_NAMES.has(tag)).length;
+    const bTagCount = b.tags.filter((tag) => !HIDDEN_TAG_NAMES.has(tag)).length;
+    if (aTagCount !== bTagCount) return aTagCount - bTagCount;
+    return (Number.parseInt(a.badgeLabel, 10) || 999) - (Number.parseInt(b.badgeLabel, 10) || 999);
+  });
+}
+
+function renderReaderPages(report, readers) {
+  const explainedTags = new Set();
   return `
     <div class="reader-cards-source" data-reader-source>
-      ${report.readers.map((reader) => `${renderReaderCard(reader, report.recommendationMode)}${renderReaderTagExplanationCards(reader)}`).join("")}
+      ${readers.map((reader) => `${renderReaderCard(reader, report.recommendationMode)}${renderReaderTagExplanationCards(reader, explainedTags)}`).join("")}
       ${renderNextStepsCard(report)}
     </div>
   `;
@@ -2592,10 +2676,8 @@ function renderTagExplanationPages(report) {
 }
 
 function renderStudentDocument(report) {
-  const summaryReaders = report.readers
-    .map((reader) => ({ reader, slot: Number.parseInt(reader.badgeLabel, 10) || 999 }))
-    .sort((a, b) => a.slot - b.slot)
-    .map(({ reader }) => reader);
+  const displayReaders = getReadersInDisplayOrder(report.readers);
+  const summaryReaders = displayReaders;
   const docTitle = String(report.manual.docTitle || "Committee Review").trim() || "Committee Review";
 
   return `
@@ -2699,10 +2781,10 @@ function renderStudentDocument(report) {
                 ${
                   report.recommendationMode === "schools"
                     ? renderSchoolRecommendationPlot(
-                        report.readers,
+                        displayReaders,
                         report.schoolRankingCycle
                       )
-                    : renderBandPlot(report.readers)
+                    : renderBandPlot(displayReaders)
                 }
               </div>
             </div>
@@ -2723,7 +2805,7 @@ function renderStudentDocument(report) {
       </div>
     </section>
 
-    ${renderReaderPages(report)}
+    ${renderReaderPages(report, displayReaders)}
   `;
 }
 
@@ -2904,6 +2986,7 @@ function paginateReaderCards(root = document) {
   };
 
   const pages = [];
+  let hasStartedReader = false;
   let currentPage = createPage();
   parent.insertBefore(currentPage, anchor);
   pages.push(currentPage);
@@ -2980,8 +3063,9 @@ function paginateReaderCards(root = document) {
   };
 
   cardTemplates.forEach((template) => {
-    if (template.classList.contains("reader-ballot-card") && container.children.length) {
-      addPage();
+    if (template.classList.contains("reader-ballot-card")) {
+      if (hasStartedReader && container.children.length) addPage();
+      hasStartedReader = true;
     }
     const card = template.cloneNode(true);
     const notesBody = card.querySelector(".reader-notes-body");
