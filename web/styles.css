@@ -1594,8 +1594,10 @@ button:disabled {
 .school-rank-connector.safety { background: #3aa968; }
 .school-rank-dot { position: absolute; top: calc(20px + var(--dot-offset, 0px)); transform: translateX(-50%); min-width: 17px; height: 17px; padding: 0 3px; border: 0; border-radius: 999px; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 7px; line-height: 1; font-weight: 800; z-index: 4; }
 .school-rank-dot.digits-3 { min-width: 23px; }
+.school-rank-dot.digits-4 { min-width: 27px; }
 .school-rank-dot.consensus { min-width: 25px; gap: 2px; }
 .school-rank-dot.consensus.digits-3 { min-width: 30px; }
+.school-rank-dot.consensus.digits-4 { min-width: 34px; }
 .school-rank-dot small { font-size: 5px; line-height: 1; }
 .school-rank-dot.reach { background: #db8a2c; }
 .school-rank-dot.target { background: #3b7fc0; }

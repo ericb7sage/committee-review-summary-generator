@@ -1,0 +1,977 @@
+[
+  {
+    "name": "Stanford",
+    "rank": "1",
+    "slug": "stanford"
+  },
+  {
+    "name": "UChicago",
+    "rank": "2",
+    "slug": "uchicago"
+  },
+  {
+    "name": "Yale",
+    "rank": "2",
+    "slug": "yale"
+  },
+  {
+    "name": "UPenn",
+    "rank": "4",
+    "slug": "upenn"
+  },
+  {
+    "name": "UVA",
+    "rank": "4",
+    "slug": "uva"
+  },
+  {
+    "name": "Harvard",
+    "rank": "6",
+    "slug": "harvard"
+  },
+  {
+    "name": "Duke",
+    "rank": "7",
+    "slug": "duke"
+  },
+  {
+    "name": "NYU",
+    "rank": "7",
+    "slug": "nyu"
+  },
+  {
+    "name": "Columbia",
+    "rank": "9",
+    "slug": "columbia"
+  },
+  {
+    "name": "Michigan",
+    "rank": "9",
+    "slug": "michigan"
+  },
+  {
+    "name": "Northwestern",
+    "rank": "9",
+    "slug": "northwestern"
+  },
+  {
+    "name": "Vanderbilt",
+    "rank": "12",
+    "slug": "vanderbilt"
+  },
+  {
+    "name": "Cornell",
+    "rank": "13",
+    "slug": "cornell"
+  },
+  {
+    "name": "UCLA",
+    "rank": "13",
+    "slug": "ucla"
+  },
+  {
+    "name": "WashU",
+    "rank": "13",
+    "slug": "washu"
+  },
+  {
+    "name": "Berkeley",
+    "rank": "16",
+    "slug": "berkeley"
+  },
+  {
+    "name": "UT Austin",
+    "rank": "16",
+    "slug": "ut-austin"
+  },
+  {
+    "name": "Georgetown",
+    "rank": "18",
+    "slug": "georgetown"
+  },
+  {
+    "name": "UNC",
+    "rank": "18",
+    "slug": "unc"
+  },
+  {
+    "name": "Boston College",
+    "rank": "20",
+    "slug": "boston-college"
+  },
+  {
+    "name": "Notre Dame",
+    "rank": "20",
+    "slug": "notre-dame"
+  },
+  {
+    "name": "Minnesota",
+    "rank": "22",
+    "slug": "minnesota"
+  },
+  {
+    "name": "Texas A&M",
+    "rank": "22",
+    "slug": "texas-aandm"
+  },
+  {
+    "name": "Boston University",
+    "rank": "24",
+    "slug": "boston-university"
+  },
+  {
+    "name": "BYU",
+    "rank": "24",
+    "slug": "byu"
+  },
+  {
+    "name": "George Washington",
+    "rank": "26",
+    "slug": "george-washington"
+  },
+  {
+    "name": "Georgia",
+    "rank": "26",
+    "slug": "georgia"
+  },
+  {
+    "name": "USC",
+    "rank": "26",
+    "slug": "usc"
+  },
+  {
+    "name": "Wisconsin",
+    "rank": "26",
+    "slug": "wisconsin"
+  },
+  {
+    "name": "Ohio State",
+    "rank": "30",
+    "slug": "ohio-state"
+  },
+  {
+    "name": "Wake Forest",
+    "rank": "30",
+    "slug": "wake-forest"
+  },
+  {
+    "name": "George Mason",
+    "rank": "32",
+    "slug": "george-mason"
+  },
+  {
+    "name": "Iowa",
+    "rank": "32",
+    "slug": "iowa"
+  },
+  {
+    "name": "Baylor",
+    "rank": "34",
+    "slug": "baylor"
+  },
+  {
+    "name": "FSU",
+    "rank": "34",
+    "slug": "fsu"
+  },
+  {
+    "name": "UC - Irvine",
+    "rank": "34",
+    "slug": "uc-irvine"
+  },
+  {
+    "name": "U Florida",
+    "rank": "34",
+    "slug": "u-florida"
+  },
+  {
+    "name": "Washington & Lee",
+    "rank": "34",
+    "slug": "washington-and-lee"
+  },
+  {
+    "name": "William & Mary",
+    "rank": "34",
+    "slug": "william-and-mary"
+  },
+  {
+    "name": "Alabama",
+    "rank": "40",
+    "slug": "alabama"
+  },
+  {
+    "name": "Emory",
+    "rank": "40",
+    "slug": "emory"
+  },
+  {
+    "name": "Fordham",
+    "rank": "42",
+    "slug": "fordham"
+  },
+  {
+    "name": "Southern Methodist",
+    "rank": "42",
+    "slug": "southern-methodist"
+  },
+  {
+    "name": "Arizona State",
+    "rank": "44",
+    "slug": "arizona-state"
+  },
+  {
+    "name": "Utah",
+    "rank": "44",
+    "slug": "utah"
+  },
+  {
+    "name": "Illinois - Urbana",
+    "rank": "46",
+    "slug": "illinois-urbana"
+  },
+  {
+    "name": "Kansas",
+    "rank": "46",
+    "slug": "kansas"
+  },
+  {
+    "name": "Pepperdine",
+    "rank": "46",
+    "slug": "pepperdine"
+  },
+  {
+    "name": "Indiana Bloomington",
+    "rank": "49",
+    "slug": "indiana-bloomington"
+  },
+  {
+    "name": "Temple University",
+    "rank": "49",
+    "slug": "temple-university"
+  },
+  {
+    "name": "Villanova",
+    "rank": "49",
+    "slug": "villanova"
+  },
+  {
+    "name": "UC - Davis",
+    "rank": "52",
+    "slug": "uc-davis"
+  },
+  {
+    "name": "U Washington",
+    "rank": "52",
+    "slug": "u-washington"
+  },
+  {
+    "name": "Colorado - Boulder",
+    "rank": "54",
+    "slug": "colorado-boulder"
+  },
+  {
+    "name": "Houston",
+    "rank": "54",
+    "slug": "houston"
+  },
+  {
+    "name": "USD",
+    "rank": "54",
+    "slug": "usd"
+  },
+  {
+    "name": "Tennessee",
+    "rank": "57",
+    "slug": "tennessee"
+  },
+  {
+    "name": "UCONN",
+    "rank": "58",
+    "slug": "uconn"
+  },
+  {
+    "name": "Cardozo",
+    "rank": "59",
+    "slug": "cardozo"
+  },
+  {
+    "name": "Marquette",
+    "rank": "59",
+    "slug": "marquette"
+  },
+  {
+    "name": "Missouri",
+    "rank": "59",
+    "slug": "missouri"
+  },
+  {
+    "name": "Maryland",
+    "rank": "62",
+    "slug": "maryland"
+  },
+  {
+    "name": "Nebraska",
+    "rank": "62",
+    "slug": "nebraska"
+  },
+  {
+    "name": "Oklahoma",
+    "rank": "62",
+    "slug": "oklahoma"
+  },
+  {
+    "name": "Penn State",
+    "rank": "62",
+    "slug": "penn-state"
+  },
+  {
+    "name": "Pennsylvania State - Penn State Law",
+    "rank": "62",
+    "slug": "pennsylvania-state-penn-state-law"
+  },
+  {
+    "name": "Richmond",
+    "rank": "62",
+    "slug": "richmond"
+  },
+  {
+    "name": "South Carolina",
+    "rank": "62",
+    "slug": "south-carolina"
+  },
+  {
+    "name": "St. John's",
+    "rank": "62",
+    "slug": "st-johns"
+  },
+  {
+    "name": "Wayne State",
+    "rank": "62",
+    "slug": "wayne-state"
+  },
+  {
+    "name": "Arizona",
+    "rank": "70",
+    "slug": "arizona"
+  },
+  {
+    "name": "Catholic University",
+    "rank": "70",
+    "slug": "catholic-university"
+  },
+  {
+    "name": "Kentucky",
+    "rank": "70",
+    "slug": "kentucky"
+  },
+  {
+    "name": "Loyola Marymount  - LA",
+    "rank": "70",
+    "slug": "loyola-marymount-la"
+  },
+  {
+    "name": "Miami",
+    "rank": "70",
+    "slug": "miami"
+  },
+  {
+    "name": "Seton Hall",
+    "rank": "70",
+    "slug": "seton-hall"
+  },
+  {
+    "name": "Tulane",
+    "rank": "70",
+    "slug": "tulane"
+  },
+  {
+    "name": "FIU",
+    "rank": "77",
+    "slug": "fiu"
+  },
+  {
+    "name": "GSU",
+    "rank": "77",
+    "slug": "gsu"
+  },
+  {
+    "name": "Loyola - Chicago",
+    "rank": "77",
+    "slug": "loyola-chicago"
+  },
+  {
+    "name": "Northeastern",
+    "rank": "77",
+    "slug": "northeastern"
+  },
+  {
+    "name": "Pittsburgh",
+    "rank": "77",
+    "slug": "pittsburgh"
+  },
+  {
+    "name": "Cincinnati",
+    "rank": "82",
+    "slug": "cincinnati"
+  },
+  {
+    "name": "Drexel",
+    "rank": "82",
+    "slug": "drexel"
+  },
+  {
+    "name": "SUNY Buffalo",
+    "rank": "82",
+    "slug": "suny-buffalo"
+  },
+  {
+    "name": "Belmont",
+    "rank": "85",
+    "slug": "belmont"
+  },
+  {
+    "name": "Duquesne",
+    "rank": "85",
+    "slug": "duquesne"
+  },
+  {
+    "name": "LSU",
+    "rank": "85",
+    "slug": "lsu"
+  },
+  {
+    "name": "Texas Tech",
+    "rank": "85",
+    "slug": "texas-tech"
+  },
+  {
+    "name": "UC Law San Francisco",
+    "rank": "85",
+    "slug": "uc-law-san-francisco"
+  },
+  {
+    "name": "Montana",
+    "rank": "90",
+    "slug": "montana"
+  },
+  {
+    "name": "Denver",
+    "rank": "91",
+    "slug": "denver"
+  },
+  {
+    "name": "Drake",
+    "rank": "91",
+    "slug": "drake"
+  },
+  {
+    "name": "Hawaii",
+    "rank": "91",
+    "slug": "hawaii"
+  },
+  {
+    "name": "Maine",
+    "rank": "91",
+    "slug": "maine"
+  },
+  {
+    "name": "Nevada - Las Vegas",
+    "rank": "91",
+    "slug": "nevada-las-vegas"
+  },
+  {
+    "name": "Oregon",
+    "rank": "91",
+    "slug": "oregon"
+  },
+  {
+    "name": "Regent",
+    "rank": "91",
+    "slug": "regent"
+  },
+  {
+    "name": "SLU",
+    "rank": "91",
+    "slug": "slu"
+  },
+  {
+    "name": "Stetson",
+    "rank": "91",
+    "slug": "stetson"
+  },
+  {
+    "name": "Case Western",
+    "rank": "100",
+    "slug": "case-western"
+  },
+  {
+    "name": "Missouri - Kansas City",
+    "rank": "100",
+    "slug": "missouri-kansas-city"
+  },
+  {
+    "name": "Rutgers",
+    "rank": "100",
+    "slug": "rutgers"
+  },
+  {
+    "name": "Syracuse University",
+    "rank": "100",
+    "slug": "syracuse-university"
+  },
+  {
+    "name": "U Arkansas - Fayetteville",
+    "rank": "100",
+    "slug": "u-arkansas-fayetteville"
+  },
+  {
+    "name": "Brooklyn",
+    "rank": "105",
+    "slug": "brooklyn"
+  },
+  {
+    "name": "Chicago-Kent",
+    "rank": "105",
+    "slug": "chicago-kent"
+  },
+  {
+    "name": "St. Thomas (Minnesota)",
+    "rank": "105",
+    "slug": "st-thomas-minnesota"
+  },
+  {
+    "name": "American",
+    "rank": "108",
+    "slug": "american"
+  },
+  {
+    "name": "Mercer",
+    "rank": "108",
+    "slug": "mercer"
+  },
+  {
+    "name": "Michigan State",
+    "rank": "108",
+    "slug": "michigan-state"
+  },
+  {
+    "name": "Washburn",
+    "rank": "108",
+    "slug": "washburn"
+  },
+  {
+    "name": "Chapman",
+    "rank": "112",
+    "slug": "chapman"
+  },
+  {
+    "name": "Dayton",
+    "rank": "112",
+    "slug": "dayton"
+  },
+  {
+    "name": "Lewis And Clark",
+    "rank": "112",
+    "slug": "lewis-and-clark"
+  },
+  {
+    "name": "New York Law School",
+    "rank": "112",
+    "slug": "new-york-law-school"
+  },
+  {
+    "name": "Wyoming",
+    "rank": "112",
+    "slug": "wyoming"
+  },
+  {
+    "name": "Hofstra",
+    "rank": "117",
+    "slug": "hofstra"
+  },
+  {
+    "name": "Howard",
+    "rank": "117",
+    "slug": "howard"
+  },
+  {
+    "name": "UNM",
+    "rank": "117",
+    "slug": "unm"
+  },
+  {
+    "name": "Albany",
+    "rank": "120",
+    "slug": "albany"
+  },
+  {
+    "name": "Tulsa",
+    "rank": "120",
+    "slug": "tulsa"
+  },
+  {
+    "name": "Samford",
+    "rank": "122",
+    "slug": "samford"
+  },
+  {
+    "name": "South Dakota",
+    "rank": "122",
+    "slug": "south-dakota"
+  },
+  {
+    "name": "IU McKinney",
+    "rank": "124",
+    "slug": "iu-mckinney"
+  },
+  {
+    "name": "Louisville",
+    "rank": "124",
+    "slug": "louisville"
+  },
+  {
+    "name": "Mississippi",
+    "rank": "124",
+    "slug": "mississippi"
+  },
+  {
+    "name": "WVU",
+    "rank": "124",
+    "slug": "wvu"
+  },
+  {
+    "name": "Seattle",
+    "rank": "128",
+    "slug": "seattle"
+  },
+  {
+    "name": "Suffolk",
+    "rank": "128",
+    "slug": "suffolk"
+  },
+  {
+    "name": "Akron",
+    "rank": "131",
+    "slug": "akron"
+  },
+  {
+    "name": "Campbell",
+    "rank": "131",
+    "slug": "campbell"
+  },
+  {
+    "name": "DePaul",
+    "rank": "131",
+    "slug": "depaul"
+  },
+  {
+    "name": "Northern Kentucky",
+    "rank": "131",
+    "slug": "northern-kentucky"
+  },
+  {
+    "name": "Loyola - New Orleans",
+    "rank": "135",
+    "slug": "loyola-new-orleans"
+  },
+  {
+    "name": "Baltimore",
+    "rank": "136",
+    "slug": "baltimore"
+  },
+  {
+    "name": "Cleveland",
+    "rank": "136",
+    "slug": "cleveland"
+  },
+  {
+    "name": "New Hampshire",
+    "rank": "136",
+    "slug": "new-hampshire"
+  },
+  {
+    "name": "Quinnipiac",
+    "rank": "136",
+    "slug": "quinnipiac"
+  },
+  {
+    "name": "South Texas",
+    "rank": "138",
+    "slug": "south-texas"
+  },
+  {
+    "name": "Memphis",
+    "rank": "140",
+    "slug": "memphis"
+  },
+  {
+    "name": "U Arkansas - Little Rock",
+    "rank": "140",
+    "slug": "u-arkansas-little-rock"
+  },
+  {
+    "name": "Detroit Mercy",
+    "rank": "142",
+    "slug": "detroit-mercy"
+  },
+  {
+    "name": "Pace",
+    "rank": "142",
+    "slug": "pace"
+  },
+  {
+    "name": "Creighton",
+    "rank": "144",
+    "slug": "creighton"
+  },
+  {
+    "name": "Elon",
+    "rank": "144",
+    "slug": "elon"
+  },
+  {
+    "name": "Gonzaga",
+    "rank": "144",
+    "slug": "gonzaga"
+  },
+  {
+    "name": "Liberty",
+    "rank": "144",
+    "slug": "liberty"
+  },
+  {
+    "name": "Idaho",
+    "rank": "148",
+    "slug": "idaho"
+  },
+  {
+    "name": "Toledo",
+    "rank": "149",
+    "slug": "toledo"
+  },
+  {
+    "name": "Santa Clara",
+    "rank": "150",
+    "slug": "santa-clara"
+  },
+  {
+    "name": "St. Mary's",
+    "rank": "150",
+    "slug": "st-marys"
+  },
+  {
+    "name": "Mitchell Hamline",
+    "rank": "152",
+    "slug": "mitchell-hamline"
+  },
+  {
+    "name": "Pacific (Mcgeorge)",
+    "rank": "152",
+    "slug": "pacific-mcgeorge"
+  },
+  {
+    "name": "Southwestern",
+    "rank": "154",
+    "slug": "southwestern"
+  },
+  {
+    "name": "Vermont",
+    "rank": "154",
+    "slug": "vermont"
+  },
+  {
+    "name": "Widener-Delaware",
+    "rank": "154",
+    "slug": "widener-delaware"
+  },
+  {
+    "name": "Oklahoma City",
+    "rank": "156",
+    "slug": "oklahoma-city"
+  },
+  {
+    "name": "UND",
+    "rank": "156",
+    "slug": "und"
+  },
+  {
+    "name": "USF",
+    "rank": "156",
+    "slug": "usf"
+  },
+  {
+    "name": "UNTD",
+    "rank": "159",
+    "slug": "untd"
+  },
+  {
+    "name": "Western New England",
+    "rank": "159",
+    "slug": "western-new-england"
+  },
+  {
+    "name": "Mississippi College",
+    "rank": "161",
+    "slug": "mississippi-college"
+  },
+  {
+    "name": "NIU",
+    "rank": "161",
+    "slug": "niu"
+  },
+  {
+    "name": "Ave Maria",
+    "rank": "164",
+    "slug": "ave-maria"
+  },
+  {
+    "name": "Jones",
+    "rank": "164",
+    "slug": "jones"
+  },
+  {
+    "name": "Touro",
+    "rank": "164",
+    "slug": "touro"
+  },
+  {
+    "name": "Illinois - Chicago",
+    "rank": "167",
+    "slug": "illinois-chicago"
+  },
+  {
+    "name": "New England - Boston",
+    "rank": "168",
+    "slug": "new-england-boston"
+  },
+  {
+    "name": "St. Thomas",
+    "rank": "168",
+    "slug": "st-thomas"
+  },
+  {
+    "name": "Willamette",
+    "rank": "168",
+    "slug": "willamette"
+  },
+  {
+    "name": "Charleston",
+    "rank": "171",
+    "slug": "charleston"
+  },
+  {
+    "name": "CUNY",
+    "rank": "171",
+    "slug": "cuny"
+  },
+  {
+    "name": "Roger Williams",
+    "rank": "171",
+    "slug": "roger-williams"
+  },
+  {
+    "name": "UMass - Dartmouth",
+    "rank": "171",
+    "slug": "umass-dartmouth"
+  },
+  {
+    "name": "Appalachian",
+    "rank": "175+",
+    "slug": "appalachian"
+  },
+  {
+    "name": "Barry Law",
+    "rank": "175+",
+    "slug": "barry-law"
+  },
+  {
+    "name": "California Western",
+    "rank": "175+",
+    "slug": "california-western"
+  },
+  {
+    "name": "Capital",
+    "rank": "175+",
+    "slug": "capital"
+  },
+  {
+    "name": "Florida A&M",
+    "rank": "175+",
+    "slug": "florida-aandm"
+  },
+  {
+    "name": "Inter American",
+    "rank": "175+",
+    "slug": "inter-american"
+  },
+  {
+    "name": "John Marshall",
+    "rank": "175+",
+    "slug": "john-marshall"
+  },
+  {
+    "name": "Lincoln Memorial",
+    "rank": "175+",
+    "slug": "lincoln-memorial"
+  },
+  {
+    "name": "NCCU",
+    "rank": "175+",
+    "slug": "nccu"
+  },
+  {
+    "name": "Nova Southeastern",
+    "rank": "175+",
+    "slug": "nova-southeastern"
+  },
+  {
+    "name": "ONU",
+    "rank": "175+",
+    "slug": "onu"
+  },
+  {
+    "name": "Pontifical Catholic",
+    "rank": "175+",
+    "slug": "pontifical-catholic"
+  },
+  {
+    "name": "Puerto Rico",
+    "rank": "175+",
+    "slug": "puerto-rico"
+  },
+  {
+    "name": "SIU - Carbondale",
+    "rank": "175+",
+    "slug": "siu-carbondale"
+  },
+  {
+    "name": "Southern",
+    "rank": "175+",
+    "slug": "southern"
+  },
+  {
+    "name": "Texas Southern",
+    "rank": "175+",
+    "slug": "texas-southern"
+  },
+  {
+    "name": "UDC",
+    "rank": "175+",
+    "slug": "udc"
+  },
+  {
+    "name": "Western Michigan",
+    "rank": "175+",
+    "slug": "western-michigan"
+  },
+  {
+    "name": "Western State",
+    "rank": "175+",
+    "slug": "western-state"
+  },
+  {
+    "name": "Widener - Pennsylvania",
+    "rank": "175+",
+    "slug": "widener-pennsylvania"
+  }
+]

@@ -433,6 +433,7 @@ function setSchoolCatalog(catalog) {
   SCHOOL_CATALOG = catalog.schools.map((school) => ({
     name: String(school.name || "").trim(),
     rank: Number(school.rank),
+    rankLabel: String(school.rankLabel || "").trim(),
     aliases: Array.isArray(school.aliases) ? school.aliases : [],
   }));
   SCHOOL_CATALOG_LOOKUP = new Map();
@@ -814,8 +815,10 @@ const PRINT_CSS = `
   .school-rank-connector.safety { background: #3aa968; }
   .school-rank-dot { position: absolute; top: calc(22px + var(--dot-offset, 0px)); transform: translateX(-50%); min-width: 13px; height: 13px; padding: 0 2px; border: 0; border-radius: 999px; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 5px; line-height: 1; font-weight: 800; z-index: 4; }
   .school-rank-dot.digits-3 { min-width: 17px; }
+  .school-rank-dot.digits-4 { min-width: 21px; }
   .school-rank-dot.consensus { min-width: 19px; gap: 1px; }
   .school-rank-dot.consensus.digits-3 { min-width: 23px; }
+  .school-rank-dot.consensus.digits-4 { min-width: 27px; }
   .school-rank-dot small { font-size: 4px; line-height: 1; }
   .school-rank-dot.reach { background: #db8a2c; }
   .school-rank-dot.target { background: #3b7fc0; }
@@ -1934,7 +1937,7 @@ function resolveReaderSchoolRecommendations(row, mode) {
         const supplied = String(row[field] || "").trim();
         if (!supplied) return [];
         const school = findSchoolInCatalog(supplied);
-        return school ? [{ name: school.name, rank: school.rank, supplied }] : [];
+        return school ? [{ name: school.name, rank: school.rank, rankLabel: school.rankLabel, supplied }] : [];
       });
       return [category, schools];
     })
@@ -1943,6 +1946,10 @@ function resolveReaderSchoolRecommendations(row, mode) {
 
 function uniqueNonEmpty(values) {
   return [...new Set(values.map((v) => String(v || "").trim()).filter(Boolean))];
+}
+
+function formatSchoolRank(school) {
+  return school?.rankLabel || `#${school?.rank}`;
 }
 
 function buildStudentReport(fileName, rows, manual) {
@@ -2341,7 +2348,7 @@ function renderSchoolRecommendationPlot(readers, cycle) {
               return [0, 1].map((index) => {
                 const school = schools[index];
                 return school
-                  ? `<span class="school-rank-list-item"><strong>${escapeHtml(school.name)}</strong><small>#${school.rank}</small></span>`
+                  ? `<span class="school-rank-list-item"><strong>${escapeHtml(school.name)}</strong><small>${escapeHtml(formatSchoolRank(school))}</small></span>`
                   : '<span class="school-rank-list-item empty" aria-hidden="true"></span>';
               });
             }).join("")}
@@ -2354,7 +2361,7 @@ function renderSchoolRecommendationPlot(readers, cycle) {
       <span class="school-rank-baseline"></span>
       ${spans.map((span, index) => `<span class="school-range-span ${span.category}${span.isPoint ? " point-range" : ""}" style="left:${span.left}%;width:${span.width}%;--range-lane:${index}"></span>`).join("")}
       ${items.filter((item) => item.dotOffset).map((item) => `<span class="school-rank-connector ${item.category}" style="left:${item.pct}%;top:${29 + Math.min(0, item.dotOffset)}px;height:${Math.abs(item.dotOffset)}px"></span>`).join("")}
-      ${items.map((item) => `<span class="school-rank-dot ${item.category} digits-${String(item.rank).length}${item.count > 1 ? " consensus" : ""}" style="left:${item.pct}%;--dot-offset:${item.dotOffset}px" title="${SCHOOL_CATEGORY_LABELS[item.category]} · ${escapeHtml(item.name)} #${item.rank}${item.count > 1 ? ` · selected ${item.count} times` : ""}">${item.rank}${item.count > 1 ? `<small>×${item.count}</small>` : ""}</span>`).join("")}
+      ${items.map((item) => `<span class="school-rank-dot ${item.category} digits-${String(item.rankLabel || item.rank).length}${item.count > 1 ? " consensus" : ""}" style="left:${item.pct}%;--dot-offset:${item.dotOffset}px" title="${SCHOOL_CATEGORY_LABELS[item.category]} · ${escapeHtml(item.name)} ${escapeHtml(formatSchoolRank(item))}${item.count > 1 ? ` · selected ${item.count} times` : ""}">${escapeHtml(item.rankLabel || item.rank)}${item.count > 1 ? `<small>×${item.count}</small>` : ""}</span>`).join("")}
     </div>
     <div class="school-rank-axis">
       ${ticks.map((tick) => `<span style="left:${tick.pct}%">${tick.label}</span>`).join("")}
@@ -2465,7 +2472,7 @@ function renderReaderSchoolRow(label, className, schools) {
       ${[0, 1].map((index) => {
         const school = values[index];
         return school
-          ? `<span class="reader-school-value"><strong>${escapeHtml(school.name)}</strong><small>#${school.rank}</small></span>`
+          ? `<span class="reader-school-value"><strong>${escapeHtml(school.name)}</strong><small>${escapeHtml(formatSchoolRank(school))}</small></span>`
           : '<span class="reader-school-value empty" aria-hidden="true"></span>';
       }).join("")}
     </span>
@@ -2773,7 +2780,7 @@ function renderStudentDocument(report) {
                   ${renderCompactStars(report.summaryStars.contribute)}
                 </div>
                 <div class="takeaway-item">
-                  <div class="takeaway-title">Connection</div>
+                  <div class="takeaway-title">Spark</div>
                   ${renderCompactStars(report.summaryStars.know)}
                 </div>
               </div>

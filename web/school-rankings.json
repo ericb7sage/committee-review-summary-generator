@@ -1,56 +1,1963 @@
 {
-  "cycle": "2025–2026 ranking snapshot",
+  "cycle": "2026 U.S. News rankings",
+  "source": "https://7sage.com/admissions/rankings",
+  "retrieved": "2026-08-04",
   "maxRank": 175,
   "schools": [
     {
-      "name": "UCLA",
+      "name": "Stanford",
+      "rank": 1,
+      "aliases": [
+        "Stanford Law School",
+        "Stanford School of Law",
+        "Stanford University",
+        "University of Stanford"
+      ]
+    },
+    {
+      "name": "UChicago",
+      "rank": 2,
+      "aliases": [
+        "UChicago Law School",
+        "UChicago School of Law",
+        "UChicago University",
+        "University of UChicago",
+        "University of Chicago",
+        "University of Chicago Law School"
+      ]
+    },
+    {
+      "name": "Yale",
+      "rank": 2,
+      "aliases": [
+        "Yale Law School",
+        "Yale School of Law",
+        "Yale University",
+        "University of Yale"
+      ]
+    },
+    {
+      "name": "UPenn",
+      "rank": 4,
+      "aliases": [
+        "UPenn Law School",
+        "UPenn School of Law",
+        "UPenn University",
+        "University of UPenn",
+        "University of Pennsylvania",
+        "Penn",
+        "Penn Carey Law",
+        "University of Pennsylvania Carey Law School"
+      ]
+    },
+    {
+      "name": "UVA",
+      "rank": 4,
+      "aliases": [
+        "UVA Law School",
+        "UVA School of Law",
+        "UVA University",
+        "University of UVA",
+        "University of Virginia",
+        "University of Virginia School of Law"
+      ]
+    },
+    {
+      "name": "Harvard",
+      "rank": 6,
+      "aliases": [
+        "Harvard Law School",
+        "Harvard School of Law",
+        "Harvard University",
+        "University of Harvard"
+      ]
+    },
+    {
+      "name": "Duke",
+      "rank": 7,
+      "aliases": [
+        "Duke Law School",
+        "Duke School of Law",
+        "Duke University",
+        "University of Duke"
+      ]
+    },
+    {
+      "name": "NYU",
+      "rank": 7,
+      "aliases": [
+        "NYU Law School",
+        "NYU School of Law",
+        "NYU University",
+        "University of NYU",
+        "New York University",
+        "New York University School of Law"
+      ]
+    },
+    {
+      "name": "Columbia",
+      "rank": 9,
+      "aliases": [
+        "Columbia Law School",
+        "Columbia School of Law",
+        "Columbia University",
+        "University of Columbia"
+      ]
+    },
+    {
+      "name": "Michigan",
+      "rank": 9,
+      "aliases": [
+        "Michigan Law School",
+        "Michigan School of Law",
+        "Michigan University",
+        "University of Michigan"
+      ]
+    },
+    {
+      "name": "Northwestern",
+      "rank": 9,
+      "aliases": [
+        "Northwestern Law School",
+        "Northwestern School of Law",
+        "Northwestern University",
+        "University of Northwestern"
+      ]
+    },
+    {
+      "name": "Vanderbilt",
       "rank": 12,
-      "aliases": ["University of California—Los Angeles", "University of California-Los Angeles", "UCLA School of Law"]
+      "aliases": [
+        "Vanderbilt Law School",
+        "Vanderbilt School of Law",
+        "Vanderbilt University",
+        "University of Vanderbilt"
+      ]
+    },
+    {
+      "name": "Cornell",
+      "rank": 13,
+      "aliases": [
+        "Cornell Law School",
+        "Cornell School of Law",
+        "Cornell University",
+        "University of Cornell"
+      ]
+    },
+    {
+      "name": "UCLA",
+      "rank": 13,
+      "aliases": [
+        "UCLA Law School",
+        "UCLA School of Law",
+        "UCLA University",
+        "University of UCLA",
+        "University of California Los Angeles"
+      ]
+    },
+    {
+      "name": "WashU",
+      "rank": 13,
+      "aliases": [
+        "WashU Law School",
+        "WashU School of Law",
+        "WashU University",
+        "University of WashU",
+        "Washington University",
+        "Washington University in St. Louis",
+        "Washington University School of Law"
+      ]
+    },
+    {
+      "name": "Berkeley",
+      "rank": 16,
+      "aliases": [
+        "Berkeley Law School",
+        "Berkeley School of Law",
+        "Berkeley University",
+        "University of Berkeley",
+        "UC Berkeley",
+        "University of California Berkeley",
+        "Berkeley Law"
+      ]
+    },
+    {
+      "name": "UT Austin",
+      "rank": 16,
+      "aliases": [
+        "UT Austin Law School",
+        "UT Austin School of Law",
+        "University of Texas",
+        "University of Texas at Austin",
+        "Texas Law"
+      ]
+    },
+    {
+      "name": "Georgetown",
+      "rank": 18,
+      "aliases": [
+        "Georgetown Law School",
+        "Georgetown School of Law",
+        "Georgetown University",
+        "University of Georgetown"
+      ]
+    },
+    {
+      "name": "UNC",
+      "rank": 18,
+      "aliases": [
+        "UNC Law School",
+        "UNC School of Law",
+        "UNC University",
+        "University of UNC",
+        "University of North Carolina",
+        "University of North Carolina at Chapel Hill"
+      ]
+    },
+    {
+      "name": "Boston College",
+      "rank": 20,
+      "aliases": [
+        "Boston College Law School",
+        "Boston College School of Law"
+      ]
+    },
+    {
+      "name": "Notre Dame",
+      "rank": 20,
+      "aliases": [
+        "Notre Dame Law School",
+        "Notre Dame School of Law"
+      ]
+    },
+    {
+      "name": "Minnesota",
+      "rank": 22,
+      "aliases": [
+        "Minnesota Law School",
+        "Minnesota School of Law",
+        "Minnesota University",
+        "University of Minnesota"
+      ]
+    },
+    {
+      "name": "Texas A&M",
+      "rank": 22,
+      "aliases": [
+        "Texas A&M Law School",
+        "Texas A&M School of Law"
+      ]
+    },
+    {
+      "name": "Boston University",
+      "rank": 24,
+      "aliases": [
+        "Boston University Law School",
+        "Boston University School of Law"
+      ]
+    },
+    {
+      "name": "BYU",
+      "rank": 24,
+      "aliases": [
+        "BYU Law School",
+        "BYU School of Law",
+        "BYU University",
+        "University of BYU",
+        "Brigham Young University",
+        "J. Reuben Clark Law School"
+      ]
+    },
+    {
+      "name": "George Washington",
+      "rank": 26,
+      "aliases": [
+        "George Washington Law School",
+        "George Washington School of Law"
+      ]
+    },
+    {
+      "name": "Georgia",
+      "rank": 26,
+      "aliases": [
+        "Georgia Law School",
+        "Georgia School of Law",
+        "Georgia University",
+        "University of Georgia"
+      ]
+    },
+    {
+      "name": "USC",
+      "rank": 26,
+      "aliases": [
+        "USC Law School",
+        "USC School of Law",
+        "USC University",
+        "University of USC",
+        "University of Southern California",
+        "USC Gould",
+        "USC Gould School of Law"
+      ]
+    },
+    {
+      "name": "Wisconsin",
+      "rank": 26,
+      "aliases": [
+        "Wisconsin Law School",
+        "Wisconsin School of Law",
+        "Wisconsin University",
+        "University of Wisconsin"
+      ]
+    },
+    {
+      "name": "Ohio State",
+      "rank": 30,
+      "aliases": [
+        "Ohio State Law School",
+        "Ohio State School of Law"
+      ]
     },
     {
       "name": "Wake Forest",
-      "rank": 26,
-      "aliases": ["Wake Forest University", "Wake Forest University School of Law"]
+      "rank": 30,
+      "aliases": [
+        "Wake Forest Law School",
+        "Wake Forest School of Law"
+      ]
+    },
+    {
+      "name": "George Mason",
+      "rank": 32,
+      "aliases": [
+        "George Mason Law School",
+        "George Mason School of Law"
+      ]
+    },
+    {
+      "name": "Iowa",
+      "rank": 32,
+      "aliases": [
+        "Iowa Law School",
+        "Iowa School of Law",
+        "Iowa University",
+        "University of Iowa"
+      ]
+    },
+    {
+      "name": "Baylor",
+      "rank": 34,
+      "aliases": [
+        "Baylor Law School",
+        "Baylor School of Law",
+        "Baylor University",
+        "University of Baylor"
+      ]
+    },
+    {
+      "name": "FSU",
+      "rank": 34,
+      "aliases": [
+        "FSU Law School",
+        "FSU School of Law",
+        "FSU University",
+        "University of FSU",
+        "Florida State University",
+        "Florida State University College of Law"
+      ]
+    },
+    {
+      "name": "UC - Irvine",
+      "rank": 34,
+      "aliases": [
+        "UC - Irvine Law School",
+        "UC - Irvine School of Law",
+        "University of California Irvine"
+      ]
+    },
+    {
+      "name": "U Florida",
+      "rank": 34,
+      "aliases": [
+        "U Florida Law School",
+        "U Florida School of Law",
+        "University of Florida",
+        "University of Florida Levin College of Law",
+        "UF Law"
+      ]
+    },
+    {
+      "name": "Washington & Lee",
+      "rank": 34,
+      "aliases": [
+        "Washington & Lee Law School",
+        "Washington & Lee School of Law"
+      ]
+    },
+    {
+      "name": "William & Mary",
+      "rank": 34,
+      "aliases": [
+        "William & Mary Law School",
+        "William & Mary School of Law"
+      ]
+    },
+    {
+      "name": "Alabama",
+      "rank": 40,
+      "aliases": [
+        "Alabama Law School",
+        "Alabama School of Law",
+        "Alabama University",
+        "University of Alabama"
+      ]
+    },
+    {
+      "name": "Emory",
+      "rank": 40,
+      "aliases": [
+        "Emory Law School",
+        "Emory School of Law",
+        "Emory University",
+        "University of Emory"
+      ]
+    },
+    {
+      "name": "Fordham",
+      "rank": 42,
+      "aliases": [
+        "Fordham Law School",
+        "Fordham School of Law",
+        "Fordham University",
+        "University of Fordham"
+      ]
+    },
+    {
+      "name": "Southern Methodist",
+      "rank": 42,
+      "aliases": [
+        "Southern Methodist Law School",
+        "Southern Methodist School of Law",
+        "Southern Methodist University",
+        "SMU",
+        "SMU Dedman School of Law"
+      ]
     },
     {
       "name": "Arizona State",
-      "rank": 45,
-      "aliases": ["Arizona State University", "Sandra Day O'Connor College of Law"]
+      "rank": 44,
+      "aliases": [
+        "Arizona State Law School",
+        "Arizona State School of Law"
+      ]
+    },
+    {
+      "name": "Utah",
+      "rank": 44,
+      "aliases": [
+        "Utah Law School",
+        "Utah School of Law",
+        "Utah University",
+        "University of Utah"
+      ]
+    },
+    {
+      "name": "Illinois - Urbana",
+      "rank": 46,
+      "aliases": [
+        "Illinois - Urbana Law School",
+        "Illinois - Urbana School of Law",
+        "University of Illinois",
+        "University of Illinois Urbana-Champaign",
+        "University of Illinois College of Law"
+      ]
+    },
+    {
+      "name": "Kansas",
+      "rank": 46,
+      "aliases": [
+        "Kansas Law School",
+        "Kansas School of Law",
+        "Kansas University",
+        "University of Kansas"
+      ]
+    },
+    {
+      "name": "Pepperdine",
+      "rank": 46,
+      "aliases": [
+        "Pepperdine Law School",
+        "Pepperdine School of Law",
+        "Pepperdine University",
+        "University of Pepperdine"
+      ]
+    },
+    {
+      "name": "Indiana Bloomington",
+      "rank": 49,
+      "aliases": [
+        "Indiana Bloomington Law School",
+        "Indiana Bloomington School of Law",
+        "Indiana University Bloomington",
+        "Indiana University Maurer School of Law",
+        "Maurer"
+      ]
+    },
+    {
+      "name": "Temple University",
+      "rank": 49,
+      "aliases": [
+        "Temple University Law School",
+        "Temple University School of Law"
+      ]
+    },
+    {
+      "name": "Villanova",
+      "rank": 49,
+      "aliases": [
+        "Villanova Law School",
+        "Villanova School of Law",
+        "Villanova University",
+        "University of Villanova"
+      ]
+    },
+    {
+      "name": "UC - Davis",
+      "rank": 52,
+      "aliases": [
+        "UC - Davis Law School",
+        "UC - Davis School of Law",
+        "University of California Davis"
+      ]
+    },
+    {
+      "name": "U Washington",
+      "rank": 52,
+      "aliases": [
+        "U Washington Law School",
+        "U Washington School of Law",
+        "University of Washington",
+        "University of Washington School of Law"
+      ]
+    },
+    {
+      "name": "Colorado - Boulder",
+      "rank": 54,
+      "aliases": [
+        "Colorado - Boulder Law School",
+        "Colorado - Boulder School of Law",
+        "University of Colorado",
+        "University of Colorado Boulder",
+        "Colorado Law"
+      ]
+    },
+    {
+      "name": "Houston",
+      "rank": 54,
+      "aliases": [
+        "Houston Law School",
+        "Houston School of Law",
+        "Houston University",
+        "University of Houston"
+      ]
+    },
+    {
+      "name": "USD",
+      "rank": 54,
+      "aliases": [
+        "USD Law School",
+        "USD School of Law",
+        "USD University",
+        "University of USD",
+        "University of San Diego",
+        "University of San Diego School of Law"
+      ]
+    },
+    {
+      "name": "Tennessee",
+      "rank": 57,
+      "aliases": [
+        "Tennessee Law School",
+        "Tennessee School of Law",
+        "Tennessee University",
+        "University of Tennessee"
+      ]
+    },
+    {
+      "name": "UCONN",
+      "rank": 58,
+      "aliases": [
+        "UCONN Law School",
+        "UCONN School of Law",
+        "UCONN University",
+        "University of UCONN",
+        "University of Connecticut",
+        "University of Connecticut School of Law",
+        "UConn Law"
+      ]
+    },
+    {
+      "name": "Cardozo",
+      "rank": 59,
+      "aliases": [
+        "Cardozo Law School",
+        "Cardozo School of Law",
+        "Cardozo University",
+        "University of Cardozo",
+        "Benjamin N. Cardozo School of Law",
+        "Yeshiva University Cardozo School of Law"
+      ]
+    },
+    {
+      "name": "Marquette",
+      "rank": 59,
+      "aliases": [
+        "Marquette Law School",
+        "Marquette School of Law",
+        "Marquette University",
+        "University of Marquette"
+      ]
     },
     {
       "name": "Missouri",
-      "rank": 57,
-      "aliases": ["University of Missouri", "University of Missouri School of Law", "Mizzou"]
+      "rank": 59,
+      "aliases": [
+        "Missouri Law School",
+        "Missouri School of Law",
+        "Missouri University",
+        "University of Missouri"
+      ]
+    },
+    {
+      "name": "Maryland",
+      "rank": 62,
+      "aliases": [
+        "Maryland Law School",
+        "Maryland School of Law",
+        "Maryland University",
+        "University of Maryland"
+      ]
+    },
+    {
+      "name": "Nebraska",
+      "rank": 62,
+      "aliases": [
+        "Nebraska Law School",
+        "Nebraska School of Law",
+        "Nebraska University",
+        "University of Nebraska"
+      ]
+    },
+    {
+      "name": "Oklahoma",
+      "rank": 62,
+      "aliases": [
+        "Oklahoma Law School",
+        "Oklahoma School of Law",
+        "Oklahoma University",
+        "University of Oklahoma"
+      ]
+    },
+    {
+      "name": "Penn State",
+      "rank": 62,
+      "aliases": [
+        "Penn State Law School",
+        "Penn State School of Law",
+        "Penn State Dickinson Law",
+        "Pennsylvania State University Dickinson Law"
+      ]
+    },
+    {
+      "name": "Pennsylvania State - Penn State Law",
+      "rank": 62,
+      "aliases": [
+        "Pennsylvania State - Penn State Law Law School",
+        "Pennsylvania State - Penn State Law School of Law",
+        "Penn State Law",
+        "Pennsylvania State University Penn State Law"
+      ]
+    },
+    {
+      "name": "Richmond",
+      "rank": 62,
+      "aliases": [
+        "Richmond Law School",
+        "Richmond School of Law",
+        "Richmond University",
+        "University of Richmond"
+      ]
+    },
+    {
+      "name": "South Carolina",
+      "rank": 62,
+      "aliases": [
+        "South Carolina Law School",
+        "South Carolina School of Law"
+      ]
+    },
+    {
+      "name": "St. John's",
+      "rank": 62,
+      "aliases": [
+        "St. John's Law School",
+        "St. John's School of Law"
+      ]
+    },
+    {
+      "name": "Wayne State",
+      "rank": 62,
+      "aliases": [
+        "Wayne State Law School",
+        "Wayne State School of Law"
+      ]
     },
     {
       "name": "Arizona",
-      "rank": 59,
-      "aliases": ["University of Arizona", "James E. Rogers College of Law"]
+      "rank": 70,
+      "aliases": [
+        "Arizona Law School",
+        "Arizona School of Law",
+        "Arizona University",
+        "University of Arizona"
+      ]
     },
     {
-      "name": "Loyola Chicago",
-      "rank": 79,
-      "aliases": ["Loyola University—Chicago", "Loyola University-Chicago", "Loyola University Chicago"]
+      "name": "Catholic University",
+      "rank": 70,
+      "aliases": [
+        "Catholic University Law School",
+        "Catholic University School of Law"
+      ]
+    },
+    {
+      "name": "Kentucky",
+      "rank": 70,
+      "aliases": [
+        "Kentucky Law School",
+        "Kentucky School of Law",
+        "Kentucky University",
+        "University of Kentucky"
+      ]
+    },
+    {
+      "name": "Loyola Marymount - LA",
+      "rank": 70,
+      "aliases": [
+        "Loyola Marymount - LA Law School",
+        "Loyola Marymount - LA School of Law",
+        "Loyola Marymount University",
+        "Loyola Law School Los Angeles",
+        "LMU Loyola Law School"
+      ]
+    },
+    {
+      "name": "Miami",
+      "rank": 70,
+      "aliases": [
+        "Miami Law School",
+        "Miami School of Law",
+        "Miami University",
+        "University of Miami"
+      ]
+    },
+    {
+      "name": "Seton Hall",
+      "rank": 70,
+      "aliases": [
+        "Seton Hall Law School",
+        "Seton Hall School of Law"
+      ]
+    },
+    {
+      "name": "Tulane",
+      "rank": 70,
+      "aliases": [
+        "Tulane Law School",
+        "Tulane School of Law",
+        "Tulane University",
+        "University of Tulane"
+      ]
+    },
+    {
+      "name": "FIU",
+      "rank": 77,
+      "aliases": [
+        "FIU Law School",
+        "FIU School of Law",
+        "FIU University",
+        "University of FIU",
+        "Florida International University",
+        "Florida International University College of Law"
+      ]
+    },
+    {
+      "name": "GSU",
+      "rank": 77,
+      "aliases": [
+        "GSU Law School",
+        "GSU School of Law",
+        "GSU University",
+        "University of GSU",
+        "Georgia State University",
+        "Georgia State University College of Law"
+      ]
+    },
+    {
+      "name": "Loyola - Chicago",
+      "rank": 77,
+      "aliases": [
+        "Loyola - Chicago Law School",
+        "Loyola - Chicago School of Law",
+        "Loyola University Chicago"
+      ]
+    },
+    {
+      "name": "Northeastern",
+      "rank": 77,
+      "aliases": [
+        "Northeastern Law School",
+        "Northeastern School of Law",
+        "Northeastern University",
+        "University of Northeastern"
+      ]
+    },
+    {
+      "name": "Pittsburgh",
+      "rank": 77,
+      "aliases": [
+        "Pittsburgh Law School",
+        "Pittsburgh School of Law",
+        "Pittsburgh University",
+        "University of Pittsburgh"
+      ]
+    },
+    {
+      "name": "Cincinnati",
+      "rank": 82,
+      "aliases": [
+        "Cincinnati Law School",
+        "Cincinnati School of Law",
+        "Cincinnati University",
+        "University of Cincinnati"
+      ]
+    },
+    {
+      "name": "Drexel",
+      "rank": 82,
+      "aliases": [
+        "Drexel Law School",
+        "Drexel School of Law",
+        "Drexel University",
+        "University of Drexel"
+      ]
+    },
+    {
+      "name": "SUNY Buffalo",
+      "rank": 82,
+      "aliases": [
+        "SUNY Buffalo Law School",
+        "SUNY Buffalo School of Law"
+      ]
+    },
+    {
+      "name": "Belmont",
+      "rank": 85,
+      "aliases": [
+        "Belmont Law School",
+        "Belmont School of Law",
+        "Belmont University",
+        "University of Belmont"
+      ]
+    },
+    {
+      "name": "Duquesne",
+      "rank": 85,
+      "aliases": [
+        "Duquesne Law School",
+        "Duquesne School of Law",
+        "Duquesne University",
+        "University of Duquesne"
+      ]
+    },
+    {
+      "name": "LSU",
+      "rank": 85,
+      "aliases": [
+        "LSU Law School",
+        "LSU School of Law",
+        "LSU University",
+        "University of LSU",
+        "Louisiana State University",
+        "LSU Paul M. Hebert Law Center"
+      ]
+    },
+    {
+      "name": "Texas Tech",
+      "rank": 85,
+      "aliases": [
+        "Texas Tech Law School",
+        "Texas Tech School of Law"
+      ]
+    },
+    {
+      "name": "UC Law San Francisco",
+      "rank": 85,
+      "aliases": [
+        "UC Law San Francisco Law School",
+        "UC Law San Francisco School of Law",
+        "University of California College of the Law San Francisco",
+        "UC Hastings",
+        "UC Hastings College of the Law"
+      ]
+    },
+    {
+      "name": "Montana",
+      "rank": 90,
+      "aliases": [
+        "Montana Law School",
+        "Montana School of Law",
+        "Montana University",
+        "University of Montana"
+      ]
+    },
+    {
+      "name": "Denver",
+      "rank": 91,
+      "aliases": [
+        "Denver Law School",
+        "Denver School of Law",
+        "Denver University",
+        "University of Denver",
+        "University of Denver Sturm College of Law",
+        "Denver Sturm"
+      ]
+    },
+    {
+      "name": "Drake",
+      "rank": 91,
+      "aliases": [
+        "Drake Law School",
+        "Drake School of Law",
+        "Drake University",
+        "University of Drake"
+      ]
+    },
+    {
+      "name": "Hawaii",
+      "rank": 91,
+      "aliases": [
+        "Hawaii Law School",
+        "Hawaii School of Law",
+        "Hawaii University",
+        "University of Hawaii"
+      ]
+    },
+    {
+      "name": "Maine",
+      "rank": 91,
+      "aliases": [
+        "Maine Law School",
+        "Maine School of Law",
+        "Maine University",
+        "University of Maine"
+      ]
+    },
+    {
+      "name": "Nevada - Las Vegas",
+      "rank": 91,
+      "aliases": [
+        "Nevada - Las Vegas Law School",
+        "Nevada - Las Vegas School of Law",
+        "University of Nevada Las Vegas",
+        "UNLV",
+        "UNLV Boyd School of Law"
+      ]
     },
     {
       "name": "Oregon",
-      "rank": 94,
-      "aliases": ["University of Oregon", "University of Oregon School of Law"]
+      "rank": 91,
+      "aliases": [
+        "Oregon Law School",
+        "Oregon School of Law",
+        "Oregon University",
+        "University of Oregon"
+      ]
+    },
+    {
+      "name": "Regent",
+      "rank": 91,
+      "aliases": [
+        "Regent Law School",
+        "Regent School of Law",
+        "Regent University",
+        "University of Regent"
+      ]
+    },
+    {
+      "name": "SLU",
+      "rank": 91,
+      "aliases": [
+        "SLU Law School",
+        "SLU School of Law",
+        "SLU University",
+        "University of SLU",
+        "Saint Louis University",
+        "Saint Louis University School of Law"
+      ]
     },
     {
       "name": "Stetson",
-      "rank": 99,
-      "aliases": ["Stetson University", "Stetson University College of Law"]
+      "rank": 91,
+      "aliases": [
+        "Stetson Law School",
+        "Stetson School of Law",
+        "Stetson University",
+        "University of Stetson"
+      ]
+    },
+    {
+      "name": "Case Western",
+      "rank": 100,
+      "aliases": [
+        "Case Western Law School",
+        "Case Western School of Law",
+        "Case Western Reserve University",
+        "Case Western Reserve University School of Law"
+      ]
+    },
+    {
+      "name": "Missouri - Kansas City",
+      "rank": 100,
+      "aliases": [
+        "Missouri - Kansas City Law School",
+        "Missouri - Kansas City School of Law",
+        "University of Missouri Kansas City",
+        "UMKC",
+        "UMKC School of Law"
+      ]
+    },
+    {
+      "name": "Rutgers",
+      "rank": 100,
+      "aliases": [
+        "Rutgers Law School",
+        "Rutgers School of Law",
+        "Rutgers University",
+        "University of Rutgers"
+      ]
+    },
+    {
+      "name": "Syracuse University",
+      "rank": 100,
+      "aliases": [
+        "Syracuse University Law School",
+        "Syracuse University School of Law"
+      ]
+    },
+    {
+      "name": "U Arkansas - Fayetteville",
+      "rank": 100,
+      "aliases": [
+        "U Arkansas - Fayetteville Law School",
+        "U Arkansas - Fayetteville School of Law",
+        "University of Arkansas",
+        "University of Arkansas School of Law",
+        "Arkansas Fayetteville"
+      ]
+    },
+    {
+      "name": "Brooklyn",
+      "rank": 105,
+      "aliases": [
+        "Brooklyn Law School",
+        "Brooklyn School of Law",
+        "Brooklyn University",
+        "University of Brooklyn"
+      ]
+    },
+    {
+      "name": "Chicago-Kent",
+      "rank": 105,
+      "aliases": [
+        "Chicago-Kent Law School",
+        "Chicago-Kent School of Law",
+        "Chicago-Kent University",
+        "University of Chicago-Kent",
+        "Chicago-Kent College of Law",
+        "Illinois Institute of Technology Chicago-Kent College of Law"
+      ]
+    },
+    {
+      "name": "St. Thomas (Minnesota)",
+      "rank": 105,
+      "aliases": [
+        "St. Thomas (Minnesota) Law School",
+        "St. Thomas (Minnesota) School of Law",
+        "University of St. Thomas Minnesota",
+        "University of St. Thomas School of Law Minnesota"
+      ]
+    },
+    {
+      "name": "American",
+      "rank": 108,
+      "aliases": [
+        "American Law School",
+        "American School of Law",
+        "American University",
+        "University of American",
+        "American University Washington College of Law",
+        "Washington College of Law"
+      ]
+    },
+    {
+      "name": "Mercer",
+      "rank": 108,
+      "aliases": [
+        "Mercer Law School",
+        "Mercer School of Law",
+        "Mercer University",
+        "University of Mercer"
+      ]
+    },
+    {
+      "name": "Michigan State",
+      "rank": 108,
+      "aliases": [
+        "Michigan State Law School",
+        "Michigan State School of Law"
+      ]
+    },
+    {
+      "name": "Washburn",
+      "rank": 108,
+      "aliases": [
+        "Washburn Law School",
+        "Washburn School of Law",
+        "Washburn University",
+        "University of Washburn"
+      ]
+    },
+    {
+      "name": "Chapman",
+      "rank": 112,
+      "aliases": [
+        "Chapman Law School",
+        "Chapman School of Law",
+        "Chapman University",
+        "University of Chapman"
+      ]
+    },
+    {
+      "name": "Dayton",
+      "rank": 112,
+      "aliases": [
+        "Dayton Law School",
+        "Dayton School of Law",
+        "Dayton University",
+        "University of Dayton"
+      ]
+    },
+    {
+      "name": "Lewis And Clark",
+      "rank": 112,
+      "aliases": [
+        "Lewis And Clark Law School",
+        "Lewis And Clark School of Law",
+        "Lewis and Clark College"
+      ]
+    },
+    {
+      "name": "New York Law School",
+      "rank": 112,
+      "aliases": [
+        "New York Law School Law School",
+        "New York Law School School of Law"
+      ]
+    },
+    {
+      "name": "Wyoming",
+      "rank": 112,
+      "aliases": [
+        "Wyoming Law School",
+        "Wyoming School of Law",
+        "Wyoming University",
+        "University of Wyoming"
+      ]
+    },
+    {
+      "name": "Hofstra",
+      "rank": 117,
+      "aliases": [
+        "Hofstra Law School",
+        "Hofstra School of Law",
+        "Hofstra University",
+        "University of Hofstra"
+      ]
+    },
+    {
+      "name": "Howard",
+      "rank": 117,
+      "aliases": [
+        "Howard Law School",
+        "Howard School of Law",
+        "Howard University",
+        "University of Howard"
+      ]
+    },
+    {
+      "name": "UNM",
+      "rank": 117,
+      "aliases": [
+        "UNM Law School",
+        "UNM School of Law",
+        "UNM University",
+        "University of UNM",
+        "University of New Mexico",
+        "University of New Mexico School of Law"
+      ]
+    },
+    {
+      "name": "Albany",
+      "rank": 120,
+      "aliases": [
+        "Albany Law School",
+        "Albany School of Law",
+        "Albany University",
+        "University of Albany"
+      ]
+    },
+    {
+      "name": "Tulsa",
+      "rank": 120,
+      "aliases": [
+        "Tulsa Law School",
+        "Tulsa School of Law",
+        "Tulsa University",
+        "University of Tulsa"
+      ]
+    },
+    {
+      "name": "Samford",
+      "rank": 122,
+      "aliases": [
+        "Samford Law School",
+        "Samford School of Law",
+        "Samford University",
+        "University of Samford"
+      ]
+    },
+    {
+      "name": "South Dakota",
+      "rank": 122,
+      "aliases": [
+        "South Dakota Law School",
+        "South Dakota School of Law"
+      ]
+    },
+    {
+      "name": "IU McKinney",
+      "rank": 124,
+      "aliases": [
+        "IU McKinney Law School",
+        "IU McKinney School of Law",
+        "Indiana University McKinney",
+        "Indiana University Robert H. McKinney School of Law"
+      ]
+    },
+    {
+      "name": "Louisville",
+      "rank": 124,
+      "aliases": [
+        "Louisville Law School",
+        "Louisville School of Law",
+        "Louisville University",
+        "University of Louisville"
+      ]
+    },
+    {
+      "name": "Mississippi",
+      "rank": 124,
+      "aliases": [
+        "Mississippi Law School",
+        "Mississippi School of Law",
+        "Mississippi University",
+        "University of Mississippi"
+      ]
+    },
+    {
+      "name": "WVU",
+      "rank": 124,
+      "aliases": [
+        "WVU Law School",
+        "WVU School of Law",
+        "WVU University",
+        "University of WVU",
+        "West Virginia University",
+        "West Virginia University College of Law"
+      ]
+    },
+    {
+      "name": "Seattle",
+      "rank": 128,
+      "aliases": [
+        "Seattle Law School",
+        "Seattle School of Law",
+        "Seattle University",
+        "University of Seattle"
+      ]
+    },
+    {
+      "name": "Suffolk",
+      "rank": 128,
+      "aliases": [
+        "Suffolk Law School",
+        "Suffolk School of Law",
+        "Suffolk University",
+        "University of Suffolk"
+      ]
+    },
+    {
+      "name": "Akron",
+      "rank": 131,
+      "aliases": [
+        "Akron Law School",
+        "Akron School of Law",
+        "Akron University",
+        "University of Akron"
+      ]
     },
     {
       "name": "Campbell",
-      "rank": 134,
-      "aliases": ["Campbell University", "Campbell University School of Law"]
+      "rank": 131,
+      "aliases": [
+        "Campbell Law School",
+        "Campbell School of Law",
+        "Campbell University",
+        "University of Campbell"
+      ]
+    },
+    {
+      "name": "DePaul",
+      "rank": 131,
+      "aliases": [
+        "DePaul Law School",
+        "DePaul School of Law",
+        "DePaul University",
+        "University of DePaul"
+      ]
+    },
+    {
+      "name": "Northern Kentucky",
+      "rank": 131,
+      "aliases": [
+        "Northern Kentucky Law School",
+        "Northern Kentucky School of Law"
+      ]
+    },
+    {
+      "name": "Loyola - New Orleans",
+      "rank": 135,
+      "aliases": [
+        "Loyola - New Orleans Law School",
+        "Loyola - New Orleans School of Law",
+        "Loyola University New Orleans",
+        "Loyola University New Orleans College of Law"
+      ]
+    },
+    {
+      "name": "Baltimore",
+      "rank": 136,
+      "aliases": [
+        "Baltimore Law School",
+        "Baltimore School of Law",
+        "Baltimore University",
+        "University of Baltimore"
+      ]
+    },
+    {
+      "name": "Cleveland",
+      "rank": 136,
+      "aliases": [
+        "Cleveland Law School",
+        "Cleveland School of Law",
+        "Cleveland University",
+        "University of Cleveland"
+      ]
+    },
+    {
+      "name": "New Hampshire",
+      "rank": 136,
+      "aliases": [
+        "New Hampshire Law School",
+        "New Hampshire School of Law"
+      ]
+    },
+    {
+      "name": "Quinnipiac",
+      "rank": 136,
+      "aliases": [
+        "Quinnipiac Law School",
+        "Quinnipiac School of Law",
+        "Quinnipiac University",
+        "University of Quinnipiac"
+      ]
+    },
+    {
+      "name": "South Texas",
+      "rank": 138,
+      "aliases": [
+        "South Texas Law School",
+        "South Texas School of Law"
+      ]
+    },
+    {
+      "name": "Memphis",
+      "rank": 140,
+      "aliases": [
+        "Memphis Law School",
+        "Memphis School of Law",
+        "Memphis University",
+        "University of Memphis"
+      ]
+    },
+    {
+      "name": "U Arkansas - Little Rock",
+      "rank": 140,
+      "aliases": [
+        "U Arkansas - Little Rock Law School",
+        "U Arkansas - Little Rock School of Law",
+        "University of Arkansas at Little Rock",
+        "UA Little Rock William H. Bowen School of Law",
+        "Bowen"
+      ]
+    },
+    {
+      "name": "Detroit Mercy",
+      "rank": 142,
+      "aliases": [
+        "Detroit Mercy Law School",
+        "Detroit Mercy School of Law"
+      ]
+    },
+    {
+      "name": "Pace",
+      "rank": 142,
+      "aliases": [
+        "Pace Law School",
+        "Pace School of Law",
+        "Pace University",
+        "University of Pace"
+      ]
+    },
+    {
+      "name": "Creighton",
+      "rank": 144,
+      "aliases": [
+        "Creighton Law School",
+        "Creighton School of Law",
+        "Creighton University",
+        "University of Creighton"
+      ]
+    },
+    {
+      "name": "Elon",
+      "rank": 144,
+      "aliases": [
+        "Elon Law School",
+        "Elon School of Law",
+        "Elon University",
+        "University of Elon"
+      ]
+    },
+    {
+      "name": "Gonzaga",
+      "rank": 144,
+      "aliases": [
+        "Gonzaga Law School",
+        "Gonzaga School of Law",
+        "Gonzaga University",
+        "University of Gonzaga"
+      ]
+    },
+    {
+      "name": "Liberty",
+      "rank": 144,
+      "aliases": [
+        "Liberty Law School",
+        "Liberty School of Law",
+        "Liberty University",
+        "University of Liberty"
+      ]
+    },
+    {
+      "name": "Idaho",
+      "rank": 148,
+      "aliases": [
+        "Idaho Law School",
+        "Idaho School of Law",
+        "Idaho University",
+        "University of Idaho"
+      ]
+    },
+    {
+      "name": "Toledo",
+      "rank": 149,
+      "aliases": [
+        "Toledo Law School",
+        "Toledo School of Law",
+        "Toledo University",
+        "University of Toledo"
+      ]
+    },
+    {
+      "name": "Santa Clara",
+      "rank": 150,
+      "aliases": [
+        "Santa Clara Law School",
+        "Santa Clara School of Law"
+      ]
+    },
+    {
+      "name": "St. Mary's",
+      "rank": 150,
+      "aliases": [
+        "St. Mary's Law School",
+        "St. Mary's School of Law"
+      ]
+    },
+    {
+      "name": "Mitchell Hamline",
+      "rank": 152,
+      "aliases": [
+        "Mitchell Hamline Law School",
+        "Mitchell Hamline School of Law"
+      ]
+    },
+    {
+      "name": "Pacific (Mcgeorge)",
+      "rank": 152,
+      "aliases": [
+        "Pacific (Mcgeorge) Law School",
+        "Pacific (Mcgeorge) School of Law",
+        "University of the Pacific",
+        "McGeorge School of Law",
+        "University of the Pacific McGeorge School of Law"
+      ]
+    },
+    {
+      "name": "Southwestern",
+      "rank": 154,
+      "aliases": [
+        "Southwestern Law School",
+        "Southwestern School of Law",
+        "Southwestern University",
+        "University of Southwestern"
+      ]
     },
     {
       "name": "Vermont",
-      "rank": 163,
-      "aliases": ["Vermont Law School", "Vermont Law and Graduate School"]
+      "rank": 154,
+      "aliases": [
+        "Vermont Law School",
+        "Vermont School of Law",
+        "Vermont University",
+        "University of Vermont"
+      ]
+    },
+    {
+      "name": "Widener-Delaware",
+      "rank": 154,
+      "aliases": [
+        "Widener-Delaware Law School",
+        "Widener-Delaware School of Law",
+        "Widener-Delaware University",
+        "University of Widener-Delaware"
+      ]
+    },
+    {
+      "name": "Oklahoma City",
+      "rank": 156,
+      "aliases": [
+        "Oklahoma City Law School",
+        "Oklahoma City School of Law"
+      ]
+    },
+    {
+      "name": "UND",
+      "rank": 156,
+      "aliases": [
+        "UND Law School",
+        "UND School of Law",
+        "UND University",
+        "University of UND",
+        "University of North Dakota",
+        "University of North Dakota School of Law"
+      ]
+    },
+    {
+      "name": "USF",
+      "rank": 156,
+      "aliases": [
+        "USF Law School",
+        "USF School of Law",
+        "USF University",
+        "University of USF",
+        "University of San Francisco",
+        "University of San Francisco School of Law"
+      ]
+    },
+    {
+      "name": "UNTD",
+      "rank": 159,
+      "aliases": [
+        "UNTD Law School",
+        "UNTD School of Law",
+        "UNTD University",
+        "University of UNTD",
+        "University of North Texas at Dallas",
+        "UNT Dallas College of Law"
+      ]
+    },
+    {
+      "name": "Western New England",
+      "rank": 159,
+      "aliases": [
+        "Western New England Law School",
+        "Western New England School of Law"
+      ]
+    },
+    {
+      "name": "Mississippi College",
+      "rank": 161,
+      "aliases": [
+        "Mississippi College Law School",
+        "Mississippi College School of Law"
+      ]
+    },
+    {
+      "name": "NIU",
+      "rank": 161,
+      "aliases": [
+        "NIU Law School",
+        "NIU School of Law",
+        "NIU University",
+        "University of NIU",
+        "Northern Illinois University",
+        "Northern Illinois University College of Law"
+      ]
+    },
+    {
+      "name": "Ave Maria",
+      "rank": 164,
+      "aliases": [
+        "Ave Maria Law School",
+        "Ave Maria School of Law"
+      ]
+    },
+    {
+      "name": "Jones",
+      "rank": 164,
+      "aliases": [
+        "Jones Law School",
+        "Jones School of Law",
+        "Jones University",
+        "University of Jones"
+      ]
+    },
+    {
+      "name": "Touro",
+      "rank": 164,
+      "aliases": [
+        "Touro Law School",
+        "Touro School of Law",
+        "Touro University",
+        "University of Touro"
+      ]
+    },
+    {
+      "name": "Illinois - Chicago",
+      "rank": 167,
+      "aliases": [
+        "Illinois - Chicago Law School",
+        "Illinois - Chicago School of Law",
+        "University of Illinois Chicago",
+        "UIC Law",
+        "UIC School of Law"
+      ]
+    },
+    {
+      "name": "New England - Boston",
+      "rank": 168,
+      "aliases": [
+        "New England - Boston Law School",
+        "New England - Boston School of Law",
+        "New England Law Boston"
+      ]
+    },
+    {
+      "name": "St. Thomas",
+      "rank": 168,
+      "aliases": [
+        "St. Thomas Law School",
+        "St. Thomas School of Law"
+      ]
+    },
+    {
+      "name": "Willamette",
+      "rank": 168,
+      "aliases": [
+        "Willamette Law School",
+        "Willamette School of Law",
+        "Willamette University",
+        "University of Willamette"
+      ]
+    },
+    {
+      "name": "Charleston",
+      "rank": 171,
+      "aliases": [
+        "Charleston Law School",
+        "Charleston School of Law",
+        "Charleston University",
+        "University of Charleston"
+      ]
+    },
+    {
+      "name": "CUNY",
+      "rank": 171,
+      "aliases": [
+        "CUNY Law School",
+        "CUNY School of Law",
+        "CUNY University",
+        "University of CUNY",
+        "City University of New York"
+      ]
+    },
+    {
+      "name": "Roger Williams",
+      "rank": 171,
+      "aliases": [
+        "Roger Williams Law School",
+        "Roger Williams School of Law"
+      ]
+    },
+    {
+      "name": "UMass - Dartmouth",
+      "rank": 171,
+      "aliases": [
+        "UMass - Dartmouth Law School",
+        "UMass - Dartmouth School of Law",
+        "University of Massachusetts Dartmouth",
+        "UMass Law",
+        "UMass School of Law"
+      ]
+    },
+    {
+      "name": "Appalachian",
+      "rank": 175,
+      "rankLabel": "175+",
+      "aliases": [
+        "Appalachian Law School",
+        "Appalachian School of Law",
+        "Appalachian University",
+        "University of Appalachian"
+      ]
+    },
+    {
+      "name": "Barry Law",
+      "rank": 175,
+      "rankLabel": "175+",
+      "aliases": [
+        "Barry Law Law School",
+        "Barry Law School of Law"
+      ]
+    },
+    {
+      "name": "California Western",
+      "rank": 175,
+      "rankLabel": "175+",
+      "aliases": [
+        "California Western Law School",
+        "California Western School of Law"
+      ]
+    },
+    {
+      "name": "Capital",
+      "rank": 175,
+      "rankLabel": "175+",
+      "aliases": [
+        "Capital Law School",
+        "Capital School of Law",
+        "Capital University",
+        "University of Capital"
+      ]
+    },
+    {
+      "name": "Florida A&M",
+      "rank": 175,
+      "rankLabel": "175+",
+      "aliases": [
+        "Florida A&M Law School",
+        "Florida A&M School of Law",
+        "Florida Agricultural and Mechanical University",
+        "Florida A&M University College of Law",
+        "FAMU"
+      ]
+    },
+    {
+      "name": "Inter American",
+      "rank": 175,
+      "rankLabel": "175+",
+      "aliases": [
+        "Inter American Law School",
+        "Inter American School of Law"
+      ]
+    },
+    {
+      "name": "John Marshall",
+      "rank": 175,
+      "rankLabel": "175+",
+      "aliases": [
+        "John Marshall Law School",
+        "John Marshall School of Law"
+      ]
+    },
+    {
+      "name": "Lincoln Memorial",
+      "rank": 175,
+      "rankLabel": "175+",
+      "aliases": [
+        "Lincoln Memorial Law School",
+        "Lincoln Memorial School of Law"
+      ]
+    },
+    {
+      "name": "NCCU",
+      "rank": 175,
+      "rankLabel": "175+",
+      "aliases": [
+        "NCCU Law School",
+        "NCCU School of Law",
+        "NCCU University",
+        "University of NCCU",
+        "North Carolina Central University",
+        "North Carolina Central University School of Law"
+      ]
+    },
+    {
+      "name": "Nova Southeastern",
+      "rank": 175,
+      "rankLabel": "175+",
+      "aliases": [
+        "Nova Southeastern Law School",
+        "Nova Southeastern School of Law"
+      ]
+    },
+    {
+      "name": "ONU",
+      "rank": 175,
+      "rankLabel": "175+",
+      "aliases": [
+        "ONU Law School",
+        "ONU School of Law",
+        "ONU University",
+        "University of ONU",
+        "Ohio Northern University",
+        "Ohio Northern University Pettit College of Law"
+      ]
+    },
+    {
+      "name": "Pontifical Catholic",
+      "rank": 175,
+      "rankLabel": "175+",
+      "aliases": [
+        "Pontifical Catholic Law School",
+        "Pontifical Catholic School of Law"
+      ]
+    },
+    {
+      "name": "Puerto Rico",
+      "rank": 175,
+      "rankLabel": "175+",
+      "aliases": [
+        "Puerto Rico Law School",
+        "Puerto Rico School of Law"
+      ]
+    },
+    {
+      "name": "SIU - Carbondale",
+      "rank": 175,
+      "rankLabel": "175+",
+      "aliases": [
+        "SIU - Carbondale Law School",
+        "SIU - Carbondale School of Law",
+        "Southern Illinois University",
+        "Southern Illinois University School of Law",
+        "SIU Law"
+      ]
+    },
+    {
+      "name": "Southern",
+      "rank": 175,
+      "rankLabel": "175+",
+      "aliases": [
+        "Southern Law School",
+        "Southern School of Law",
+        "Southern University",
+        "University of Southern"
+      ]
+    },
+    {
+      "name": "Texas Southern",
+      "rank": 175,
+      "rankLabel": "175+",
+      "aliases": [
+        "Texas Southern Law School",
+        "Texas Southern School of Law"
+      ]
+    },
+    {
+      "name": "UDC",
+      "rank": 175,
+      "rankLabel": "175+",
+      "aliases": [
+        "UDC Law School",
+        "UDC School of Law",
+        "UDC University",
+        "University of UDC",
+        "University of the District of Columbia",
+        "UDC David A. Clarke School of Law"
+      ]
+    },
+    {
+      "name": "Western Michigan",
+      "rank": 175,
+      "rankLabel": "175+",
+      "aliases": [
+        "Western Michigan Law School",
+        "Western Michigan School of Law",
+        "Western Michigan University",
+        "Western Michigan University Cooley Law School",
+        "Cooley"
+      ]
+    },
+    {
+      "name": "Western State",
+      "rank": 175,
+      "rankLabel": "175+",
+      "aliases": [
+        "Western State Law School",
+        "Western State School of Law"
+      ]
+    },
+    {
+      "name": "Widener - Pennsylvania",
+      "rank": 175,
+      "rankLabel": "175+",
+      "aliases": [
+        "Widener - Pennsylvania Law School",
+        "Widener - Pennsylvania School of Law"
+      ]
     }
   ]
 }
