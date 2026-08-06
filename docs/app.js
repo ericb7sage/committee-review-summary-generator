@@ -1999,6 +1999,10 @@ function formatSchoolRank(school) {
   return school?.rankLabel || `#${school?.rank}`;
 }
 
+function getSchoolRangeLaneCenter(category) {
+  return { reach: 26.5, target: 29.5, safety: 32.5 }[category] ?? 29;
+}
+
 function buildStudentReport(fileName, rows, manual) {
   const unknownTags = new Set();
   const summaryRatings = {
@@ -2409,7 +2413,11 @@ function renderSchoolRecommendationPlot(readers, cycle) {
       ${ticks.map((tick) => `<span class="school-rank-gridline" style="left:${tick.pct}%"></span>`).join("")}
       <span class="school-rank-baseline"></span>
       ${spans.map((span, index) => `<span class="school-range-span ${span.category}${span.isPoint ? " point-range" : ""}" style="left:${span.left}%;width:${span.width}%;--range-lane:${index}"></span>`).join("")}
-      ${items.filter((item) => item.dotOffset).map((item) => `<span class="school-rank-connector ${item.category}" style="left:${item.pct}%;top:${29 + Math.min(0, item.dotOffset)}px;height:${Math.abs(item.dotOffset)}px"></span>`).join("")}
+      ${items.filter((item) => item.dotOffset).map((item) => {
+        const dotCenter = 29 + item.dotOffset;
+        const laneCenter = getSchoolRangeLaneCenter(item.category);
+        return `<span class="school-rank-connector ${item.category}" style="left:${item.pct}%;top:${Math.min(dotCenter, laneCenter)}px;height:${Math.abs(dotCenter - laneCenter)}px"></span>`;
+      }).join("")}
       ${items.map((item) => `<span class="school-rank-dot ${item.category} digits-${String(item.rankLabel || item.rank).length}" style="left:${item.pct}%;--dot-offset:${item.dotOffset}px" title="${SCHOOL_CATEGORY_LABELS[item.category]} · ${escapeHtml(item.schoolNames.join(" / "))} ${escapeHtml(formatSchoolRank(item))}">${escapeHtml(item.rankLabel || item.rank)}</span>`).join("")}
     </div>
     <div class="school-rank-axis">
