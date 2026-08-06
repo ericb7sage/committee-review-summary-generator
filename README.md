@@ -109,6 +109,8 @@ The existing one-school format remains supported:
 - `Recommend a Target`
 - `Recommend a Safety`
 
+Coda exports using `Recommend Two Reaches` and `Recommend Two Targets` are normalized to the corresponding one-school fields. Despite those column labels, a single populated school remains valid and the second summary position stays blank.
+
 Each of the three review rows must name one school in every required recommendation column. School names are matched against the versioned `school-rankings.json` catalog; exported rank columns are intentionally ignored. Unknown schools and duplicate choices within the same reader/category block that student's report. If the recommendation columns are absent, the report continues to use the legacy `Reach`, `Target`, and `Safety` tier plot.
 
 When nearby school ranks are staggered above or below the number line, a category-colored connector marks the bubble's exact position on the shared baseline.

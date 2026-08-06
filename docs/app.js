@@ -20,6 +20,14 @@ const HEADER_ALIASES = {
   "Personality?": "Know?",
   "Experience Rating (Softs Tier)": "Softs",
   Explanation: "Notes",
+  "Recommend Two Reaches": "Recommend a Reach",
+  "Recommend Two Targets": "Recommend a Target",
+  "Recommend a Reach 1": "Recommend a Reach",
+  "Recommend a Reach 2": "Recommend a Second Reach",
+  "Recommend a Target 1": "Recommend a Target",
+  "Recommend a Target 2": "Recommend a Second Target",
+  "Recommend a Safety 1": "Recommend a Safety",
+  "Recommend a Safety 2": "Recommend a Second Safety",
 };
 
 const RUBRIC_DELTA = {
@@ -72,9 +80,9 @@ const SCHOOL_RECOMMENDATION_FIELDS = {
   safety: "Recommend a Safety",
 };
 const SCHOOL_RECOMMENDATION_FIELDS_TWO = {
-  reach: ["Recommend a Reach 1", "Recommend a Reach 2"],
-  target: ["Recommend a Target 1", "Recommend a Target 2"],
-  safety: ["Recommend a Safety 1", "Recommend a Safety 2"],
+  reach: ["Recommend a Reach", "Recommend a Second Reach"],
+  target: ["Recommend a Target", "Recommend a Second Target"],
+  safety: ["Recommend a Safety", "Recommend a Second Safety"],
 };
 const SCHOOL_RANK_BREAKPOINTS = [3, 6, 14, 20, 30, 50, 75, 100];
 const SCHOOL_CATEGORY_LABELS = {
@@ -692,7 +700,9 @@ const PRINT_CSS = `
   .reader-card.reader-slot-1 { border-color: #d8dee9; --reader-top-bg: #f9f9f9; }
   .reader-card.reader-slot-2 { border-color: #d8dee9; --reader-top-bg: #f9f9f9; }
   .reader-card.reader-slot-3 { border-color: #d8dee9; --reader-top-bg: #f9f9f9; }
-  .reader-tag-explanation-card { gap: 7px; border-width: 1px; background: #fff; }
+  .reader-tag-explanation-card { display: grid; gap: 4px; width: calc(100% - 16px); margin: 0 auto; border: 1px solid #d8dee9; border-radius: 8px; padding: 7px 10px; background: #fff; }
+  .reader-tag-explanations { display: grid; gap: 6px; padding-top: 2px; }
+  .reader-ballot-continuation { padding: 10px; }
   .reader-tag-explanation-title { display: flex; justify-content: flex-start; }
   .page-continue-note { position: absolute; right: 8px; bottom: 12px; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; color: #94a3b8; opacity: 0; }
   .page.has-continue .page-continue-note { opacity: 1; }
@@ -793,9 +803,9 @@ const PRINT_CSS = `
   .school-rank-lists { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; padding-bottom: 3px; border-bottom: 1px solid #e2e8f0; }
   .school-rank-list-title { display: flex; align-items: center; justify-content: center; gap: 3px; margin-bottom: 2px; font-size: 6px; font-weight: 700; text-transform: uppercase; color: #475467; }
   .school-rank-list-title i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-  .school-rank-list.reach .school-rank-list-title { color: #b45309; }
-  .school-rank-list.target .school-rank-list-title { color: #0c4a6e; }
-  .school-rank-list.safety .school-rank-list-title { color: #14532d; }
+  .school-rank-list.reach .school-rank-list-title { color: #db8a2c; }
+  .school-rank-list.target .school-rank-list-title { color: #3b7fc0; }
+  .school-rank-list.safety .school-rank-list-title { color: #3aa968; }
   .school-rank-list-items { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(3, 1fr); gap: 1px 3px; }
   .school-rank-list-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 2px; min-width: 0; min-height: 6px; font-size: 5px; line-height: 1.05; }
   .school-rank-list-item strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -805,17 +815,17 @@ const PRINT_CSS = `
   .school-rank-gridline { position: absolute; top: 4px; bottom: 4px; width: 1px; background: #e2e8f0; }
   .school-rank-baseline { position: absolute; left: 0; right: 0; top: 29px; height: 1px; background: #667085; }
   .school-range-span { position: absolute; top: 28px; height: 3px; border-radius: 999px; opacity: 0.65; }
-  .school-range-span.reach { background: #db8a2c; }
-  .school-range-span.target { background: #3b7fc0; }
-  .school-range-span.safety { background: #3aa968; }
+  .school-range-span.reach { top: 25px; background: #db8a2c; }
+  .school-range-span.target { top: 28px; background: #3b7fc0; }
+  .school-range-span.safety { top: 31px; background: #3aa968; }
   .school-range-span.point-range { min-width: 4px; transform: translateX(-2px); opacity: 0.85; }
   .school-rank-connector { position: absolute; width: 3px; transform: translateX(-1.5px); border-radius: 999px; opacity: 0.75; z-index: 3; }
   .school-rank-connector.reach { background: #db8a2c; }
   .school-rank-connector.target { background: #3b7fc0; }
   .school-rank-connector.safety { background: #3aa968; }
-  .school-rank-dot { position: absolute; top: calc(22px + var(--dot-offset, 0px)); transform: translateX(-50%); min-width: 13px; height: 13px; padding: 0 2px; border: 0; border-radius: 999px; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 5px; line-height: 1; font-weight: 800; z-index: 4; }
-  .school-rank-dot.digits-3 { min-width: 17px; }
-  .school-rank-dot.digits-4 { min-width: 21px; }
+  .school-rank-dot { position: absolute; top: calc(23.5px + var(--dot-offset, 0px)); transform: translateX(-50%); min-width: 11px; height: 11px; padding: 0 1.5px; border: 0; border-radius: 999px; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 4.5px; line-height: 1; font-weight: 800; z-index: 4; }
+  .school-rank-dot.digits-3 { min-width: 15px; }
+  .school-rank-dot.digits-4 { min-width: 19px; }
   .school-rank-dot.consensus { min-width: 19px; gap: 1px; }
   .school-rank-dot.consensus.digits-3 { min-width: 23px; }
   .school-rank-dot.consensus.digits-4 { min-width: 27px; }
@@ -1010,12 +1020,43 @@ const PRINT_FIT_SCRIPT = `
       }
     }
   };
+  const appendExplanationCards = (templates) => {
+    if (!templates.length) return;
+    let host = [...container.querySelectorAll(".reader-ballot-card")].pop() || null;
+    const createContinuationHost = () => {
+      host = document.createElement("article");
+      host.className = "reader-card reader-ballot-card reader-ballot-continuation";
+      const holder = document.createElement("div");
+      holder.className = "reader-tag-explanations";
+      host.appendChild(holder);
+      container.appendChild(host);
+      return holder;
+    };
+    templates.forEach((template) => {
+      let holder = host?.querySelector(".reader-tag-explanations");
+      if (!holder) {
+        holder = document.createElement("div");
+        holder.className = "reader-tag-explanations";
+        host?.appendChild(holder);
+      }
+      const explanation = template.cloneNode(true);
+      holder.appendChild(explanation);
+      if (container.scrollHeight <= container.clientHeight + 0.5) return;
+      explanation.remove();
+      if (!holder.children.length) holder.remove();
+      addPage();
+      holder = createContinuationHost();
+      holder.appendChild(explanation);
+    });
+  };
   cardTemplates.forEach((template) => {
     if (template.classList.contains("reader-ballot-card")) {
       if (hasStartedReader && container.children.length) addPage();
       hasStartedReader = true;
     }
     const card = template.cloneNode(true);
+    const explanationTemplates = [...card.querySelectorAll(".reader-tag-explanation-card")];
+    card.querySelector(".reader-tag-explanations")?.remove();
     const notesBody = card.querySelector(".reader-notes-body");
     if (notesBody && !notesBody.dataset.fullText) {
       notesBody.dataset.fullText = notesBody.textContent || "";
@@ -1023,13 +1064,17 @@ const PRINT_FIT_SCRIPT = `
     const fullText = notesBody?.dataset.fullText || "";
     if (notesBody) notesBody.textContent = fullText;
 
-    if (tryAppendCard(card)) return;
+    if (tryAppendCard(card)) {
+      appendExplanationCards(explanationTemplates);
+      return;
+    }
 
     if (container.children.length) {
       addPage();
     }
 
     splitCardIntoPages(card, fullText);
+    appendExplanationCards(explanationTemplates);
   });
 
   pages.forEach((page, index) => {
@@ -1856,7 +1901,9 @@ function computeSoftsDisplay(rows, fileName) {
 }
 
 function getSchoolRecommendationMode(rows) {
-  const twoSchoolFields = Object.values(SCHOOL_RECOMMENDATION_FIELDS_TWO).flat();
+  const twoSchoolFields = Object.values(SCHOOL_RECOMMENDATION_FIELDS_TWO).map(
+    (fields) => fields[1]
+  );
   const hasAnyTwoSchoolColumn =
     rows.length > 0 &&
     twoSchoolFields.some((field) => Object.prototype.hasOwnProperty.call(rows[0], field));
@@ -2254,34 +2301,33 @@ function getSchoolPlotScale(ranks) {
   return points.slice(firstIndex, lastIndex + 1);
 }
 
-function getSchoolPlotSegmentWeights(scalePoints, ranks) {
-  return scalePoints.slice(0, -1).map((start, index) => {
-    const end = scalePoints[index + 1];
-    const count = ranks.filter((rank) => {
-      const numericRank = Number(rank);
-      return index === 0
-        ? numericRank >= start && numericRank <= end
-        : numericRank > start && numericRank <= end;
-    }).length;
-    return Math.max(1, count);
-  });
+function getSchoolPlotSegmentWeights(scalePoints) {
+  return scalePoints.slice(0, -1).map(() => 1);
 }
 
 function assignSchoolDotOffsets(items) {
   const sorted = [...items].sort((a, b) => a.pct - b.pct);
   let cluster = [];
   const flushCluster = () => {
-    const offsets = cluster.length === 1
-      ? [0]
-      : [-10, 10, -20, 20, 0, -15, 15, -5, 5];
-    cluster.forEach((item, index) => {
-      item.dotOffset = offsets[index] ?? offsets[index % offsets.length];
+    const categories = new Set(cluster.map((item) => item.category));
+    const crossCategoryPadding = categories.size > 1 ? 6 : 0;
+    const reaches = cluster.filter((item) => item.category === "reach");
+    const safeties = cluster.filter((item) => item.category === "safety");
+
+    cluster.filter((item) => item.category === "target").forEach((item) => {
+      item.dotOffset = 0;
+    });
+    reaches.forEach((item, index) => {
+      item.dotOffset = -(8 + crossCategoryPadding + (reaches.length - index - 1) * 8);
+    });
+    safeties.forEach((item, index) => {
+      item.dotOffset = 8 + crossCategoryPadding + index * 8;
     });
     cluster = [];
   };
   sorted.forEach((item) => {
-    const previous = cluster[cluster.length - 1];
-    if (previous && item.pct - previous.pct > 5) flushCluster();
+    const clusterStart = cluster[0];
+    if (clusterStart && item.pct - clusterStart.pct > 5) flushCluster();
     cluster.push(item);
   });
   flushCluster();
@@ -2302,18 +2348,16 @@ function renderSchoolRecommendationPlot(readers, cycle) {
     )
   );
   const scalePoints = getSchoolPlotScale(recommendations.map((item) => item.rank));
-  const segmentWeights = getSchoolPlotSegmentWeights(
-    scalePoints,
-    recommendations.map((item) => item.rank)
-  );
+  const segmentWeights = getSchoolPlotSegmentWeights(scalePoints);
   const consensusItems = [...recommendations.reduce((groups, item) => {
-    const key = `${item.category}:${normalizeSchoolKey(item.name)}`;
+    const key = `${item.category}:${item.rank}`;
     if (!groups.has(key)) {
-      groups.set(key, { ...item, count: 0, readerLabels: [] });
+      groups.set(key, { ...item, count: 0, readerLabels: [], schoolNames: [] });
     }
     const group = groups.get(key);
     group.count += 1;
     group.readerLabels.push(item.readerLabel);
+    if (!group.schoolNames.includes(item.name)) group.schoolNames.push(item.name);
     return groups;
   }, new Map()).values()];
   const items = assignSchoolDotOffsets(consensusItems.map((item) => ({
@@ -2340,18 +2384,23 @@ function renderSchoolRecommendationPlot(readers, cycle) {
   return `<div class="school-rank-plot">
     <div class="school-rank-lists">
       ${categories.map((category) => {
+        const schools = readers
+          .flatMap((reader) => reader.schoolRecommendations?.[category] || [])
+          .sort((a, b) => a.rank - b.rank || a.name.localeCompare(b.name));
+        const leftCount = Math.ceil(schools.length / 2);
+        const leftColumn = schools.slice(0, leftCount);
+        const rightColumn = schools.slice(leftCount);
+        const schoolSlots = [0, 1, 2].flatMap((rowIndex) => [
+          leftColumn[rowIndex] || null,
+          rightColumn[rowIndex] || null,
+        ]);
         return `<div class="school-rank-list ${category}">
           <div class="school-rank-list-title"><i></i>${SCHOOL_CATEGORY_LABELS[category]}</div>
           <div class="school-rank-list-items">
-            ${readers.flatMap((reader) => {
-              const schools = reader.schoolRecommendations?.[category] || [];
-              return [0, 1].map((index) => {
-                const school = schools[index];
-                return school
-                  ? `<span class="school-rank-list-item"><strong>${escapeHtml(school.name)}</strong><small>${escapeHtml(formatSchoolRank(school))}</small></span>`
-                  : '<span class="school-rank-list-item empty" aria-hidden="true"></span>';
-              });
-            }).join("")}
+            ${schoolSlots.map((school) => school
+              ? `<span class="school-rank-list-item"><strong>${escapeHtml(school.name)}</strong><small>${escapeHtml(formatSchoolRank(school))}</small></span>`
+              : '<span class="school-rank-list-item empty" aria-hidden="true"></span>'
+            ).join("")}
           </div>
         </div>`;
       }).join("")}
@@ -2361,7 +2410,7 @@ function renderSchoolRecommendationPlot(readers, cycle) {
       <span class="school-rank-baseline"></span>
       ${spans.map((span, index) => `<span class="school-range-span ${span.category}${span.isPoint ? " point-range" : ""}" style="left:${span.left}%;width:${span.width}%;--range-lane:${index}"></span>`).join("")}
       ${items.filter((item) => item.dotOffset).map((item) => `<span class="school-rank-connector ${item.category}" style="left:${item.pct}%;top:${29 + Math.min(0, item.dotOffset)}px;height:${Math.abs(item.dotOffset)}px"></span>`).join("")}
-      ${items.map((item) => `<span class="school-rank-dot ${item.category} digits-${String(item.rankLabel || item.rank).length}${item.count > 1 ? " consensus" : ""}" style="left:${item.pct}%;--dot-offset:${item.dotOffset}px" title="${SCHOOL_CATEGORY_LABELS[item.category]} · ${escapeHtml(item.name)} ${escapeHtml(formatSchoolRank(item))}${item.count > 1 ? ` · selected ${item.count} times` : ""}">${escapeHtml(item.rankLabel || item.rank)}${item.count > 1 ? `<small>×${item.count}</small>` : ""}</span>`).join("")}
+      ${items.map((item) => `<span class="school-rank-dot ${item.category} digits-${String(item.rankLabel || item.rank).length}" style="left:${item.pct}%;--dot-offset:${item.dotOffset}px" title="${SCHOOL_CATEGORY_LABELS[item.category]} · ${escapeHtml(item.schoolNames.join(" / "))} ${escapeHtml(formatSchoolRank(item))}">${escapeHtml(item.rankLabel || item.rank)}</span>`).join("")}
     </div>
     <div class="school-rank-axis">
       ${ticks.map((tick) => `<span style="left:${tick.pct}%">${tick.label}</span>`).join("")}
@@ -2515,22 +2564,22 @@ function renderReaderTagExplanationCards(reader, explainedTags = new Set()) {
     explainedTags.add(tag);
     return true;
   });
-  return [
-    { polarity: "positive", label: "Positive" },
-    { polarity: "negative", label: "Negative" },
-  ]
-    .flatMap(({ polarity, label }) => {
+  const explanationTags = [
+    { polarity: "positive" },
+    { polarity: "negative" },
+  ].flatMap(({ polarity }) => {
       const groupTags = visibleTags.filter((tag) => TAG_POLARITY_MAP.get(tag) === polarity);
-      return groupTags.map((tag, index) => `<article class="reader-card reader-tag-explanation-card ${polarity}">
-          ${index === 0 ? `<div class="reader-tag-explanation-group-label ${polarity}">${label} tag explanations</div>` : ""}
+      return groupTags.map((tag) => ({ tag, polarity }));
+    });
+  return explanationTags
+    .map(({ tag, polarity }) => `<article class="reader-tag-explanation-card ${polarity}">
           <div class="reader-tag-explanation-title">
             <span class="tag-pill active-${polarity} tag-explanation-pill">${renderTagText(tag, "tag-explanation-text")}</span>
           </div>
           <div class="reader-notes">
             <div class="reader-notes-body">${escapeHtml(TAG_DESCRIPTION_MAP.get(tag) || "Description coming soon.")}</div>
           </div>
-        </article>`);
-    })
+        </article>`)
     .join("");
 }
 
@@ -2568,7 +2617,7 @@ function renderNextStepsCard(report) {
   `;
 }
 
-function renderReaderCard(reader, recommendationMode = "legacy") {
+function renderReaderCard(reader, recommendationMode = "legacy", tagExplanations = "") {
   const notesText = getReaderNotesText(reader);
   const slotClass = getReaderSlotClass(reader.badgeLabel);
   return `
@@ -2612,6 +2661,7 @@ function renderReaderCard(reader, recommendationMode = "legacy") {
         </div>
       </div>
       ${renderReaderNotesBlock(notesText)}
+      ${tagExplanations ? `<div class="reader-tag-explanations">${tagExplanations}</div>` : ""}
     </article>
   `;
 }
@@ -2629,7 +2679,10 @@ function renderReaderPages(report, readers) {
   const explainedTags = new Set();
   return `
     <div class="reader-cards-source" data-reader-source>
-      ${readers.map((reader) => `${renderReaderCard(reader, report.recommendationMode)}${renderReaderTagExplanationCards(reader, explainedTags)}`).join("")}
+      ${readers.map((reader) => {
+        const tagExplanations = renderReaderTagExplanationCards(reader, explainedTags);
+        return renderReaderCard(reader, report.recommendationMode, tagExplanations);
+      }).join("")}
       ${renderNextStepsCard(report)}
     </div>
   `;
@@ -2717,7 +2770,6 @@ function renderStudentDocument(report) {
               </div>
               <span class="basics-divider">|</span>
               <div class="basics-item">
-                <span class="basics-label">Other:</span>
                 <span class="basics-value">${escapeHtml(report.manual.otherText || "—")}</span>
               </div>
             </div>
@@ -3069,12 +3121,44 @@ function paginateReaderCards(root = document) {
     }
   };
 
+  const appendExplanationCards = (templates) => {
+    if (!templates.length) return;
+    let host = [...container.querySelectorAll(".reader-ballot-card")].pop() || null;
+    const createContinuationHost = () => {
+      host = document.createElement("article");
+      host.className = "reader-card reader-ballot-card reader-ballot-continuation";
+      const holder = document.createElement("div");
+      holder.className = "reader-tag-explanations";
+      host.appendChild(holder);
+      container.appendChild(host);
+      return holder;
+    };
+    templates.forEach((template) => {
+      let holder = host?.querySelector(".reader-tag-explanations");
+      if (!holder) {
+        holder = document.createElement("div");
+        holder.className = "reader-tag-explanations";
+        host?.appendChild(holder);
+      }
+      const explanation = template.cloneNode(true);
+      holder.appendChild(explanation);
+      if (container.scrollHeight <= container.clientHeight + 0.5) return;
+      explanation.remove();
+      if (!holder.children.length) holder.remove();
+      addPage();
+      holder = createContinuationHost();
+      holder.appendChild(explanation);
+    });
+  };
+
   cardTemplates.forEach((template) => {
     if (template.classList.contains("reader-ballot-card")) {
       if (hasStartedReader && container.children.length) addPage();
       hasStartedReader = true;
     }
     const card = template.cloneNode(true);
+    const explanationTemplates = [...card.querySelectorAll(".reader-tag-explanation-card")];
+    card.querySelector(".reader-tag-explanations")?.remove();
     const notesBody = card.querySelector(".reader-notes-body");
     if (notesBody && !notesBody.dataset.fullText) {
       notesBody.dataset.fullText = notesBody.textContent || "";
@@ -3082,13 +3166,17 @@ function paginateReaderCards(root = document) {
     const fullText = notesBody?.dataset.fullText || "";
     if (notesBody) notesBody.textContent = fullText;
 
-    if (tryAppendCard(card)) return;
+    if (tryAppendCard(card)) {
+      appendExplanationCards(explanationTemplates);
+      return;
+    }
 
     if (container.children.length) {
       addPage();
     }
 
     splitCardIntoPages(card, fullText);
+    appendExplanationCards(explanationTemplates);
   });
 
   pages.forEach((page, index) => {

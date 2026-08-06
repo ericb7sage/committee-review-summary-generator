@@ -20,6 +20,7 @@ const aliasOverrides = {
   "UT Austin": ["University of Texas", "University of Texas at Austin", "Texas Law"],
   UNC: ["University of North Carolina", "University of North Carolina at Chapel Hill", "UNC School of Law"],
   BYU: ["Brigham Young University", "J. Reuben Clark Law School"],
+  "George Washington": ["George Washington University", "George Washington University Law School", "GW Law"],
   USC: ["University of Southern California", "USC Gould", "USC Gould School of Law"],
   FSU: ["Florida State University", "Florida State University College of Law"],
   "UC - Irvine": ["UC Irvine", "University of California Irvine", "University of California—Irvine"],
