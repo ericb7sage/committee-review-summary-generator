@@ -1,0 +1,790 @@
+{
+  "source": "Consultant Hub · Law Schools - Superhuman Docs.pdf",
+  "sourceCreated": "2026-08-06",
+  "note": "Canonical display names only. Numeric ranks remain sourced from the ranking catalog.",
+  "entries": [
+    {
+      "sourceName": "Yale",
+      "canonicalName": "Yale University"
+    },
+    {
+      "sourceName": "Stanford",
+      "canonicalName": "Stanford University"
+    },
+    {
+      "sourceName": "Harvard",
+      "canonicalName": "Harvard University"
+    },
+    {
+      "sourceName": "UChicago",
+      "canonicalName": "University of Chicago"
+    },
+    {
+      "sourceName": "Columbia",
+      "canonicalName": "Columbia University"
+    },
+    {
+      "sourceName": "NYU",
+      "canonicalName": "New York University"
+    },
+    {
+      "sourceName": "UPenn",
+      "canonicalName": "University of Pennsylvania"
+    },
+    {
+      "sourceName": "Michigan",
+      "canonicalName": "University of Michigan"
+    },
+    {
+      "sourceName": "Berkeley",
+      "canonicalName": "University of California—Berkeley"
+    },
+    {
+      "sourceName": "UVA",
+      "canonicalName": "University of Virginia"
+    },
+    {
+      "sourceName": "Duke",
+      "canonicalName": "Duke University"
+    },
+    {
+      "sourceName": "Northwestern",
+      "canonicalName": "Northwestern University"
+    },
+    {
+      "sourceName": "Cornell",
+      "canonicalName": "Cornell University"
+    },
+    {
+      "sourceName": "Georgetown",
+      "canonicalName": "Georgetown University"
+    },
+    {
+      "sourceName": "UT Austin",
+      "canonicalName": "University of Texas at Austin"
+    },
+    {
+      "sourceName": "UCLA",
+      "canonicalName": "University of California—Los Angeles"
+    },
+    {
+      "sourceName": "Vanderbilt",
+      "canonicalName": "Vanderbilt University"
+    },
+    {
+      "sourceName": "WashU",
+      "canonicalName": "Washington University in St. Louis"
+    },
+    {
+      "sourceName": "USC",
+      "canonicalName": "University of Southern California"
+    },
+    {
+      "sourceName": "Minnesota",
+      "canonicalName": "University of Minnesota"
+    },
+    {
+      "sourceName": "UC - Irvine",
+      "canonicalName": "University of California—Irvine"
+    },
+    {
+      "sourceName": "Boston University",
+      "canonicalName": "Boston University"
+    },
+    {
+      "sourceName": "Emory",
+      "canonicalName": "Emory University"
+    },
+    {
+      "sourceName": "George Washington",
+      "canonicalName": "George Washington University"
+    },
+    {
+      "sourceName": "Notre Dame",
+      "canonicalName": "University of Notre Dame"
+    },
+    {
+      "sourceName": "Washington & Lee",
+      "canonicalName": "Washington and Lee University"
+    },
+    {
+      "sourceName": "Alabama",
+      "canonicalName": "University of Alabama"
+    },
+    {
+      "sourceName": "Arizona State",
+      "canonicalName": "Arizona State University"
+    },
+    {
+      "sourceName": "Boston College",
+      "canonicalName": "Boston College"
+    },
+    {
+      "sourceName": "Iowa",
+      "canonicalName": "University of Iowa"
+    },
+    {
+      "sourceName": "Wisconsin",
+      "canonicalName": "University of Wisconsin"
+    },
+    {
+      "sourceName": "Georgia",
+      "canonicalName": "University of Georgia"
+    },
+    {
+      "sourceName": "Indiana Bloomington",
+      "canonicalName": "Indiana University - Bloomington"
+    },
+    {
+      "sourceName": "Ohio State",
+      "canonicalName": "Ohio State University"
+    },
+    {
+      "sourceName": "Wake Forest",
+      "canonicalName": "Wake Forest University"
+    },
+    {
+      "sourceName": "U Washington",
+      "canonicalName": "University of Washington"
+    },
+    {
+      "sourceName": "UC - Davis",
+      "canonicalName": "University of California—Davis"
+    },
+    {
+      "sourceName": "Fordham",
+      "canonicalName": "Fordham University"
+    },
+    {
+      "sourceName": "Illinois - Urbana",
+      "canonicalName": "University of Illinois— Urbana Champaign"
+    },
+    {
+      "sourceName": "William & Mary",
+      "canonicalName": "William & Mary Law School"
+    },
+    {
+      "sourceName": "Arizona",
+      "canonicalName": "University of Arizona"
+    },
+    {
+      "sourceName": "BYU",
+      "canonicalName": "Brigham Young University"
+    },
+    {
+      "sourceName": "U Florida",
+      "canonicalName": "University of Florida (Levin)"
+    },
+    {
+      "sourceName": "George Mason",
+      "canonicalName": "George Mason University"
+    },
+    {
+      "sourceName": "UNC",
+      "canonicalName": "University of North Carolina"
+    },
+    {
+      "sourceName": "Colorado - Boulder",
+      "canonicalName": "University of Colorado—Boulder"
+    },
+    {
+      "sourceName": "FSU",
+      "canonicalName": "Florida State University"
+    },
+    {
+      "sourceName": "Temple University",
+      "canonicalName": "Temple University"
+    },
+    {
+      "sourceName": "Maryland",
+      "canonicalName": "University of Maryland"
+    },
+    {
+      "sourceName": "Baylor",
+      "canonicalName": "Baylor University"
+    },
+    {
+      "sourceName": "UCONN",
+      "canonicalName": "University of Connecticut"
+    },
+    {
+      "sourceName": "Richmond",
+      "canonicalName": "University of Richmond"
+    },
+    {
+      "sourceName": "Southern Methodist",
+      "canonicalName": "Southern Methodist University"
+    },
+    {
+      "sourceName": "Tulane",
+      "canonicalName": "Tulane University"
+    },
+    {
+      "sourceName": "Utah",
+      "canonicalName": "University of Utah"
+    },
+    {
+      "sourceName": "Cardozo",
+      "canonicalName": "Yeshiva University (Cardozo)"
+    },
+    {
+      "sourceName": "Houston",
+      "canonicalName": "University of Houston"
+    },
+    {
+      "sourceName": "UC Law San Francisco",
+      "canonicalName": "University of California (Hastings)"
+    },
+    {
+      "sourceName": "Penn State",
+      "canonicalName": "Pennsylvania State - Dickinson Law"
+    },
+    {
+      "sourceName": "Seton Hall",
+      "canonicalName": "Seton Hall University"
+    },
+    {
+      "sourceName": "Nevada - Las Vegas",
+      "canonicalName": "University of Nevada —Las Vegas"
+    },
+    {
+      "sourceName": "Denver",
+      "canonicalName": "University of Denver"
+    },
+    {
+      "sourceName": "Oklahoma",
+      "canonicalName": "University of Oklahoma"
+    },
+    {
+      "sourceName": "Case Western",
+      "canonicalName": "Case Western Reserve University"
+    },
+    {
+      "sourceName": "Cincinnati",
+      "canonicalName": "University of Cincinnati"
+    },
+    {
+      "sourceName": "GSU",
+      "canonicalName": "Georgia State University"
+    },
+    {
+      "sourceName": "Kentucky",
+      "canonicalName": "University of Kentucky"
+    },
+    {
+      "sourceName": "Loyola Marymount - LA",
+      "canonicalName": "Loyola Marymount University—Los Angeles"
+    },
+    {
+      "sourceName": "Miami",
+      "canonicalName": "University of Miami"
+    },
+    {
+      "sourceName": "Missouri",
+      "canonicalName": "University of Missouri"
+    },
+    {
+      "sourceName": "Tennessee",
+      "canonicalName": "University of Tennessee"
+    },
+    {
+      "sourceName": "Villanova",
+      "canonicalName": "Villanova University"
+    },
+    {
+      "sourceName": "Kansas",
+      "canonicalName": "University of Kansas"
+    },
+    {
+      "sourceName": "Loyola - Chicago",
+      "canonicalName": "Loyola University— Chicago"
+    },
+    {
+      "sourceName": "Northeastern",
+      "canonicalName": "Northeastern University"
+    },
+    {
+      "sourceName": "Pennsylvania State - Penn State Law",
+      "canonicalName": "Pennsylvania State - Penn State Law"
+    },
+    {
+      "sourceName": "Pittsburgh",
+      "canonicalName": "University of Pittsburgh"
+    },
+    {
+      "sourceName": "Rutgers",
+      "canonicalName": "Rutgers University (merged)"
+    },
+    {
+      "sourceName": "American",
+      "canonicalName": "American University"
+    },
+    {
+      "sourceName": "Nebraska",
+      "canonicalName": "University of Nebraska"
+    },
+    {
+      "sourceName": "Texas A&M",
+      "canonicalName": "Texas A&M University"
+    },
+    {
+      "sourceName": "Brooklyn",
+      "canonicalName": "Brooklyn Law School"
+    },
+    {
+      "sourceName": "St. John's",
+      "canonicalName": "St. John's University"
+    },
+    {
+      "sourceName": "Chicago-Kent",
+      "canonicalName": "Illinois Institute of Technology (Chicago-Kent College of Law)"
+    },
+    {
+      "sourceName": "New Hampshire",
+      "canonicalName": "University of New Hampshire"
+    },
+    {
+      "sourceName": "Oregon",
+      "canonicalName": "University of Oregon"
+    },
+    {
+      "sourceName": "U Arkansas - Fayetteville",
+      "canonicalName": "University of Arkansas, Fayetteville"
+    },
+    {
+      "sourceName": "LSU",
+      "canonicalName": "Louisiana State University"
+    },
+    {
+      "sourceName": "Michigan State",
+      "canonicalName": "Michigan State University"
+    },
+    {
+      "sourceName": "UNM",
+      "canonicalName": "University of New Mexico"
+    },
+    {
+      "sourceName": "SLU",
+      "canonicalName": "Saint Louis University"
+    },
+    {
+      "sourceName": "South Carolina",
+      "canonicalName": "University of South Carolina"
+    },
+    {
+      "sourceName": "Syracuse University",
+      "canonicalName": "Syracuse University"
+    },
+    {
+      "sourceName": "Lewis And Clark",
+      "canonicalName": "Lewis And Clark College"
+    },
+    {
+      "sourceName": "Marquette",
+      "canonicalName": "Marquette University"
+    },
+    {
+      "sourceName": "USD",
+      "canonicalName": "University of San Diego"
+    },
+    {
+      "sourceName": "IU McKinney",
+      "canonicalName": "Indiana University - Indianapolis"
+    },
+    {
+      "sourceName": "Stetson",
+      "canonicalName": "Stetson University"
+    },
+    {
+      "sourceName": "Wayne State",
+      "canonicalName": "Wayne State University"
+    },
+    {
+      "sourceName": "Drexel",
+      "canonicalName": "Drexel University"
+    },
+    {
+      "sourceName": "FIU",
+      "canonicalName": "Florida International University"
+    },
+    {
+      "sourceName": "Hawaii",
+      "canonicalName": "University of Hawaii"
+    },
+    {
+      "sourceName": "Mississippi",
+      "canonicalName": "University of Mississippi"
+    },
+    {
+      "sourceName": "Tulsa",
+      "canonicalName": "University of Tulsa"
+    },
+    {
+      "sourceName": "Albany",
+      "canonicalName": "Albany Law School Of Union University"
+    },
+    {
+      "sourceName": "Maine",
+      "canonicalName": "University of Maine"
+    },
+    {
+      "sourceName": "SUNY Buffalo",
+      "canonicalName": "University of Buffalo —SUNY"
+    },
+    {
+      "sourceName": "WVU",
+      "canonicalName": "West Virginia University"
+    },
+    {
+      "sourceName": "Catholic University",
+      "canonicalName": "Catholic University Of America"
+    },
+    {
+      "sourceName": "Hofstra",
+      "canonicalName": "Hofstra University"
+    },
+    {
+      "sourceName": "New York Law School",
+      "canonicalName": "New York Law School"
+    },
+    {
+      "sourceName": "Cleveland",
+      "canonicalName": "Cleveland State University"
+    },
+    {
+      "sourceName": "Gonzaga",
+      "canonicalName": "Gonzaga University"
+    },
+    {
+      "sourceName": "Louisville",
+      "canonicalName": "University of Louisville"
+    },
+    {
+      "sourceName": "Santa Clara",
+      "canonicalName": "Santa Clara University"
+    },
+    {
+      "sourceName": "St. Thomas (Minnesota)",
+      "canonicalName": "University of St. Thomas (Minnesota)"
+    },
+    {
+      "sourceName": "Texas Tech",
+      "canonicalName": "Texas Tech University"
+    },
+    {
+      "sourceName": "Baltimore",
+      "canonicalName": "University Of Baltimore"
+    },
+    {
+      "sourceName": "Duquesne",
+      "canonicalName": "Duquesne University"
+    },
+    {
+      "sourceName": "Idaho",
+      "canonicalName": "University of Idaho"
+    },
+    {
+      "sourceName": "Missouri - Kansas City",
+      "canonicalName": "University of Missouri —Kansas City"
+    },
+    {
+      "sourceName": "Montana",
+      "canonicalName": "University of Montana"
+    },
+    {
+      "sourceName": "Washburn",
+      "canonicalName": "Washburn University"
+    },
+    {
+      "sourceName": "CUNY",
+      "canonicalName": "CUNY"
+    },
+    {
+      "sourceName": "Creighton",
+      "canonicalName": "Creighton University"
+    },
+    {
+      "sourceName": "Pace",
+      "canonicalName": "Pace University"
+    },
+    {
+      "sourceName": "DePaul",
+      "canonicalName": "DePaul University"
+    },
+    {
+      "sourceName": "Howard",
+      "canonicalName": "Howard University"
+    },
+    {
+      "sourceName": "Mercer",
+      "canonicalName": "Mercer University"
+    },
+    {
+      "sourceName": "Seattle",
+      "canonicalName": "Seattle University"
+    },
+    {
+      "sourceName": "South Dakota",
+      "canonicalName": "University of South Dakota"
+    },
+    {
+      "sourceName": "Drake",
+      "canonicalName": "Drake University"
+    },
+    {
+      "sourceName": "Quinnipiac",
+      "canonicalName": "Quinnipiac University"
+    },
+    {
+      "sourceName": "Vermont",
+      "canonicalName": "Vermont Law School"
+    },
+    {
+      "sourceName": "Wyoming",
+      "canonicalName": "University of Wyoming"
+    },
+    {
+      "sourceName": "Memphis",
+      "canonicalName": "University of Memphis"
+    },
+    {
+      "sourceName": "Toledo",
+      "canonicalName": "University of Toledo"
+    },
+    {
+      "sourceName": "Belmont",
+      "canonicalName": "Belmont University"
+    },
+    {
+      "sourceName": "Chapman",
+      "canonicalName": "Chapman University"
+    },
+    {
+      "sourceName": "U Arkansas - Little Rock",
+      "canonicalName": "University of Arkansas, Little Rock"
+    },
+    {
+      "sourceName": "Dayton",
+      "canonicalName": "University of Dayton"
+    },
+    {
+      "sourceName": "Widener - Pennsylvania",
+      "canonicalName": "Widener- commonwealth"
+    },
+    {
+      "sourceName": "Akron",
+      "canonicalName": "University of Akron"
+    },
+    {
+      "sourceName": "NIU",
+      "canonicalName": "Northern Illinois University"
+    },
+    {
+      "sourceName": "Suffolk",
+      "canonicalName": "Suffolk University"
+    },
+    {
+      "sourceName": "Appalachian",
+      "canonicalName": "Appalachian School of Law"
+    },
+    {
+      "sourceName": "John Marshall",
+      "canonicalName": "Atlanta's John Marshall Law School"
+    },
+    {
+      "sourceName": "Ave Maria",
+      "canonicalName": "Ave Maria School Of Law"
+    },
+    {
+      "sourceName": "Barry Law",
+      "canonicalName": "Barry University"
+    },
+    {
+      "sourceName": "California Western",
+      "canonicalName": "California Western School Of Law"
+    },
+    {
+      "sourceName": "Campbell",
+      "canonicalName": "Campbell University"
+    },
+    {
+      "sourceName": "Capital",
+      "canonicalName": "Capital University"
+    },
+    {
+      "sourceName": "Charleston",
+      "canonicalName": "Charleston School Of Law"
+    },
+    {
+      "sourceName": "Detroit Mercy",
+      "canonicalName": "University of Detroit Mercy"
+    },
+    {
+      "sourceName": "UDC",
+      "canonicalName": "University of the District of Columbia"
+    },
+    {
+      "sourceName": "Elon",
+      "canonicalName": "Elon University"
+    },
+    {
+      "sourceName": "Jones",
+      "canonicalName": "Faulkner University"
+    },
+    {
+      "sourceName": "Florida A&M",
+      "canonicalName": "Florida A&M University"
+    },
+    {
+      "sourceName": "Illinois - Chicago",
+      "canonicalName": "University of Illinois Chicago School of Law (UIC Law)"
+    },
+    {
+      "sourceName": "Liberty",
+      "canonicalName": "Liberty University"
+    },
+    {
+      "sourceName": "Loyola - New Orleans",
+      "canonicalName": "Loyola University— New Orleans"
+    },
+    {
+      "sourceName": "Pacific (Mcgeorge)",
+      "canonicalName": "University of the Pacific (Mcgeorge)"
+    },
+    {
+      "sourceName": "Mississippi College",
+      "canonicalName": "Mississippi College"
+    },
+    {
+      "sourceName": "Mitchell Hamline",
+      "canonicalName": "Mitchell Hamline"
+    },
+    {
+      "sourceName": "New England - Boston",
+      "canonicalName": "New England Law | Boston"
+    },
+    {
+      "sourceName": "NCCU",
+      "canonicalName": "North Carolina Central University"
+    },
+    {
+      "sourceName": "UND",
+      "canonicalName": "University of North Dakota"
+    },
+    {
+      "sourceName": "Northern Kentucky",
+      "canonicalName": "Northern Kentucky University"
+    },
+    {
+      "sourceName": "Nova Southeastern",
+      "canonicalName": "Nova Southeastern University"
+    },
+    {
+      "sourceName": "ONU",
+      "canonicalName": "Ohio Northern University"
+    },
+    {
+      "sourceName": "Oklahoma City",
+      "canonicalName": "Oklahoma City University"
+    },
+    {
+      "sourceName": "Regent",
+      "canonicalName": "Regent University"
+    },
+    {
+      "sourceName": "Roger Williams",
+      "canonicalName": "Roger Williams University"
+    },
+    {
+      "sourceName": "Samford",
+      "canonicalName": "Samford University"
+    },
+    {
+      "sourceName": "USF",
+      "canonicalName": "University of San Francisco"
+    },
+    {
+      "sourceName": "South Texas",
+      "canonicalName": "South Texas College Of Law—Houston"
+    },
+    {
+      "sourceName": "SIU - Carbondale",
+      "canonicalName": "Southern Illinois University— Carbondale"
+    },
+    {
+      "sourceName": "Southern",
+      "canonicalName": "Southern University"
+    },
+    {
+      "sourceName": "Southwestern",
+      "canonicalName": "Southwestern Law School"
+    },
+    {
+      "sourceName": "St. Mary's",
+      "canonicalName": "St. Mary's University"
+    },
+    {
+      "sourceName": "St. Thomas",
+      "canonicalName": "St. Thomas University (Florida)"
+    },
+    {
+      "sourceName": "Texas Southern",
+      "canonicalName": "Texas Southern University"
+    },
+    {
+      "sourceName": "Touro",
+      "canonicalName": "Touro College"
+    },
+    {
+      "sourceName": "UMass - Dartmouth",
+      "canonicalName": "University of Massachusetts Dartmouth"
+    },
+    {
+      "sourceName": "Western Michigan",
+      "canonicalName": "Western Michigan University (Cooley)"
+    },
+    {
+      "sourceName": "Western New England",
+      "canonicalName": "Western New England University"
+    },
+    {
+      "sourceName": "Western State",
+      "canonicalName": "Western State College Of Law"
+    },
+    {
+      "sourceName": "Widener-Delaware",
+      "canonicalName": "Widener University— Delaware"
+    },
+    {
+      "sourceName": "Willamette",
+      "canonicalName": "Willamette University"
+    },
+    {
+      "sourceName": "Inter American",
+      "canonicalName": "Inter American University Of Puerto Rico"
+    },
+    {
+      "sourceName": "Lincoln Memorial",
+      "canonicalName": "Lincoln Memorial"
+    },
+    {
+      "sourceName": "Pepperdine",
+      "canonicalName": "Pepperdine University"
+    },
+    {
+      "sourceName": "Pontifical Catholic",
+      "canonicalName": "Pontifical Catholic University Of P.R."
+    },
+    {
+      "sourceName": "Puerto Rico",
+      "canonicalName": "University of Puerto Rico"
+    },
+    {
+      "sourceName": "UNTD",
+      "canonicalName": "UNT Dallas College Of Law"
+    }
+  ],
+  "unrankedOrUnmatched": [
+    "Golden Gate University"
+  ]
+}

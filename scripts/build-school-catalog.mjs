@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sourcePath = path.join(root, "data", "7sage-rankings-2026.json");
+const canonicalNamesPath = path.join(root, "data", "superhuman-school-names-2026.json");
 const outputPaths = [
   path.join(root, "web", "school-rankings.json"),
   path.join(root, "docs", "school-rankings.json"),
@@ -96,12 +97,20 @@ function generatedAliases(name) {
 }
 
 const sourceRows = JSON.parse(fs.readFileSync(sourcePath, "utf8"));
-const schools = sourceRows.map(({ name, rank }) => ({
-  name: String(name).replace(/\s+/g, " ").trim(),
+const canonicalNameData = JSON.parse(fs.readFileSync(canonicalNamesPath, "utf8"));
+const canonicalNames = new Map(
+  canonicalNameData.entries.map(({ sourceName, canonicalName }) => [sourceName, canonicalName])
+);
+const schools = sourceRows.map(({ name, rank }) => {
+  const sourceName = String(name).replace(/\s+/g, " ").trim();
+  return {
+  sourceName,
+  name: String(canonicalNames.get(sourceName) || sourceName).replace(/\s+/g, " ").trim(),
   rank: rank === "175+" ? 175 : Number(rank),
   ...(rank === "175+" ? { rankLabel: "175+" } : {}),
   aliases: [],
-}));
+};
+});
 
 const canonicalOwners = new Map(schools.map((school, index) => [normalize(school.name), index]));
 const aliasOwners = new Map(canonicalOwners);
@@ -109,7 +118,9 @@ const aliasOwners = new Map(canonicalOwners);
 schools.forEach((school, index) => {
   const candidates = [
     ...generatedAliases(school.name),
-    ...(aliasOverrides[school.name] || []),
+    school.sourceName,
+    ...generatedAliases(school.sourceName),
+    ...(aliasOverrides[school.sourceName] || []),
   ];
   const aliases = [];
   for (const alias of candidates) {
@@ -122,11 +133,14 @@ schools.forEach((school, index) => {
     aliases.push(trimmed);
   }
   school.aliases = aliases;
+  delete school.sourceName;
 });
 
 const catalog = {
   cycle: "2026 U.S. News rankings",
   source: "https://7sage.com/admissions/rankings",
+  nameSource: canonicalNameData.source,
+  nameSourceCreated: canonicalNameData.sourceCreated,
   retrieved: "2026-08-04",
   maxRank: 175,
   schools,
