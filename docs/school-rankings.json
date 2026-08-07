@@ -3,6 +3,7 @@
   "source": "https://7sage.com/admissions/rankings",
   "nameSource": "Consultant Hub · Law Schools - Superhuman Docs.pdf",
   "nameSourceCreated": "2026-08-06",
+  "displayNameSource": "Name Shorteners - Sheet1.csv",
   "retrieved": "2026-08-04",
   "maxRank": 175,
   "schools": [
@@ -57,7 +58,8 @@
         "Penn",
         "Penn Carey Law",
         "University of Pennsylvania Carey Law School"
-      ]
+      ],
+      "displayName": "Penn Carey Law"
     },
     {
       "name": "University of Virginia",
@@ -180,7 +182,8 @@
         "UCLA School of Law",
         "UCLA University",
         "University of UCLA"
-      ]
+      ],
+      "displayName": "UCLA"
     },
     {
       "name": "Washington University in St. Louis",
@@ -195,7 +198,8 @@
         "University of WashU",
         "Washington University",
         "Washington University School of Law"
-      ]
+      ],
+      "displayName": "WashU"
     },
     {
       "name": "University of California—Berkeley",
@@ -210,7 +214,8 @@
         "University of Berkeley",
         "UC Berkeley",
         "Berkeley Law"
-      ]
+      ],
+      "displayName": "UC Berkeley"
     },
     {
       "name": "University of Texas at Austin",
@@ -223,7 +228,8 @@
         "UT Austin School of Law",
         "University of Texas",
         "Texas Law"
-      ]
+      ],
+      "displayName": "UT Austin"
     },
     {
       "name": "Georgetown University",
@@ -249,7 +255,8 @@
         "UNC University",
         "University of UNC",
         "University of North Carolina at Chapel Hill"
-      ]
+      ],
+      "displayName": "UNC"
     },
     {
       "name": "Boston College",
@@ -268,7 +275,8 @@
         "Notre Dame",
         "Notre Dame Law School",
         "Notre Dame School of Law"
-      ]
+      ],
+      "displayName": "Notre Dame"
     },
     {
       "name": "University of Minnesota",
@@ -313,7 +321,8 @@
         "BYU University",
         "University of BYU",
         "J. Reuben Clark Law School"
-      ]
+      ],
+      "displayName": "BYU"
     },
     {
       "name": "George Washington University",
@@ -325,7 +334,8 @@
         "George Washington Law School",
         "George Washington School of Law",
         "GW Law"
-      ]
+      ],
+      "displayName": "GW Law"
     },
     {
       "name": "University of Georgia",
@@ -352,7 +362,8 @@
         "University of USC",
         "USC Gould",
         "USC Gould School of Law"
-      ]
+      ],
+      "displayName": "USC"
     },
     {
       "name": "University of Wisconsin",
@@ -397,7 +408,8 @@
         "George Mason",
         "George Mason Law School",
         "George Mason School of Law"
-      ]
+      ],
+      "displayName": "Scalia Law"
     },
     {
       "name": "University of Iowa",
@@ -446,7 +458,8 @@
         "UC - Irvine",
         "UC - Irvine Law School",
         "UC - Irvine School of Law"
-      ]
+      ],
+      "displayName": "UC Irvine"
     },
     {
       "name": "University of Florida (Levin)",
@@ -460,7 +473,8 @@
         "University of Florida",
         "University of Florida Levin College of Law",
         "UF Law"
-      ]
+      ],
+      "displayName": "Florida Levin"
     },
     {
       "name": "Washington and Lee University",
@@ -471,7 +485,8 @@
         "Washington & Lee",
         "Washington & Lee Law School",
         "Washington & Lee School of Law"
-      ]
+      ],
+      "displayName": "Washington & Lee"
     },
     {
       "name": "William & Mary Law School",
@@ -481,7 +496,8 @@
         "William & Mary Law School School of Law",
         "William & Mary",
         "William & Mary School of Law"
-      ]
+      ],
+      "displayName": "William & Mary"
     },
     {
       "name": "University of Alabama",
@@ -530,7 +546,8 @@
         "Southern Methodist School of Law",
         "SMU",
         "SMU Dedman School of Law"
-      ]
+      ],
+      "displayName": "SMU Dedman"
     },
     {
       "name": "Arizona State University",
@@ -566,7 +583,8 @@
         "Illinois - Urbana School of Law",
         "University of Illinois",
         "University of Illinois College of Law"
-      ]
+      ],
+      "displayName": "Illinois"
     },
     {
       "name": "University of Kansas",
@@ -603,7 +621,8 @@
         "Indiana Bloomington School of Law",
         "Indiana University Maurer School of Law",
         "Maurer"
-      ]
+      ],
+      "displayName": "Indiana Bloomington"
     },
     {
       "name": "Temple University",
@@ -634,7 +653,8 @@
         "UC - Davis",
         "UC - Davis Law School",
         "UC - Davis School of Law"
-      ]
+      ],
+      "displayName": "UC Davis"
     },
     {
       "name": "University of Washington",
@@ -645,7 +665,8 @@
         "U Washington",
         "U Washington Law School",
         "U Washington School of Law"
-      ]
+      ],
+      "displayName": "U Washington"
     },
     {
       "name": "University of Colorado—Boulder",
@@ -658,7 +679,8 @@
         "Colorado - Boulder School of Law",
         "University of Colorado",
         "Colorado Law"
-      ]
+      ],
+      "displayName": "Colorado Boulder"
     },
     {
       "name": "University of Houston",
@@ -709,7 +731,8 @@
         "UCONN University",
         "University of UCONN",
         "UConn Law"
-      ]
+      ],
+      "displayName": "UConn"
     },
     {
       "name": "Yeshiva University (Cardozo)",
@@ -723,7 +746,8 @@
         "Cardozo University",
         "University of Cardozo",
         "Benjamin N. Cardozo School of Law"
-      ]
+      ],
+      "displayName": "Cardozo"
     },
     {
       "name": "Marquette University",
@@ -796,7 +820,8 @@
         "Penn State School of Law",
         "Penn State Dickinson Law",
         "Pennsylvania State University Dickinson Law"
-      ]
+      ],
+      "displayName": "Penn State Dickinson"
     },
     {
       "name": "Pennsylvania State - Penn State Law",
@@ -806,7 +831,8 @@
         "Pennsylvania State - Penn State Law School of Law",
         "Penn State Law",
         "Pennsylvania State University Penn State Law"
-      ]
+      ],
+      "displayName": "Penn State Law"
     },
     {
       "name": "University of Richmond",
@@ -829,7 +855,8 @@
         "South Carolina",
         "South Carolina Law School",
         "South Carolina School of Law"
-      ]
+      ],
+      "displayName": "South Carolina"
     },
     {
       "name": "St. John's University",
@@ -874,7 +901,8 @@
         "Catholic University",
         "Catholic University Law School",
         "Catholic University School of Law"
-      ]
+      ],
+      "displayName": "Catholic U"
     },
     {
       "name": "University of Kentucky",
@@ -900,7 +928,8 @@
         "Loyola Marymount University",
         "Loyola Law School Los Angeles",
         "LMU Loyola Law School"
-      ]
+      ],
+      "displayName": "Loyola Marymount"
     },
     {
       "name": "University of Miami",
@@ -949,7 +978,8 @@
         "FIU University",
         "University of FIU",
         "Florida International University College of Law"
-      ]
+      ],
+      "displayName": "FIU"
     },
     {
       "name": "Georgia State University",
@@ -974,7 +1004,8 @@
         "Loyola - Chicago",
         "Loyola - Chicago Law School",
         "Loyola - Chicago School of Law"
-      ]
+      ],
+      "displayName": "Loyola Chicago"
     },
     {
       "name": "Northeastern University",
@@ -1033,7 +1064,8 @@
         "SUNY Buffalo",
         "SUNY Buffalo Law School",
         "SUNY Buffalo School of Law"
-      ]
+      ],
+      "displayName": "SUNY Buffalo"
     },
     {
       "name": "Belmont University",
@@ -1071,7 +1103,8 @@
         "LSU University",
         "University of LSU",
         "LSU Paul M. Hebert Law Center"
-      ]
+      ],
+      "displayName": "LSU"
     },
     {
       "name": "Texas Tech University",
@@ -1096,7 +1129,8 @@
         "University of California College of the Law San Francisco",
         "UC Hastings",
         "UC Hastings College of the Law"
-      ]
+      ],
+      "displayName": "UC Law SF"
     },
     {
       "name": "University of Montana",
@@ -1171,7 +1205,8 @@
         "Nevada - Las Vegas School of Law",
         "UNLV",
         "UNLV Boyd School of Law"
-      ]
+      ],
+      "displayName": "Nevada-LV"
     },
     {
       "name": "University of Oregon",
@@ -1231,7 +1266,8 @@
         "Case Western",
         "Case Western Law School",
         "Case Western School of Law"
-      ]
+      ],
+      "displayName": "Case Western"
     },
     {
       "name": "University of Missouri —Kansas City",
@@ -1244,7 +1280,8 @@
         "Missouri - Kansas City School of Law",
         "UMKC",
         "UMKC School of Law"
-      ]
+      ],
+      "displayName": "UMKC"
     },
     {
       "name": "Rutgers University (merged)",
@@ -1257,7 +1294,8 @@
         "Rutgers School of Law",
         "Rutgers University",
         "University of Rutgers"
-      ]
+      ],
+      "displayName": "Rutgers"
     },
     {
       "name": "Syracuse University",
@@ -1279,7 +1317,8 @@
         "University of Arkansas",
         "University of Arkansas School of Law",
         "Arkansas Fayetteville"
-      ]
+      ],
+      "displayName": "UA Fayetteville"
     },
     {
       "name": "Brooklyn Law School",
@@ -1305,7 +1344,8 @@
         "Chicago-Kent University",
         "University of Chicago-Kent",
         "Chicago-Kent College of Law"
-      ]
+      ],
+      "displayName": "Chicago-Kent"
     },
     {
       "name": "University of St. Thomas (Minnesota)",
@@ -1317,7 +1357,8 @@
         "St. Thomas (Minnesota) Law School",
         "St. Thomas (Minnesota) School of Law",
         "University of St. Thomas School of Law Minnesota"
-      ]
+      ],
+      "displayName": "St. Thomas (MN)"
     },
     {
       "name": "American University",
@@ -1354,7 +1395,8 @@
         "Michigan State",
         "Michigan State Law School",
         "Michigan State School of Law"
-      ]
+      ],
+      "displayName": "Michigan State"
     },
     {
       "name": "Washburn University",
@@ -1401,7 +1443,8 @@
         "Lewis And Clark",
         "Lewis And Clark Law School",
         "Lewis And Clark School of Law"
-      ]
+      ],
+      "displayName": "Lewis & Clark"
     },
     {
       "name": "New York Law School",
@@ -1458,7 +1501,8 @@
         "UNM School of Law",
         "UNM University",
         "University of UNM"
-      ]
+      ],
+      "displayName": "New Mexico"
     },
     {
       "name": "Albany Law School Of Union University",
@@ -1471,7 +1515,8 @@
         "Albany School of Law",
         "Albany University",
         "University of Albany"
-      ]
+      ],
+      "displayName": "Albany Law"
     },
     {
       "name": "University of Tulsa",
@@ -1506,7 +1551,8 @@
         "South Dakota",
         "South Dakota Law School",
         "South Dakota School of Law"
-      ]
+      ],
+      "displayName": "South Dakota"
     },
     {
       "name": "Indiana University - Indianapolis",
@@ -1519,7 +1565,8 @@
         "IU McKinney School of Law",
         "Indiana University McKinney",
         "Indiana University Robert H. McKinney School of Law"
-      ]
+      ],
+      "displayName": "IU Indianapolis"
     },
     {
       "name": "University of Louisville",
@@ -1543,7 +1590,8 @@
         "Mississippi Law School",
         "Mississippi School of Law",
         "Mississippi University"
-      ]
+      ],
+      "displayName": "Mississippi"
     },
     {
       "name": "West Virginia University",
@@ -1557,7 +1605,8 @@
         "WVU University",
         "University of WVU",
         "West Virginia University College of Law"
-      ]
+      ],
+      "displayName": "West Virginia"
     },
     {
       "name": "Seattle University",
@@ -1628,7 +1677,8 @@
         "Northern Kentucky",
         "Northern Kentucky Law School",
         "Northern Kentucky School of Law"
-      ]
+      ],
+      "displayName": "Northern Kentucky"
     },
     {
       "name": "Loyola University— New Orleans",
@@ -1640,7 +1690,8 @@
         "Loyola - New Orleans Law School",
         "Loyola - New Orleans School of Law",
         "Loyola University New Orleans College of Law"
-      ]
+      ],
+      "displayName": "Loyola New Orleans"
     },
     {
       "name": "University Of Baltimore",
@@ -1665,7 +1716,8 @@
         "Cleveland School of Law",
         "Cleveland University",
         "University of Cleveland"
-      ]
+      ],
+      "displayName": "Cleveland State"
     },
     {
       "name": "University of New Hampshire",
@@ -1676,7 +1728,8 @@
         "New Hampshire",
         "New Hampshire Law School",
         "New Hampshire School of Law"
-      ]
+      ],
+      "displayName": "New Hampshire"
     },
     {
       "name": "Quinnipiac University",
@@ -1699,7 +1752,8 @@
         "South Texas",
         "South Texas Law School",
         "South Texas School of Law"
-      ]
+      ],
+      "displayName": "South Texas Houston"
     },
     {
       "name": "University of Memphis",
@@ -1725,7 +1779,8 @@
         "University of Arkansas at Little Rock",
         "UA Little Rock William H. Bowen School of Law",
         "Bowen"
-      ]
+      ],
+      "displayName": "UA Little Rock"
     },
     {
       "name": "University of Detroit Mercy",
@@ -1736,7 +1791,8 @@
         "Detroit Mercy",
         "Detroit Mercy Law School",
         "Detroit Mercy School of Law"
-      ]
+      ],
+      "displayName": "Detroit Mercy"
     },
     {
       "name": "Pace University",
@@ -1863,7 +1919,8 @@
         "Pacific (Mcgeorge) School of Law",
         "University of the Pacific",
         "McGeorge School of Law"
-      ]
+      ],
+      "displayName": "Pacific McGeorge"
     },
     {
       "name": "Southwestern Law School",
@@ -1875,7 +1932,8 @@
         "Southwestern School of Law",
         "Southwestern University",
         "University of Southwestern"
-      ]
+      ],
+      "displayName": "Southwestern"
     },
     {
       "name": "Vermont Law School",
@@ -1900,7 +1958,8 @@
         "Widener-Delaware School of Law",
         "Widener-Delaware University",
         "University of Widener-Delaware"
-      ]
+      ],
+      "displayName": "Widener Delaware"
     },
     {
       "name": "Oklahoma City University",
@@ -1911,7 +1970,8 @@
         "Oklahoma City",
         "Oklahoma City Law School",
         "Oklahoma City School of Law"
-      ]
+      ],
+      "displayName": "Oklahoma City"
     },
     {
       "name": "University of North Dakota",
@@ -1924,7 +1984,8 @@
         "UND School of Law",
         "UND University",
         "University of UND"
-      ]
+      ],
+      "displayName": "North Dakota"
     },
     {
       "name": "University of San Francisco",
@@ -1937,7 +1998,8 @@
         "USF School of Law",
         "USF University",
         "University of USF"
-      ]
+      ],
+      "displayName": "USF"
     },
     {
       "name": "UNT Dallas College Of Law",
@@ -1951,7 +2013,8 @@
         "UNTD University",
         "University of UNTD",
         "University of North Texas at Dallas"
-      ]
+      ],
+      "displayName": "UNT Dallas"
     },
     {
       "name": "Western New England University",
@@ -1962,7 +2025,8 @@
         "Western New England",
         "Western New England Law School",
         "Western New England School of Law"
-      ]
+      ],
+      "displayName": "Western New England"
     },
     {
       "name": "Mississippi College",
@@ -1984,7 +2048,8 @@
         "NIU University",
         "University of NIU",
         "Northern Illinois University College of Law"
-      ]
+      ],
+      "displayName": "Northern Illinois"
     },
     {
       "name": "Ave Maria School Of Law",
@@ -1994,7 +2059,8 @@
         "Ave Maria School Of Law School of Law",
         "Ave Maria",
         "Ave Maria Law School"
-      ]
+      ],
+      "displayName": "Ave Maria"
     },
     {
       "name": "Faulkner University",
@@ -2034,7 +2100,8 @@
         "University of Illinois Chicago",
         "UIC Law",
         "UIC School of Law"
-      ]
+      ],
+      "displayName": "UIC Law"
     },
     {
       "name": "New England Law | Boston",
@@ -2045,7 +2112,8 @@
         "New England - Boston",
         "New England - Boston Law School",
         "New England - Boston School of Law"
-      ]
+      ],
+      "displayName": "New England Law"
     },
     {
       "name": "St. Thomas University (Florida)",
@@ -2056,7 +2124,8 @@
         "St. Thomas",
         "St. Thomas Law School",
         "St. Thomas School of Law"
-      ]
+      ],
+      "displayName": "St. Thomas (FL)"
     },
     {
       "name": "Willamette University",
@@ -2080,7 +2149,8 @@
         "Charleston Law School",
         "Charleston University",
         "University of Charleston"
-      ]
+      ],
+      "displayName": "Charleston"
     },
     {
       "name": "CUNY",
@@ -2102,7 +2172,8 @@
         "Roger Williams",
         "Roger Williams Law School",
         "Roger Williams School of Law"
-      ]
+      ],
+      "displayName": "Roger Williams"
     },
     {
       "name": "University of Massachusetts Dartmouth",
@@ -2115,7 +2186,8 @@
         "UMass - Dartmouth School of Law",
         "UMass Law",
         "UMass School of Law"
-      ]
+      ],
+      "displayName": "UMass Dartmouth"
     },
     {
       "name": "Appalachian School of Law",
@@ -2128,7 +2200,8 @@
         "Appalachian Law School",
         "Appalachian University",
         "University of Appalachian"
-      ]
+      ],
+      "displayName": "Appalachian"
     },
     {
       "name": "Barry University",
@@ -2151,7 +2224,8 @@
         "California Western School Of Law School of Law",
         "California Western",
         "California Western Law School"
-      ]
+      ],
+      "displayName": "California Western"
     },
     {
       "name": "Capital University",
@@ -2191,7 +2265,8 @@
         "Inter American",
         "Inter American Law School",
         "Inter American School of Law"
-      ]
+      ],
+      "displayName": "Inter American PR"
     },
     {
       "name": "Atlanta's John Marshall Law School",
@@ -2203,7 +2278,8 @@
         "John Marshall",
         "John Marshall Law School",
         "John Marshall School of Law"
-      ]
+      ],
+      "displayName": "Atlanta J. Marshall"
     },
     {
       "name": "Lincoln Memorial",
@@ -2226,7 +2302,8 @@
         "NCCU School of Law",
         "NCCU University",
         "University of NCCU"
-      ]
+      ],
+      "displayName": "NC Central"
     },
     {
       "name": "Nova Southeastern University",
@@ -2238,7 +2315,8 @@
         "Nova Southeastern",
         "Nova Southeastern Law School",
         "Nova Southeastern School of Law"
-      ]
+      ],
+      "displayName": "Nova Southeastern"
     },
     {
       "name": "Ohio Northern University",
@@ -2253,7 +2331,8 @@
         "ONU University",
         "University of ONU",
         "Ohio Northern University Pettit College of Law"
-      ]
+      ],
+      "displayName": "Ohio Northern"
     },
     {
       "name": "Pontifical Catholic University Of P.R.",
@@ -2265,7 +2344,8 @@
         "Pontifical Catholic",
         "Pontifical Catholic Law School",
         "Pontifical Catholic School of Law"
-      ]
+      ],
+      "displayName": "Pontifical Catholic"
     },
     {
       "name": "University of Puerto Rico",
@@ -2277,7 +2357,8 @@
         "Puerto Rico",
         "Puerto Rico Law School",
         "Puerto Rico School of Law"
-      ]
+      ],
+      "displayName": "Puerto Rico"
     },
     {
       "name": "Southern Illinois University— Carbondale",
@@ -2292,7 +2373,8 @@
         "Southern Illinois University",
         "Southern Illinois University School of Law",
         "SIU Law"
-      ]
+      ],
+      "displayName": "SIU Carbondale"
     },
     {
       "name": "Southern University",
@@ -2317,7 +2399,8 @@
         "Texas Southern",
         "Texas Southern Law School",
         "Texas Southern School of Law"
-      ]
+      ],
+      "displayName": "Texas Southern"
     },
     {
       "name": "University of the District of Columbia",
@@ -2332,7 +2415,8 @@
         "UDC University",
         "University of UDC",
         "UDC David A. Clarke School of Law"
-      ]
+      ],
+      "displayName": "UDC Law"
     },
     {
       "name": "Western Michigan University (Cooley)",
@@ -2346,7 +2430,8 @@
         "Western Michigan School of Law",
         "Western Michigan University",
         "Cooley"
-      ]
+      ],
+      "displayName": "Cooley Law"
     },
     {
       "name": "Western State College Of Law",
@@ -2358,7 +2443,8 @@
         "Western State",
         "Western State Law School",
         "Western State School of Law"
-      ]
+      ],
+      "displayName": "Western State"
     },
     {
       "name": "Widener- commonwealth",
@@ -2370,7 +2456,8 @@
         "Widener - Pennsylvania",
         "Widener - Pennsylvania Law School",
         "Widener - Pennsylvania School of Law"
-      ]
+      ],
+      "displayName": "Widener Commonwealth"
     }
   ]
 }

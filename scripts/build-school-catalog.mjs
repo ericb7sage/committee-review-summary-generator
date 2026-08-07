@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sourcePath = path.join(root, "data", "7sage-rankings-2026.json");
 const canonicalNamesPath = path.join(root, "data", "superhuman-school-names-2026.json");
+const displayNamesPath = path.join(root, "data", "school-display-names-2026.json");
 const outputPaths = [
   path.join(root, "web", "school-rankings.json"),
   path.join(root, "docs", "school-rankings.json"),
@@ -75,6 +76,13 @@ const aliasOverrides = {
   Denver: ["University of Denver", "University of Denver Sturm College of Law", "Denver Sturm"],
 };
 
+const displayNameSchoolOverrides = {
+  "Penn State - Penn State Law": "Pennsylvania State - Penn State Law",
+  "Loyola Marymount—Los Angeles": "Loyola Marymount University—Los Angeles",
+  "Illinois Tech (Chicago-Kent)": "Illinois Institute of Technology (Chicago-Kent College of Law)",
+  "University of Illinois Chicago (UIC Law)": "University of Illinois Chicago School of Law (UIC Law)",
+};
+
 function normalize(value) {
   return String(value || "")
     .normalize("NFD")
@@ -98,6 +106,7 @@ function generatedAliases(name) {
 
 const sourceRows = JSON.parse(fs.readFileSync(sourcePath, "utf8"));
 const canonicalNameData = JSON.parse(fs.readFileSync(canonicalNamesPath, "utf8"));
+const displayNameData = JSON.parse(fs.readFileSync(displayNamesPath, "utf8"));
 const canonicalNames = new Map(
   canonicalNameData.entries.map(({ sourceName, canonicalName }) => [sourceName, canonicalName])
 );
@@ -136,11 +145,55 @@ schools.forEach((school, index) => {
   delete school.sourceName;
 });
 
+if (!Array.isArray(displayNameData.entries)) {
+  throw new Error("School display-name data must contain an entries array.");
+}
+if (displayNameData.cycle !== "2026 U.S. News rankings") {
+  throw new Error(`Unexpected school display-name cycle: ${displayNameData.cycle || "missing"}.`);
+}
+
+const schoolLookup = new Map();
+schools.forEach((school, index) => {
+  [school.name, ...school.aliases].forEach((candidate) => {
+    schoolLookup.set(normalize(candidate), index);
+  });
+});
+
+const displayNameOwners = new Map();
+const displayValueOwners = new Map();
+displayNameData.entries.forEach((entry, entryIndex) => {
+  const suppliedSchoolName = String(entry?.schoolName || "").replace(/\s+/g, " ").trim();
+  const displayName = String(entry?.displayName || "").replace(/\s+/g, " ").trim();
+  if (!suppliedSchoolName) {
+    throw new Error(`Display-name row ${entryIndex + 1} is missing a school name.`);
+  }
+  if (!displayName) {
+    throw new Error(`Display-name row ${entryIndex + 1} for ${suppliedSchoolName} is blank.`);
+  }
+
+  const lookupName = displayNameSchoolOverrides[suppliedSchoolName] || suppliedSchoolName;
+  const schoolIndex = schoolLookup.get(normalize(lookupName));
+  if (schoolIndex === undefined) {
+    throw new Error(`Display-name row ${entryIndex + 1} does not match a catalog school: ${suppliedSchoolName}.`);
+  }
+  if (displayNameOwners.has(schoolIndex)) {
+    throw new Error(`Multiple display names target ${schools[schoolIndex].name}.`);
+  }
+  const existingDisplayOwner = displayValueOwners.get(normalize(displayName));
+  if (existingDisplayOwner !== undefined && existingDisplayOwner !== schoolIndex) {
+    throw new Error(`Display name "${displayName}" targets multiple catalog schools.`);
+  }
+  displayNameOwners.set(schoolIndex, entryIndex);
+  displayValueOwners.set(normalize(displayName), schoolIndex);
+  schools[schoolIndex].displayName = displayName;
+});
+
 const catalog = {
   cycle: "2026 U.S. News rankings",
   source: "https://7sage.com/admissions/rankings",
   nameSource: canonicalNameData.source,
   nameSourceCreated: canonicalNameData.sourceCreated,
+  displayNameSource: displayNameData.source,
   retrieved: "2026-08-04",
   maxRank: 175,
   schools,

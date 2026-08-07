@@ -440,6 +440,7 @@ function setSchoolCatalog(catalog) {
   );
   SCHOOL_CATALOG = catalog.schools.map((school) => ({
     name: String(school.name || "").trim(),
+    displayName: String(school.displayName || "").trim(),
     rank: Number(school.rank),
     rankLabel: String(school.rankLabel || "").trim(),
     aliases: Array.isArray(school.aliases) ? school.aliases : [],
@@ -460,8 +461,13 @@ function validateSchoolCatalog(catalog) {
   const aliasOwners = new Map();
   catalog.schools.forEach((school, index) => {
     const name = String(school?.name || "").trim();
+    const hasDisplayName = Object.prototype.hasOwnProperty.call(school || {}, "displayName");
+    const displayName = String(school?.displayName || "").trim();
     const rank = Number(school?.rank);
     if (!name) errors.push(`School row ${index + 1} is missing a name.`);
+    if (hasDisplayName && !displayName) {
+      errors.push(`${name || `School row ${index + 1}`} has a blank display name.`);
+    }
     if (!Number.isFinite(rank) || rank < 1) {
       errors.push(`${name || `School row ${index + 1}`} has an invalid rank.`);
     }
@@ -1984,7 +1990,7 @@ function resolveReaderSchoolRecommendations(row, mode) {
         const supplied = String(row[field] || "").trim();
         if (!supplied) return [];
         const school = findSchoolInCatalog(supplied);
-        return school ? [{ name: school.name, rank: school.rank, rankLabel: school.rankLabel, supplied }] : [];
+        return school ? [{ name: school.name, displayName: school.displayName, rank: school.rank, rankLabel: school.rankLabel, supplied }] : [];
       });
       return [category, schools];
     })
@@ -1997,6 +2003,10 @@ function uniqueNonEmpty(values) {
 
 function formatSchoolRank(school) {
   return school?.rankLabel || `#${school?.rank}`;
+}
+
+function formatSchoolName(school) {
+  return String(school?.displayName || school?.name || "").trim();
 }
 
 function uniqueSchoolsByName(schools) {
@@ -2434,7 +2444,7 @@ function renderSchoolRecommendationPlot(readers, cycle) {
           <div class="school-rank-list-title"><i></i>${SCHOOL_CATEGORY_LABELS[category]}</div>
           <div class="school-rank-list-items">
             ${schoolSlots.map((school) => school
-              ? `<span class="school-rank-list-item"><strong>${escapeHtml(school.name)}</strong><small>${escapeHtml(formatSchoolRank(school))}</small></span>`
+              ? `<span class="school-rank-list-item"><strong title="${escapeHtml(school.name)}">${escapeHtml(formatSchoolName(school))}</strong><small>${escapeHtml(formatSchoolRank(school))}</small></span>`
               : '<span class="school-rank-list-item empty" aria-hidden="true"></span>'
             ).join("")}
           </div>
@@ -2561,7 +2571,7 @@ function renderReaderSchoolRow(label, className, schools) {
       ${[0, 1].map((index) => {
         const school = values[index];
         return school
-          ? `<span class="reader-school-value"><strong>${escapeHtml(school.name)}</strong><small>${escapeHtml(formatSchoolRank(school))}</small></span>`
+          ? `<span class="reader-school-value"><strong title="${escapeHtml(school.name)}">${escapeHtml(formatSchoolName(school))}</strong><small>${escapeHtml(formatSchoolRank(school))}</small></span>`
           : '<span class="reader-school-value empty" aria-hidden="true"></span>';
       }).join("")}
     </span>

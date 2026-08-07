@@ -1,0 +1,350 @@
+{
+  "cycle": "2026 U.S. News rankings",
+  "source": "Name Shorteners - Sheet1.csv",
+  "entries": [
+    {
+      "schoolName": "University of California—Los Angeles",
+      "displayName": "UCLA"
+    },
+    {
+      "schoolName": "Washington University in St. Louis",
+      "displayName": "WashU"
+    },
+    {
+      "schoolName": "University of California—Berkeley",
+      "displayName": "UC Berkeley"
+    },
+    {
+      "schoolName": "University of Southern California",
+      "displayName": "USC"
+    },
+    {
+      "schoolName": "University of Illinois—Urbana Champaign",
+      "displayName": "Illinois"
+    },
+    {
+      "schoolName": "Indiana University - Bloomington",
+      "displayName": "Indiana Bloomington"
+    },
+    {
+      "schoolName": "University of Colorado—Boulder",
+      "displayName": "Colorado Boulder"
+    },
+    {
+      "schoolName": "Penn State - Dickinson Law",
+      "displayName": "Penn State Dickinson"
+    },
+    {
+      "schoolName": "Penn State - Penn State Law",
+      "displayName": "Penn State Law"
+    },
+    {
+      "schoolName": "Loyola Marymount—Los Angeles",
+      "displayName": "Loyola Marymount"
+    },
+    {
+      "schoolName": "Florida International University",
+      "displayName": "FIU"
+    },
+    {
+      "schoolName": "University of California (Hastings)",
+      "displayName": "UC Law SF"
+    },
+    {
+      "schoolName": "University of Nevada—Las Vegas",
+      "displayName": "Nevada-LV"
+    },
+    {
+      "schoolName": "Case Western Reserve University",
+      "displayName": "Case Western"
+    },
+    {
+      "schoolName": "University of Missouri—Kansas City",
+      "displayName": "UMKC"
+    },
+    {
+      "schoolName": "University of Arkansas, Fayetteville",
+      "displayName": "UA Fayetteville"
+    },
+    {
+      "schoolName": "Illinois Tech (Chicago-Kent)",
+      "displayName": "Chicago-Kent"
+    },
+    {
+      "schoolName": "University of St. Thomas (Minnesota)",
+      "displayName": "St. Thomas (MN)"
+    },
+    {
+      "schoolName": "Albany Law School Of Union University",
+      "displayName": "Albany Law"
+    },
+    {
+      "schoolName": "Indiana University - Indianapolis",
+      "displayName": "IU Indianapolis"
+    },
+    {
+      "schoolName": "Loyola University—New Orleans",
+      "displayName": "Loyola New Orleans"
+    },
+    {
+      "schoolName": "South Texas College Of Law—Houston",
+      "displayName": "South Texas Houston"
+    },
+    {
+      "schoolName": "University of Arkansas, Little Rock",
+      "displayName": "UA Little Rock"
+    },
+    {
+      "schoolName": "University of the Pacific (McGeorge)",
+      "displayName": "Pacific McGeorge"
+    },
+    {
+      "schoolName": "Widener University—Delaware",
+      "displayName": "Widener Delaware"
+    },
+    {
+      "schoolName": "Western New England University",
+      "displayName": "Western New England"
+    },
+    {
+      "schoolName": "University of Illinois Chicago (UIC Law)",
+      "displayName": "UIC Law"
+    },
+    {
+      "schoolName": "St. Thomas University (Florida)",
+      "displayName": "St. Thomas (FL)"
+    },
+    {
+      "schoolName": "University of Massachusetts Dartmouth",
+      "displayName": "UMass Dartmouth"
+    },
+    {
+      "schoolName": "California Western School Of Law",
+      "displayName": "California Western"
+    },
+    {
+      "schoolName": "Inter American University Of Puerto Rico",
+      "displayName": "Inter American PR"
+    },
+    {
+      "schoolName": "Atlanta's John Marshall Law School",
+      "displayName": "Atlanta J. Marshall"
+    },
+    {
+      "schoolName": "North Carolina Central University",
+      "displayName": "NC Central"
+    },
+    {
+      "schoolName": "Pontifical Catholic University Of P.R.",
+      "displayName": "Pontifical Catholic"
+    },
+    {
+      "schoolName": "Southern Illinois University—Carbondale",
+      "displayName": "SIU Carbondale"
+    },
+    {
+      "schoolName": "University of the District of Columbia",
+      "displayName": "UDC Law"
+    },
+    {
+      "schoolName": "Western Michigan University (Cooley)",
+      "displayName": "Cooley Law"
+    },
+    {
+      "schoolName": "University of Pennsylvania",
+      "displayName": "Penn Carey Law"
+    },
+    {
+      "schoolName": "University of Texas at Austin",
+      "displayName": "UT Austin"
+    },
+    {
+      "schoolName": "University of North Carolina",
+      "displayName": "UNC"
+    },
+    {
+      "schoolName": "University of Notre Dame",
+      "displayName": "Notre Dame"
+    },
+    {
+      "schoolName": "Brigham Young University",
+      "displayName": "BYU"
+    },
+    {
+      "schoolName": "George Washington University",
+      "displayName": "GW Law"
+    },
+    {
+      "schoolName": "George Mason University",
+      "displayName": "Scalia Law"
+    },
+    {
+      "schoolName": "University of California—Irvine",
+      "displayName": "UC Irvine"
+    },
+    {
+      "schoolName": "University of Florida (Levin)",
+      "displayName": "Florida Levin"
+    },
+    {
+      "schoolName": "Washington and Lee University",
+      "displayName": "Washington & Lee"
+    },
+    {
+      "schoolName": "William & Mary Law School",
+      "displayName": "William & Mary"
+    },
+    {
+      "schoolName": "Southern Methodist University",
+      "displayName": "SMU Dedman"
+    },
+    {
+      "schoolName": "University of California—Davis",
+      "displayName": "UC Davis"
+    },
+    {
+      "schoolName": "University of Washington",
+      "displayName": "U Washington"
+    },
+    {
+      "schoolName": "University of Connecticut",
+      "displayName": "UConn"
+    },
+    {
+      "schoolName": "Yeshiva University (Cardozo)",
+      "displayName": "Cardozo"
+    },
+    {
+      "schoolName": "University of South Carolina",
+      "displayName": "South Carolina"
+    },
+    {
+      "schoolName": "Catholic University Of America",
+      "displayName": "Catholic U"
+    },
+    {
+      "schoolName": "Loyola University—Chicago",
+      "displayName": "Loyola Chicago"
+    },
+    {
+      "schoolName": "University of Buffalo—SUNY",
+      "displayName": "SUNY Buffalo"
+    },
+    {
+      "schoolName": "Louisiana State University",
+      "displayName": "LSU"
+    },
+    {
+      "schoolName": "Rutgers University (merged)",
+      "displayName": "Rutgers"
+    },
+    {
+      "schoolName": "Michigan State University",
+      "displayName": "Michigan State"
+    },
+    {
+      "schoolName": "Lewis And Clark College",
+      "displayName": "Lewis & Clark"
+    },
+    {
+      "schoolName": "University of New Mexico",
+      "displayName": "New Mexico"
+    },
+    {
+      "schoolName": "University of South Dakota",
+      "displayName": "South Dakota"
+    },
+    {
+      "schoolName": "University of Mississippi",
+      "displayName": "Mississippi"
+    },
+    {
+      "schoolName": "West Virginia University",
+      "displayName": "West Virginia"
+    },
+    {
+      "schoolName": "Northern Kentucky University",
+      "displayName": "Northern Kentucky"
+    },
+    {
+      "schoolName": "Cleveland State University",
+      "displayName": "Cleveland State"
+    },
+    {
+      "schoolName": "University of New Hampshire",
+      "displayName": "New Hampshire"
+    },
+    {
+      "schoolName": "University of Detroit Mercy",
+      "displayName": "Detroit Mercy"
+    },
+    {
+      "schoolName": "Southwestern Law School",
+      "displayName": "Southwestern"
+    },
+    {
+      "schoolName": "Oklahoma City University",
+      "displayName": "Oklahoma City"
+    },
+    {
+      "schoolName": "University of North Dakota",
+      "displayName": "North Dakota"
+    },
+    {
+      "schoolName": "University of San Francisco",
+      "displayName": "USF"
+    },
+    {
+      "schoolName": "UNT Dallas College Of Law",
+      "displayName": "UNT Dallas"
+    },
+    {
+      "schoolName": "Northern Illinois University",
+      "displayName": "Northern Illinois"
+    },
+    {
+      "schoolName": "Ave Maria School Of Law",
+      "displayName": "Ave Maria"
+    },
+    {
+      "schoolName": "New England Law | Boston",
+      "displayName": "New England Law"
+    },
+    {
+      "schoolName": "Charleston School Of Law",
+      "displayName": "Charleston"
+    },
+    {
+      "schoolName": "Roger Williams University",
+      "displayName": "Roger Williams"
+    },
+    {
+      "schoolName": "Appalachian School of Law",
+      "displayName": "Appalachian"
+    },
+    {
+      "schoolName": "Nova Southeastern University",
+      "displayName": "Nova Southeastern"
+    },
+    {
+      "schoolName": "Ohio Northern University",
+      "displayName": "Ohio Northern"
+    },
+    {
+      "schoolName": "University of Puerto Rico",
+      "displayName": "Puerto Rico"
+    },
+    {
+      "schoolName": "Texas Southern University",
+      "displayName": "Texas Southern"
+    },
+    {
+      "schoolName": "Western State College Of Law",
+      "displayName": "Western State"
+    },
+    {
+      "schoolName": "Widener - Commonwealth",
+      "displayName": "Widener Commonwealth"
+    }
+  ]
+}

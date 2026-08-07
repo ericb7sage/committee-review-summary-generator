@@ -1577,7 +1577,7 @@ button:disabled {
 .school-rank-list.safety .school-rank-list-title { color: #3aa968; }
 .school-rank-list-items { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: repeat(3, 1fr); gap: 2px 5px; }
 .school-rank-list-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 3px; min-width: 0; min-height: 8px; font-size: 6px; line-height: 1.08; }
-.school-rank-list-item strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.school-rank-list-item strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 5.5px; }
 .school-rank-list-item small { color: #667085; font-size: 6px; }
 .school-rank-list-item.empty { visibility: hidden; }
 .school-rank-track { height: 58px; margin: 0 22px; position: relative; }

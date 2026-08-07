@@ -115,7 +115,7 @@ Each of the three review rows must name one school in every required recommendat
 
 When nearby school ranks are staggered above or below the number line, a category-colored connector marks the bubble's exact position on the shared baseline.
 
-The catalog contains the 2026 U.S. News rankings published on the 7Sage rankings page. Its source snapshot lives in `data/7sage-rankings-2026.json`; run `node scripts/build-school-catalog.mjs` after editing the source or alias overrides to regenerate identical `web` and `docs` catalogs. Schools in the published `175+` group use rank 175 for plotting while retaining the `175+` display label.
+The catalog contains the 2026 U.S. News rankings published on the 7Sage rankings page. Its source snapshot lives in `data/7sage-rankings-2026.json`, and compact report labels live in `data/school-display-names-2026.json`. Display names affect report labels only; canonical names and aliases continue to control CSV matching, validation, and deduplication. Run `node scripts/build-school-catalog.mjs` after editing either source or the alias overrides to regenerate identical `web` and `docs` catalogs. Schools in the published `175+` group use rank 175 for plotting while retaining the `175+` display label.
 
 ## Template key fields
 
