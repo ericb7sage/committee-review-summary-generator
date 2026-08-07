@@ -893,7 +893,7 @@ const PRINT_CSS = `
   .reader-band-values-pill.target { background: #e0f2fe; border-color: #7dd3fc; color: #0c4a6e; }
   .reader-band-values-pill.safety { background: #dcfce7; border-color: #86efac; color: #14532d; }
   .reader-band-values-pill.empty { background: #fff; border-color: #d8dee9; color: #98a2b3; }
-  .reader-school-values { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3px; min-width: 0; flex: 1; margin-left: auto; }
+  .reader-school-values { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: repeat(2, minmax(0, 1fr)); gap: 1px; min-width: 0; flex: 1; margin-left: auto; }
   .reader-school-value { display: flex; align-items: baseline; justify-content: flex-end; gap: 2px; min-width: 0; min-height: 8px; font-size: 5.5px; white-space: nowrap; }
   .reader-school-value strong { overflow: hidden; text-overflow: ellipsis; }
   .reader-school-value small { color: #667085; font-size: 6px; flex: 0 0 auto; }
