@@ -1,0 +1,708 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><html><head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+        <meta name="format-detection" content="telephone=no">
+        <title>7Sage LSAT</title>
+        <!-- Web font imports -->
+        <style type="text/css" data-premailer="ignore">
+            @import url("https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600&display=swap");
+            @import url("https://fonts.googleapis.com/css2?family=Lexend:wght@400;500&display=swap");
+            @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&family=Open+Sans:wght@400;600&display=swap");
+
+            /* Media queries for responsive design */
+            /* Media queries */
+            @media screen and (max-width: 600px) {
+                body {
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    background-color: #ffffff !important;
+                    width: 100% !important;
+                }
+
+                .container {
+                    width: 100% !important;
+                    max-width: 100% !important;
+                    min-width: 100% !important;
+                    margin: 0 !important;
+                    border-radius: 16px 16px 0 0 !important;
+                }
+
+                .footer {
+                    width: 100% !important;
+                    max-width: 100% !important;
+                    min-width: 100% !important;
+                    border-radius: 0 0 16px 16px !important;
+                }
+
+                .outer-wrapper {
+                    width: 100% !important;
+                    min-width: 100% !important;
+                    max-width: 100% !important;
+                }
+
+                h1 {
+                    font-size: 36px !important;
+                }
+
+                h2 {
+                    font-size: 30px !important;
+                }
+
+                h3 {
+                    font-size: 24px !important;
+                }
+
+                h4 {
+                    font-size: 20px !important;
+                }
+
+                /* Remove outer padding on mobile */
+                .outer-padding-cell {
+                    padding: 0 !important;
+                }
+
+                .card-section {
+                    width: 100% !important;
+                    margin-left: 0 !important;
+                    margin-right: 0 !important;
+                    padding-left: 0 !important;
+                    padding-right: 0 !important;
+                }
+
+                .card {
+                    width: calc(100% - 32px) !important;
+                    margin-left: 16px !important;
+                    margin-right: 16px !important;
+                }
+            }
+        </style>
+
+        <!-- Styles that will be inlined -->
+        <style type="text/css">
+            /* Reset styles */
+            body,
+            table,
+            td,
+            p,
+            a,
+            li,
+            blockquote {
+                -webkit-text-size-adjust: 100%;
+                -ms-text-size-adjust: 100%;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                background-color: #f1ede9;
+            }
+
+            table,
+            td {
+                border-collapse: collapse;
+            }
+
+            img {
+                -ms-interpolation-mode: bicubic;
+                border: 0;
+                height: auto;
+                line-height: 100%;
+                outline: none;
+                text-decoration: none;
+                max-width: 100%;
+            }
+
+            .content-area img {
+                max-width: 100%;
+                height: auto;
+                display: block;
+                margin: 16px 0;
+            }
+
+            /* Typography with fallbacks */
+            h1 {
+                font-family: "Fraunces", Georgia, serif !important;
+                color: #344054;
+                font-size: 48px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 100%;
+                margin: 0 0 24px 0;
+                padding: 0;
+            }
+
+            h2 {
+                font-family: "Fraunces", Georgia, serif !important;
+                color: #344054;
+                font-size: 36px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 120%;
+                letter-spacing: -0.72px;
+                margin: 0 0 20px 0;
+                padding: 0;
+            }
+
+            h3 {
+                font-family: "Fraunces", Georgia, serif !important;
+                color: #344054;
+                font-size: 30px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 120%;
+                margin: 0 0 16px 0;
+                padding: 0;
+            }
+
+            h4 {
+                font-family: "Fraunces", Georgia, serif !important;
+                color: #344054;
+                font-size: 24px;
+                font-style: normal;
+                font-weight: 600;
+                line-height: 120%;
+                margin: 0 0 16px 0;
+                padding: 0;
+            }
+
+            p,
+            span,
+            div,
+            td {
+                font-family: "Lexend", "Roboto", sans-serif !important;
+                color: #344054;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 150%;
+                margin: 0 0 16px 0;
+                padding: 0;
+            }
+
+            li {
+                font-family: "Lexend", "Roboto", sans-serif !important;
+                color: #344054;
+                font-size: 16px;
+                font-style: normal;
+                font-weight: 400;
+                line-height: 150%;
+                margin: 0 0 8px 0;
+                padding: 0;
+            }
+
+            a {
+                font-family: "Lexend", "Roboto", sans-serif !important;
+                text-decoration: none;
+            }
+
+            /* Content link styling */
+            .content-area a {
+                color: #227f9c;
+                text-decoration: none;
+            }
+
+            /* List styling */
+            ul,
+            ol {
+                padding-left: 20px;
+                margin: 0 0 16px 0;
+            }
+
+            /* Critical styling for content area */
+            .content-area * {
+                font-family: "Lexend", "Roboto", sans-serif !important;
+                color: #344054;
+            }
+
+            .content-area h1,
+            .content-area h2,
+            .content-area h3,
+            .content-area h4 {
+                font-family: "Fraunces", Georgia, serif !important;
+                color: #344054;
+            }
+
+            .content-area p {
+                margin-bottom: 16px;
+            }
+
+            .content-area ul li,
+            .content-area ol li {
+                margin-bottom: 8px;
+            }
+
+            /* Intercom button styling */
+            .intercom-h2b-button {
+                background: #227f9c;
+                border-radius: 12px;
+                color: #ffffff !important;
+                display: inline-block;
+                font-family: "Fraunces", Georgia, serif !important;
+                font-size: 24px;
+                font-weight: 600;
+                line-height: 120%;
+                padding: 14px 28px;
+                text-decoration: none;
+                box-shadow: 0px 1px 2px 0px rgba(111, 92, 73, 0.05);
+                margin: 8px 0 24px 0;
+            }
+
+            .footer-title {
+                color: #ffffff;
+                font-family: "Lexend", "Roboto", sans-serif !important;
+                font-size: 20px;
+                font-weight: 600;
+                line-height: 150%;
+            }
+
+            .card-text {
+                color: #98a2b3;
+                font-family: "Lexend", "Roboto", sans-serif !important;
+                font-size: 16px;
+                font-weight: 500;
+                line-height: 150%;
+            }
+
+            /* Custom unsubscribe link styling */
+            .unsubscribe-custom {
+                color: #98a2b3 !important;
+                font-family: "Lexend", "Roboto", sans-serif !important;
+                font-size: 16px !important;
+                font-weight: 500 !important;
+                line-height: 150% !important;
+                text-decoration: none !important;
+            }
+
+            .container {
+                background-color: #ffffff;
+            }
+
+            /* Footer divider styling */
+            .footer-divider {
+                width: 3px;
+                height: 45px;
+                background-color: #667085;
+                margin: 0;
+                padding: 0;
+            }
+
+            /* Forum post excerpt styling */
+            .forum-post-left {
+                background-color: #227f9c;
+                color: #ffffff;
+                padding: 24px;
+                margin: 24px;
+                border-radius: 0 12px 12px 12px;
+                border: 2px solid rgba(71, 84, 103, 0.08);
+                box-shadow:
+                    0px 20px 24px -4px rgba(111, 92, 73, 0.08),
+                    0px 8px 8px -4px rgba(111, 92, 73, 0.03);
+            }
+
+            .forum-post-left h3 {
+                font-family: "Fraunces", Georgia, serif !important;
+                color: #ffffff !important;
+                font-size: 24px !important;
+                font-weight: 600 !important;
+                line-height: 120% !important;
+                margin: 0 0 16px 0 !important;
+            }
+
+            .forum-post-left p {
+                font-family: "Lexend", "Roboto", sans-serif !important;
+                color: #ffffff !important;
+                font-size: 16px !important;
+                line-height: 150% !important;
+                margin: 0 0 16px 0 !important;
+            }
+
+            .forum-post-left a {
+                font-family: "Lexend", "Roboto", sans-serif !important;
+                color: #ffffff !important;
+                text-decoration: none !important;
+                font-size: 16px !important;
+                line-height: 150% !important;
+                vertical-align: bottom;
+            }
+
+            .forum-post-left img {
+                height: 20px;
+                vertical-align: middle;
+                margin-bottom: 2px;
+            }
+
+            .forum-post-right {
+                background-color: #ffffff;
+                color: #ffffff;
+                padding: 24px;
+                margin: 24px;
+                border-radius: 12px 0 12px 12px;
+                border: 2px solid rgba(71, 84, 103, 0.08);
+                box-shadow:
+                    0px 20px 24px -4px rgba(111, 92, 73, 0.08),
+                    0px 8px 8px -4px rgba(111, 92, 73, 0.03);
+            }
+
+            .forum-post-right h3 {
+                font-family: "Fraunces", Georgia, serif !important;
+                color: #227f9c !important;
+                font-size: 24px !important;
+                font-weight: 600 !important;
+                line-height: 120% !important;
+                margin: 0 0 16px 0 !important;
+            }
+
+            .forum-post-right p {
+                font-family: "Lexend", "Roboto", sans-serif !important;
+                color: #344054 !important;
+                font-size: 16px !important;
+                line-height: 150% !important;
+                margin: 0 0 16px 0 !important;
+            }
+
+            .forum-post-right a {
+                font-family: "Lexend", "Roboto", sans-serif !important;
+                color: #227f9c !important;
+                text-decoration: none !important;
+                font-size: 16px !important;
+                line-height: 150% !important;
+            }
+
+            .forum-post-right img {
+                height: 20px;
+                vertical-align: middle;
+                margin-bottom: 2px;
+            }
+
+            /* Podcast card styling */
+            .podcast-card {
+                background-color: #ffffff;
+                border-radius: 16px;
+                padding: 32px;
+                margin-bottom: 24px;
+                border: 2px solid rgba(71, 84, 103, 0.08);
+                box-shadow:
+                    0px 20px 24px -4px rgba(111, 92, 73, 0.08),
+                    0px 8px 8px -4px rgba(111, 92, 73, 0.03);
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .podcast-card-title {
+                font-family: "Fraunces", Georgia, serif !important;
+                font-size: 24px;
+                font-weight: 600;
+                color: #227f9c;
+                line-height: 120%;
+                margin-bottom: 16px;
+            }
+
+            .podcast-card p {
+                font-family: "Lexend", "Roboto", sans-serif !important;
+                font-size: 16px;
+                color: #344054;
+                line-height: 150%;
+                margin-bottom: 24px;
+            }
+
+            .podcast-card-host {
+                font-family: "Lexend", "Roboto", sans-serif !important;
+                margin-bottom: 0;
+                vertical-align: middle;
+            }
+
+            .podcast-card-host .name {
+                font-weight: 500;
+                color: #344054;
+            }
+
+            .podcast-card-host .date {
+                color: #98a2b3;
+                display: block;
+            }
+
+            .podcast-listen-btn {
+                background-color: #227f9c;
+                color: #ffffff !important;
+                font-family: "Lexend", "Roboto", sans-serif !important;
+                text-decoration: none !important;
+                font-weight: 500;
+                padding: 12px 24px;
+                border-radius: 8px;
+                display: inline-block;
+                white-space: nowrap;
+                text-align: center;
+            }
+
+            .podcast-listen-btn img {
+                height: 20px !important;
+                vertical-align: middle;
+                margin-bottom: 2px;
+            }
+
+            /* Podcast section styling - simplified */
+            .podcast-section {
+                background-color: #fcfaf8;
+                margin: 20px 0;
+                padding: 40px 36px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .podcast-card-pre-header {
+                font-family: "Lexend", "Roboto", sans-serif !important;
+                text-align: center;
+                font-size: 16px;
+                color: #98a2b3;
+                line-height: 150%;
+                margin-bottom: 24px;
+            }
+
+            /* Admissions card styling */
+            .admissions-card {
+                background-color: #ffffff;
+                border-radius: 16px;
+                padding: 32px;
+                margin-bottom: 24px;
+                border: 2px solid rgba(71, 84, 103, 0.08);
+                box-shadow:
+                    0px 20px 24px -4px rgba(111, 92, 73, 0.08),
+                    0px 8px 8px -4px rgba(111, 92, 73, 0.03);
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .admissions-card-pre-header {
+                font-family: "Lexend", "Roboto", sans-serif !important;
+                text-align: center;
+                font-size: 16px;
+                color: #afd3de;
+                line-height: 150%;
+                margin-bottom: 24px;
+                margin-top: 24px;
+            }
+
+            .admissions-card-title {
+                font-family: "Fraunces", Georgia, serif !important;
+                font-size: 24px;
+                font-weight: 600;
+                color: #344054;
+                line-height: 120%;
+                margin-bottom: 16px;
+            }
+
+            .admissions-card p {
+                font-family: "Lexend", "Roboto", sans-serif !important;
+                font-size: 16px;
+                color: #344054;
+                line-height: 150%;
+                margin-bottom: 24px;
+            }
+
+            .admissions-card-host .date {
+                color: #98a2b3;
+                display: block;
+            }
+
+            .admissions-read-btn {
+                background-color: #227f9c;
+                color: #ffffff !important;
+                font-family: "Lexend", "Roboto", sans-serif !important;
+                text-decoration: none !important;
+                font-weight: 500;
+                padding: 12px 24px;
+                border-radius: 8px;
+                display: inline-block;
+                white-space: nowrap;
+                text-align: center;
+            }
+
+            /* Podcast section styling - simplified */
+            .admissions-section {
+                background-color: #1b667d;
+                margin: 20px 0;
+                padding: 40px 36px;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            /* Divider styling */
+            hr.solid {
+                border: 3px solid rgba(71, 84, 103, 0.08);
+                margin: 0;
+                padding: 0;
+                display: block;
+            }
+        </style>
+    </head>
+    <body style="margin: 0; padding: 0; background-color: #f1ede9">
+        <!-- Main Wrapper Table -->
+        <table class="outer-wrapper" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#F1EDE9" style="background-color: #f1ede9; width: 100%; min-width: 100%">
+            <tbody>
+                <tr>
+                    <td class="outer-padding-cell" align="center" valign="top" style="padding: 30px 0 30px 0">
+                        <!-- Content Container -->
+                        <table class="container" width="600" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff" style="
+                                width: 100%;
+                                max-width: 600px;
+                                border-radius: 16px 16px 0 0;
+                                box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+                            ">
+                            <!-- Header -->
+                            <tbody>
+                                <tr>
+                                    <td align="center" valign="top" style="padding: 30px 36px 30px 36px">
+                                        <img src="https://ik.imagekit.io/7sage/Newsletter%20Files/Newsletter%20Files%202/Logo%20-%207Sage%20LSAT%20-%20b2r2-1%20(1).png?updatedAt=1765812786613" alt="7Sage LSAT" width="156" style="display: block">
+                                    </td>
+                                </tr>
+
+                                <!-- Main Content -->
+                                <tr>
+                                    <td align="left" valign="top" class="content-area" style="
+                                            padding: 0 36px 30px 36px;
+                                            font-family: &quot;Lexend&quot;,
+                                                &quot;Roboto&quot;,
+                                                &quot;Open Sans&quot;,
+                                                Helvetica, sans-serif !important;
+                                        ">
+                                        <div style="
+                                                font-family: &quot;Lexend&quot;,
+                                                    &quot;Roboto&quot;,
+                                                    &quot;Open Sans&quot;,
+                                                    Helvetica, sans-serif !important;
+                                                color: #44403c;
+                                            ">
+                                            {{ content }}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <!-- Footer -->
+                        <table class="footer" width="600" border="0" cellspacing="0" cellpadding="0" bgcolor="#344054" style="
+                                width: 100%;
+                                max-width: 600px;
+                                border-radius: 0 0 16px 16px;
+                                box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+                            ">
+                            <tbody>
+                                <tr>
+                                    <td align="center" valign="top" style="padding: 30px 36px 30px 36px">
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                            <tbody>
+                                                <tr>
+                                                    <td align="center">
+                                                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="padding-top: 16px">
+    <!-- Follow text -->
+    </table>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- 7Sage Logo -->
+                                                <tr>
+                                                    <td align="center" valign="top" style="padding-bottom: 20px">
+                                                        <img src="https://ik.imagekit.io/7sage/Newsletter%20Files/Newsletter%20Files%202/Logo%20-%207Sage%20-%20b2r2.png?updatedAt=1765812788347" width="70" alt="7Sage" style="display: block; width: 70px; max-width: 100%; height: auto; margin: 0 auto">
+                                                    </td>
+                                                </tr>
+
+                                                <!-- Social Media Icons -->
+                                                <tr>
+                                                    <td align="center" valign="top" style="
+                                                            padding-bottom: 16px;
+                                                        ">
+                                                        <table border="0" cellspacing="0" cellpadding="0">
+                                                            <tbody>
+                                                                <tr>
+                                                                    <!-- YouTube Icon -->
+                                                                    <td width="40" style="
+                                                                            padding-right: 25px;
+                                                                        " valign="middle">
+                                                                        <a href="https://www.youtube.com/c/7sage" target="_blank">
+                                                                            <img src="https://ik.imagekit.io/7sage/Newsletter%20Files/Newsletter%20Files%202/youtube_icon.png?updatedAt=1765812785920" width="40" alt="YouTube" style="
+                                                                                    display: block;
+                                                                                ">
+                                                                        </a>
+                                                                    </td>
+
+                                                                    <!-- TikTok Icon -->
+                                                                    <td width="28" style="
+                                                                            padding-right: 25px;
+                                                                        " valign="middle">
+                                                                        <a href="https://www.tiktok.com/@7sagelsat" target="_blank">
+                                                                            <img src="https://ik.imagekit.io/7sage/Newsletter%20Files/Newsletter%20Files%202/tiktok_icon.png?updatedAt=1765812785841" width="28" alt="TikTok" style="
+                                                                                    display: block;
+                                                                                ">
+                                                                        </a>
+                                                                    </td>
+
+                                                                    <!-- Instagram Icon -->
+                                                                    <td width="32" style="
+                                                                            padding-right: 25px;
+                                                                        " valign="middle">
+                                                                        <a href="https://www.instagram.com/7sage/" target="_blank">
+                                                                            <img src="https://ik.imagekit.io/7sage/Newsletter%20Files/Newsletter%20Files%202/instagram_icon.png?updatedAt=1765812785783" width="32" alt="Instagram" style="
+                                                                                    display: block;
+                                                                                ">
+                                                                        </a>
+                                                                    </td>
+
+                                                                    <!-- Divider -->
+                                                                    <td width="3" style="
+                                                                            padding-right: 16px;
+                                                                        " valign="middle">
+                                                                        <div class="footer-divider"></div>
+                                                                    </td>
+
+                                                                    <!-- Podcasts Text with Link -->
+                                                                    <td style="
+                                                                            color: #98a2b3;
+                                                                            font-family: &quot;Lexend&quot;,
+                                                                                &quot;Roboto&quot;,
+                                                                                &quot;Open Sans&quot;,
+                                                                                Helvetica,
+                                                                                sans-serif !important;
+                                                                            font-size: 16px;
+                                                                            font-weight: 500;
+                                                                            line-height: 150%;
+                                                                        " valign="middle">
+                                                                        <a href="https://open.spotify.com/show/1IYx61IAEHDWfq1Q7Xhq5l" target="_blank" style="
+                                                                                color: #98a2b3;
+                                                                                text-decoration: none;
+                                                                            ">Podcasts</a>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+
+                                                <!-- Unsubscribe Link -->
+                                                <tr>
+                                                    <td align="center" valign="top">
+                                                        <a href="{{unsubscribe_url}}" style="
+                                                                color: #98a2b3 !important;
+                                                                font-family: &quot;Lexend&quot;,
+                                                                    &quot;Roboto&quot;,
+                                                                    &quot;Open Sans&quot;,
+                                                                    Helvetica,
+                                                                    sans-serif !important;
+                                                                font-size: 16px !important;
+                                                                font-weight: 500 !important;
+                                                                line-height: 150% !important;
+                                                                text-decoration: none !important;
+                                                            ">Unsubscribe</a>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    
+</body></html>

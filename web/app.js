@@ -1999,6 +1999,16 @@ function formatSchoolRank(school) {
   return school?.rankLabel || `#${school?.rank}`;
 }
 
+function uniqueSchoolsByName(schools) {
+  const seen = new Set();
+  return schools.filter((school) => {
+    const key = normalizeSchoolKey(school?.name);
+    if (!key || seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 function getSchoolRangeLaneCenter(category) {
   return { reach: 26.5, target: 29.5, safety: 32.5 }[category] ?? 29;
 }
@@ -2410,9 +2420,9 @@ function renderSchoolRecommendationPlot(readers, cycle) {
   return `<div class="school-rank-plot">
     <div class="school-rank-lists">
       ${categories.map((category) => {
-        const schools = readers
-          .flatMap((reader) => reader.schoolRecommendations?.[category] || [])
-          .sort((a, b) => a.rank - b.rank || a.name.localeCompare(b.name));
+        const schools = uniqueSchoolsByName(
+          readers.flatMap((reader) => reader.schoolRecommendations?.[category] || [])
+        ).sort((a, b) => a.rank - b.rank || a.name.localeCompare(b.name));
         const leftCount = Math.ceil(schools.length / 2);
         const leftColumn = schools.slice(0, leftCount);
         const rightColumn = schools.slice(leftCount);

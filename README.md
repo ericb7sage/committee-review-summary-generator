@@ -101,7 +101,7 @@ Exports can use two school recommendations per category with these six columns:
 - `Recommend a Safety 1`
 - `Recommend a Safety 2`
 
-The first recommendation in each category is required for every reader; the second is optional. The summary reserves six compact positions per category (two for each of three readers), leaving an intentional blank when an optional school is omitted. Reader ballots use the same two-position layout. Repeated recommendations across readers remain in the lists and collapse to a counted consensus marker on the number line.
+The first recommendation in each category is required for every reader; the second is optional. The summary reserves six compact positions per category (two for each of three readers), leaving an intentional blank when an optional school is omitted. Reader ballots use the same two-position layout. Repeated recommendations across readers appear only once in the combined category lists and collapse to a counted consensus marker on the number line.
 
 The existing one-school format remains supported:
 
