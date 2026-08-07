@@ -2316,16 +2316,38 @@ function assignSchoolDotOffsets(items) {
     const categories = new Set(cluster.map((item) => item.category));
     const crossCategoryPadding = categories.size > 1 ? 6 : 0;
     const reaches = cluster.filter((item) => item.category === "reach");
+    const targets = cluster.filter((item) => item.category === "target");
     const safeties = cluster.filter((item) => item.category === "safety");
 
-    cluster.filter((item) => item.category === "target").forEach((item) => {
-      item.dotOffset = 0;
+    const targetOffsets = (() => {
+      if (targets.length <= 1) return targets.map(() => 0);
+      if (reaches.length && !safeties.length) {
+        return targets.map((_, index) => 8 * (index + 1));
+      }
+      if (safeties.length && !reaches.length) {
+        return targets.map((_, index) => -8 * (index + 1));
+      }
+      return targets.map((_, index) => {
+        const lane = Math.floor(index / 2) + 1;
+        return lane * 8 * (index % 2 === 0 ? -1 : 1);
+      });
+    })();
+    targets.forEach((item, index) => {
+      item.dotOffset = targetOffsets[index];
     });
+    const targetAboveDepth = Math.max(0, ...targetOffsets.map((offset) => -offset));
+    const targetBelowDepth = Math.max(0, ...targetOffsets);
+    const reachBaseOffset = targets.length
+      ? Math.max(8 + crossCategoryPadding, targetAboveDepth + 14)
+      : 8 + crossCategoryPadding;
+    const safetyBaseOffset = targets.length
+      ? Math.max(8 + crossCategoryPadding, targetBelowDepth + 14)
+      : 8 + crossCategoryPadding;
     reaches.forEach((item, index) => {
-      item.dotOffset = -(8 + crossCategoryPadding + (reaches.length - index - 1) * 8);
+      item.dotOffset = -(reachBaseOffset + (reaches.length - index - 1) * 8);
     });
     safeties.forEach((item, index) => {
-      item.dotOffset = 8 + crossCategoryPadding + index * 8;
+      item.dotOffset = safetyBaseOffset + index * 8;
     });
     cluster = [];
   };
@@ -2747,6 +2769,17 @@ function renderStudentDocument(report) {
   const displayReaders = getReadersInDisplayOrder(report.readers);
   const summaryReaders = displayReaders;
   const docTitle = String(report.manual.docTitle || "Committee Review").trim() || "Committee Review";
+  const basicsItems = [
+    report.manual.lsat
+      ? `<div class="basics-item"><span class="basics-label">LSAT:</span><span class="basics-value">${escapeHtml(report.manual.lsat)}</span></div>`
+      : "",
+    report.manual.gpa
+      ? `<div class="basics-item"><span class="basics-label">GPA:</span><span class="basics-value">${escapeHtml(report.manual.gpa)}</span></div>`
+      : "",
+    report.manual.otherText
+      ? `<div class="basics-item"><span class="basics-value">${escapeHtml(report.manual.otherText)}</span></div>`
+      : "",
+  ].filter(Boolean);
 
   return `
     <section class="page summary-page">
@@ -2762,28 +2795,16 @@ function renderStudentDocument(report) {
           <div class="summary-banner-title">${escapeHtml(docTitle)}</div>
         </div>
       </div>
-      <div class="section-block basics-section">
+      ${basicsItems.length ? `<div class="section-block basics-section">
         <div class="section-body">
           <div class="fit-content fit-basics">
             <div class="section-title">Basics</div>
             <div class="basics-grid">
-              <div class="basics-item">
-                <span class="basics-label">LSAT:</span>
-                <span class="basics-value">${escapeHtml(report.manual.lsat || "—")}</span>
-              </div>
-              <span class="basics-divider">|</span>
-              <div class="basics-item">
-                <span class="basics-label">GPA:</span>
-                <span class="basics-value">${escapeHtml(report.manual.gpa || "—")}</span>
-              </div>
-              <span class="basics-divider">|</span>
-              <div class="basics-item">
-                <span class="basics-value">${escapeHtml(report.manual.otherText || "—")}</span>
-              </div>
+              ${basicsItems.join('<span class="basics-divider">|</span>')}
             </div>
           </div>
         </div>
-      </div>
+      </div>` : ""}
       <div class="section-block readers-section">
         <div class="section-body">
           <div class="fit-content fit-readers">
@@ -3526,8 +3547,7 @@ function onGenerateDocuments() {
     nextSteps: manual.nextSteps,
     otherText:
       csvSummary.situation ||
-      manual.situation ||
-      `${manual.kjd} • ${csvSummary.urm || manual.urm}`,
+      manual.situation,
   };
 
   const report = buildStudentReport(selectedFile, rows, mergedManual);
