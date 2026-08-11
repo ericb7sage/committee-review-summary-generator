@@ -635,6 +635,22 @@ const READER_PROFILES = [
     bio:
       "Former Cardozo AO. 7Sage Expert on NYC schools.",
   },
+  {
+    fullName: "Chelsea Hess",
+    firstName: "Chelsea",
+    aliases: ["Chelsea Hess", "Chelsea"],
+    headshotUrl:
+      "https://ik.imagekit.io/7sage/Newsletter%20Files/Headshot.jpeg",
+    bio: "Former Columbia AO.",
+  },
+  {
+    fullName: "Max Gaston",
+    firstName: "Max",
+    aliases: ["Max Gaston", "Max"],
+    headshotUrl:
+      "https://ik.imagekit.io/7sage/Newsletter%20Files/MHG%20Headshot.jpeg",
+    bio: "Former Notre Dame AO. Former ACLU staff attorney.",
+  },
 ];
 
 const TAG_FONT_BASE_PX = 9;
