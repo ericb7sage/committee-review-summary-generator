@@ -651,6 +651,14 @@ const READER_PROFILES = [
       "https://ik.imagekit.io/7sage/Newsletter%20Files/MHG%20Headshot.jpeg",
     bio: "Former Notre Dame AO. Former ACLU staff attorney.",
   },
+  {
+    fullName: "Allison Nash",
+    firstName: "Allison",
+    aliases: ["Allison Nash", "Allison"],
+    headshotUrl:
+      "https://ik.imagekit.io/7sage/Newsletter%20Files/Newsletter%20Files%202/Ali.Nash.jpeg",
+    bio: "Former Arizona Law AO.",
+  },
 ];
 
 const TAG_FONT_BASE_PX = 9;
