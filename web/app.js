@@ -659,6 +659,15 @@ const READER_PROFILES = [
       "https://ik.imagekit.io/7sage/Newsletter%20Files/Newsletter%20Files%202/Ali.Nash.jpeg",
     bio: "Former Arizona Law AO.",
   },
+  {
+    fullName: "Meghann Banacki",
+    firstName: "Meghann",
+    aliases: ["Meghann Banacki", "Meghann"],
+    headshotUrl:
+      "https://ik.imagekit.io/7sage/Newsletter%20Files/ChatGPT%20Image%20Sep%202,%202026,%2002_58_33%20PM.png",
+    bio:
+      "Former Cardozo Law AO. Former litigation associate at Weil, Gotshal & Manges.",
+  },
 ];
 
 const TAG_FONT_BASE_PX = 9;
