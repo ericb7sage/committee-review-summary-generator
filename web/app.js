@@ -563,7 +563,7 @@ const READER_PROFILES = [
     aliases: ["Jocelyn Glantz", "Jocelyn"],
     headshotUrl:
       "https://www.gravatar.com/avatar/47947e4483a165443bbb98abecfdde40?size=320&default=robohash",
-    bio: "Former Assistant Director of Admissions at Brooklyn Law.",
+    bio: "Former Assistant Director of Admissions at Brooklyn Law. 25 years of admissions experience.",
   },
   {
     fullName: "Jen Kott",
