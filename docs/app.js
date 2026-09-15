@@ -668,6 +668,15 @@ const READER_PROFILES = [
     bio:
       "Former Cardozo Law AO. Former litigation associate at Weil, Gotshal & Manges.",
   },
+  {
+    fullName: "Maria Rivera",
+    firstName: "Maria",
+    aliases: ["Maria Rivera", "Maria"],
+    headshotUrl:
+      "https://ik.imagekit.io/7sage/Newsletter%20Files/Rivera-Portrait-1-400x500.jpg",
+    bio:
+      "Former Yale AO. Former UT Austin Assistant Dean of Admissions.",
+  },
 ];
 
 const TAG_FONT_BASE_PX = 9;
