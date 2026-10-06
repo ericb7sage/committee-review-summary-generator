@@ -441,7 +441,7 @@ function setSchoolCatalog(catalog) {
   SCHOOL_CATALOG = catalog.schools.map((school) => ({
     name: String(school.name || "").trim(),
     displayName: String(school.displayName || "").trim(),
-    rank: Number(school.rank),
+    rank: school.rank === null ? null : Number(school.rank),
     rankLabel: String(school.rankLabel || "").trim(),
     aliases: Array.isArray(school.aliases) ? school.aliases : [],
   }));
@@ -468,7 +468,7 @@ function validateSchoolCatalog(catalog) {
     if (hasDisplayName && !displayName) {
       errors.push(`${name || `School row ${index + 1}`} has a blank display name.`);
     }
-    if (!Number.isFinite(rank) || rank < 1) {
+    if (school?.rank !== null && (!Number.isFinite(rank) || rank < 1)) {
       errors.push(`${name || `School row ${index + 1}`} has an invalid rank.`);
     }
     [name, ...(Array.isArray(school?.aliases) ? school.aliases : [])].forEach((alias) => {
@@ -1969,6 +1969,17 @@ function findSchoolInCatalog(value) {
   return SCHOOL_CATALOG_LOOKUP.get(normalizeSchoolKey(value)) || null;
 }
 
+// Recommendations outside the U.S. ranking catalog still belong in the report.
+function resolveSchoolRecommendation(value) {
+  const name = String(value || "").trim();
+  return findSchoolInCatalog(name) || {
+    name,
+    displayName: name,
+    rank: null,
+    rankLabel: "Unranked",
+  };
+}
+
 function validateStudentSchoolRecommendations(fileName, rows) {
   const mode = getSchoolRecommendationMode(rows);
   if (mode === "legacy") return [];
@@ -1999,20 +2010,9 @@ function validateStudentSchoolRecommendations(fileName, rows) {
           }
           return;
         }
-        const school = findSchoolInCatalog(supplied);
-        if (!school) {
-          errors.push(
-            `${fileName}: ${reader} has unknown ${SCHOOL_CATEGORY_LABELS[category]} school ${index + 1} "${supplied}".`
-          );
-        } else if (!Number.isFinite(school.rank)) {
-          errors.push(
-            `${fileName}: ${reader}'s ${SCHOOL_CATEGORY_LABELS[category]} school ${index + 1} "${supplied}" has no plottable rank.`
-          );
-        } else {
-          resolved.push(school);
-        }
+        resolved.push(resolveSchoolRecommendation(supplied));
       });
-      if (resolved.length === 2 && resolved[0].name === resolved[1].name) {
+      if (resolved.length === 2 && normalizeSchoolKey(resolved[0].name) === normalizeSchoolKey(resolved[1].name)) {
         errors.push(`${fileName}: ${reader} selected ${resolved[0].name} twice for ${SCHOOL_CATEGORY_LABELS[category]}.`);
       }
     });
@@ -2031,7 +2031,7 @@ function resolveReaderSchoolRecommendations(row, mode) {
       const schools = fields.flatMap((field) => {
         const supplied = String(row[field] || "").trim();
         if (!supplied) return [];
-        const school = findSchoolInCatalog(supplied);
+        const school = resolveSchoolRecommendation(supplied);
         return school ? [{ name: school.name, displayName: school.displayName, rank: school.rank, rankLabel: school.rankLabel, supplied }] : [];
       });
       return [category, schools];
@@ -2044,7 +2044,7 @@ function uniqueNonEmpty(values) {
 }
 
 function formatSchoolRank(school) {
-  return school?.rankLabel || `#${school?.rank}`;
+  return Number.isFinite(school?.rank) ? school.rankLabel || `#${school.rank}` : "Unranked";
 }
 
 function formatSchoolName(school) {
@@ -2352,6 +2352,7 @@ function rankToSchoolPlotPercent(
 
 function getSchoolPlotScale(ranks) {
   const points = [...SCHOOL_RANK_BREAKPOINTS, SCHOOL_RANKING_MAX];
+  if (!ranks.length) return points;
   const lowestRank = Math.min(...ranks);
   const highestRank = Math.max(...ranks);
   let firstIndex = Math.max(
@@ -2434,7 +2435,7 @@ function renderSchoolRecommendationPlot(readers, cycle) {
         readerLabel: reader.label,
       }))
     )
-  );
+  ).filter((school) => Number.isFinite(school.rank));
   const scalePoints = getSchoolPlotScale(recommendations.map((item) => item.rank));
   const segmentWeights = getSchoolPlotSegmentWeights(scalePoints);
   const consensusItems = [...recommendations.reduce((groups, item) => {
@@ -2452,17 +2453,19 @@ function renderSchoolRecommendationPlot(readers, cycle) {
     ...item,
     pct: rankToSchoolPlotPercent(item.rank, scalePoints, segmentWeights),
   })));
-  const spans = categories.map((category) => {
+  const spans = categories.flatMap((category, laneIndex) => {
     const categoryItems = items.filter((item) => item.category === category);
+    if (!categoryItems.length) return [];
     const positions = categoryItems.map((item) => item.pct);
     const min = Math.min(...positions);
     const max = Math.max(...positions);
-    return {
+    return [{
       category,
+      laneIndex,
       left: min,
       width: Math.max(0.8, max - min),
       isPoint: Math.abs(max - min) < 0.01,
-    };
+    }];
   });
   const ticks = scalePoints.map((rank) => ({
     label: rank === SCHOOL_RANKING_MAX ? "T100+" : `T${rank}`,
@@ -2474,7 +2477,7 @@ function renderSchoolRecommendationPlot(readers, cycle) {
       ${categories.map((category) => {
         const schools = uniqueSchoolsByName(
           readers.flatMap((reader) => reader.schoolRecommendations?.[category] || [])
-        ).sort((a, b) => a.rank - b.rank || a.name.localeCompare(b.name));
+        ).sort((a, b) => (a.rank ?? Infinity) - (b.rank ?? Infinity) || a.name.localeCompare(b.name));
         const leftCount = Math.ceil(schools.length / 2);
         const leftColumn = schools.slice(0, leftCount);
         const rightColumn = schools.slice(leftCount);
@@ -2496,7 +2499,7 @@ function renderSchoolRecommendationPlot(readers, cycle) {
     <div class="school-rank-track">
       ${ticks.map((tick) => `<span class="school-rank-gridline" style="left:${tick.pct}%"></span>`).join("")}
       <span class="school-rank-baseline"></span>
-      ${spans.map((span, index) => `<span class="school-range-span ${span.category}${span.isPoint ? " point-range" : ""}" style="left:${span.left}%;width:${span.width}%;--range-lane:${index}"></span>`).join("")}
+      ${spans.map((span) => `<span class="school-range-span ${span.category}${span.isPoint ? " point-range" : ""}" style="left:${span.left}%;width:${span.width}%;--range-lane:${span.laneIndex}"></span>`).join("")}
       ${items.filter((item) => item.dotOffset).map((item) => {
         const dotCenter = 29 + item.dotOffset;
         const laneCenter = getSchoolRangeLaneCenter(item.category);
@@ -2507,7 +2510,7 @@ function renderSchoolRecommendationPlot(readers, cycle) {
     <div class="school-rank-axis">
       ${ticks.map((tick) => `<span style="left:${tick.pct}%">${tick.label}</span>`).join("")}
     </div>
-    <div class="school-rank-note">Actual school rank on tier-compressed axis · ${escapeHtml(cycle)}</div>
+    <div class="school-rank-note">${recommendations.length ? "Actual school rank on tier-compressed axis" : "No ranked schools to plot"} · ${escapeHtml(cycle)} · Unranked schools are listed only</div>
   </div>`;
 }
 
