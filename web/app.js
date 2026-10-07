@@ -1972,6 +1972,8 @@ function findSchoolInCatalog(value) {
 // Recommendations outside the U.S. ranking catalog still belong in the report.
 function resolveSchoolRecommendation(value) {
   const name = String(value || "").trim();
+  // Coda may export an unresolved row reference instead of a school name.
+  if (/^#r\d+$/i.test(name)) return null;
   return findSchoolInCatalog(name) || {
     name,
     displayName: name,
@@ -2010,7 +2012,8 @@ function validateStudentSchoolRecommendations(fileName, rows) {
           }
           return;
         }
-        resolved.push(resolveSchoolRecommendation(supplied));
+        const school = resolveSchoolRecommendation(supplied);
+        if (school) resolved.push(school);
       });
       if (resolved.length === 2 && normalizeSchoolKey(resolved[0].name) === normalizeSchoolKey(resolved[1].name)) {
         errors.push(`${fileName}: ${reader} selected ${resolved[0].name} twice for ${SCHOOL_CATEGORY_LABELS[category]}.`);
