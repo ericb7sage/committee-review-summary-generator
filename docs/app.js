@@ -666,7 +666,7 @@ const READER_PROFILES = [
     headshotUrl:
       "https://ik.imagekit.io/7sage/Newsletter%20Files/ChatGPT%20Image%20Sep%202,%202026,%2002_58_33%20PM.png",
     bio:
-      "Former Cardozo Law AO. Former litigation associate at Weil, Gotshal & Manges.",
+      "Former Cardozo Law AO. Former litigation associate at Weil, Gotshal & Manges. Reviewed applications for NYU.",
   },
   {
     fullName: "Maria Rivera",
