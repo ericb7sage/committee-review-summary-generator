@@ -17,6 +17,7 @@ This is a browser-only JavaScript app for your Coda CSV to printable PDF workflo
 - Lets users enter per-student metadata (LSAT, GPA, KJD, URM)
 - Generates an on-screen report preview before enabling PDF download
 - Lets users switch between students in a multi-student CSV and review each report before downloading
+- Downloaded PDFs include an invisible, searchable copy of the File label with accents removed, for name matching in downstream tools. The visible name retains its original spelling. This applies to Download PDF, not the browser Print fallback.
 - Keeps Print Current Student as a fallback
 
 ## Quick start

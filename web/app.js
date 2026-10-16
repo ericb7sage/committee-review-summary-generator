@@ -3797,6 +3797,17 @@ function sanitizeFileName(value) {
     .slice(0, 120);
 }
 
+// Keep a searchable alias in the PDF even though its visible pages are images.
+function embedSearchableStudentName(pdf, fileName) {
+  const alias = String(fileName || "")
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .trim();
+  if (!alias) return;
+  pdf.setPage(1);
+  pdf.text(alias, 24, 24, { renderingMode: "invisible" });
+}
+
 function measureDataUrlImage(dataUrl) {
   return new Promise((resolve, reject) => {
     const image = new Image();
@@ -3931,6 +3942,7 @@ async function onDownloadCurrentStudentPdf() {
       pdf.addImage(imageData, "PNG", 0, 0, 612, 792, undefined, "FAST");
     }
 
+    embedSearchableStudentName(pdf, report.fileName);
     pdf.save(filename);
   } catch (_error) {
     state.warnings = [
