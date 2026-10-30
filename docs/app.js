@@ -486,6 +486,14 @@ function validateSchoolCatalog(catalog) {
 }
 const READER_PROFILES = [
   {
+    fullName: "Gina Cecchetti",
+    firstName: "Gina",
+    aliases: ["Gina Cecchetti", "Gina"],
+    headshotUrl:
+      "https://ik.imagekit.io/7sage/Newsletter%20Files/GVC%20high%20res%20Sept%202024.jpg?tr=c-maintain_ratio,w-3308,h-3308,fo-face,z-1",
+    bio: "Former Admissions Director at Duquesne Law. JD/MBA admissions expert.",
+  },
+  {
     fullName: "Tajira McCoy",
     firstName: "Tajira",
     aliases: ["Tajira McCoy", "Tajira"],

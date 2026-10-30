@@ -28,6 +28,8 @@ Open `web/index.html` in a browser.
 
 Set Pages source to `main` + `/docs`. `/docs` is a published copy of `/web`.
 
+See [Hosting reviewer photos](docs/REVIEWER-PHOTOS.md) for adding repository-hosted reviewer images and profiles.
+
 ## Centralized tag explanations (no server)
 
 Tag explanations are centralized in:
