@@ -685,6 +685,14 @@ const READER_PROFILES = [
     bio:
       "Former Yale AO. Former UT Austin Assistant Dean of Admissions.",
   },
+  {
+    fullName: "Brittney McCartney",
+    firstName: "Brittney",
+    aliases: ["Brittney McCartney", "Brittney"],
+    headshotUrl: "assets/reviewers/brittney-mccartney.jpg",
+    bio:
+      "Former Assistant Director of JD Admissions at Boston University.",
+  },
 ];
 
 const TAG_FONT_BASE_PX = 9;
